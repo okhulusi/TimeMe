@@ -12,8 +12,9 @@
 {}
 
 @property (nonatomic, strong) UILabel *label;
-@property (nonatomic, strong) UITextField *intervalField;
-@property (nonatomic, strong) UITextField *timerLengthField;
+
+@property (nonatomic, strong) UILabel *pickerViewLabel;
+@property (nonatomic, strong) UIPickerView *pickerView;
 @property (nonatomic, strong) UIButton *startButton;
 
 @end

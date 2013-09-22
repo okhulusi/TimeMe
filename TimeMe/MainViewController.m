@@ -17,9 +17,8 @@
 @implementation MainViewController
 
 @synthesize label = _label;
-@synthesize intervalField = _intervalField;
-@synthesize timerLengthField = _timerLengthField;
 @synthesize startButton = _startButton;
+@synthesize pickerView = _pickerView;
 
 - (void)viewDidLoad
 {
@@ -34,19 +33,47 @@
 
     [self.view addSubview:_label];
     
-    _intervalField = [[UITextField alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 200.0f, 200.0f, 30.0f)];
-    _intervalField.borderStyle = UITextBorderStyleRoundedRect;
-    [self.view addSubview:_intervalField];
-
-    _timerLengthField =[ [UITextField alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 300.0f, 200.0f, 30.0f)];
-     _timerLengthField.borderStyle = UITextBorderStyleRoundedRect;
-    [self.view addSubview:_timerLengthField];
+    _pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 200.0f, 200.0f, 30.0f)];
+    _pickerView.delegate = self;
+    _pickerView.showsSelectionIndicator = YES;
+    [self.view addSubview:_pickerView];
     
     _startButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [_startButton addTarget:self action:@selector(startButtonPressed) forControlEvents:UIControlEventTouchDown];
     [_startButton setTitle:@"Start Timer" forState:UIControlStateNormal];
     _startButton.frame = CGRectMake(width/2 - 100.0f, 400.0f, 200.0f, 30.0f);
     [self.view addSubview:_startButton];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
+    //Handle the selection
+}
+
+//Tell the picker how many rows are available for a given component
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
+    NSUInteger numRows = 60;
+    
+    return numRows;
+}
+
+//Tells picker how many components it will have
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+//Tell the picker the title for the given component
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
+    NSString *title;
+    title = [@"" stringByAppendingFormat:@"%d", row];
+    
+    return title;
+}
+
+//Tell the picker the width of each row for a given component
+- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component{
+    int sectionWidth = 300;
+    
+    return sectionWidth;
 }
 
 - (void) startButtonPressed{
