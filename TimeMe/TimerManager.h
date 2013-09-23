@@ -11,8 +11,8 @@
 @interface TimerManager : NSObject
 {}
 
-@property int    intervalLength;
-@property int    timerLength;
+@property NSTimeInterval intervalLength;
+@property NSTimeInterval timerLength;
 
 - (void) update: (NSInteger)dt;
 
