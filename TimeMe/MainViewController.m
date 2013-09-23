@@ -20,17 +20,14 @@
 @synthesize startButton = _startButton;
 @synthesize pickerView = _pickerView;
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    
+- (void)loadView {
+    [super loadView];
     CGFloat width = self.view.frame.size.width;
     CGFloat height = self.view.frame.size.height;
     
     _label = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 30.0f, 100.0f, 200.0f, 30.0f)];
     [_label setText:@"Time Me"];
-
+    
     [self.view addSubview:_label];
     
     _pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 200.0f, 200.0f, 30.0f)];
@@ -43,6 +40,13 @@
     [_startButton setTitle:@"Start Timer" forState:UIControlStateNormal];
     _startButton.frame = CGRectMake(width/2 - 100.0f, 400.0f, 200.0f, 30.0f);
     [self.view addSubview:_startButton];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view, typically from a nib.
+
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
