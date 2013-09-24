@@ -21,7 +21,7 @@
 		AA2F1E0017ECD84D001AB1D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA2F1DE217ECD84D001AB1D6 /* UIKit.framework */; };
 		AA2F1E0817ECD84D001AB1D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA2F1E0617ECD84D001AB1D6 /* InfoPlist.strings */; };
 		AA2F1E0A17ECD84D001AB1D6 /* TimeMeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1E0917ECD84D001AB1D6 /* TimeMeTests.m */; };
-		AA2F1E1517ECD8C0001AB1D6 /* TimerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1E1417ECD8C0001AB1D6 /* TimerManager.m */; };
+		AA2F1E1517ECD8C0001AB1D6 /* TMIntervalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1E1417ECD8C0001AB1D6 /* TMIntervalTimer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,8 +54,8 @@
 		AA2F1E0517ECD84D001AB1D6 /* TimeMeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TimeMeTests-Info.plist"; sourceTree = "<group>"; };
 		AA2F1E0717ECD84D001AB1D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AA2F1E0917ECD84D001AB1D6 /* TimeMeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeMeTests.m; sourceTree = "<group>"; };
-		AA2F1E1317ECD8C0001AB1D6 /* TimerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerManager.h; sourceTree = "<group>"; };
-		AA2F1E1417ECD8C0001AB1D6 /* TimerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerManager.m; sourceTree = "<group>"; };
+		AA2F1E1317ECD8C0001AB1D6 /* TMIntervalTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMIntervalTimer.h; sourceTree = "<group>"; };
+		AA2F1E1417ECD8C0001AB1D6 /* TMIntervalTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMIntervalTimer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,8 +120,8 @@
 				AA2F1DF017ECD84D001AB1D6 /* Main.storyboard */,
 				AA2F1DF317ECD84D001AB1D6 /* MainViewController.h */,
 				AA2F1DF417ECD84D001AB1D6 /* MainViewController.m */,
-				AA2F1E1317ECD8C0001AB1D6 /* TimerManager.h */,
-				AA2F1E1417ECD8C0001AB1D6 /* TimerManager.m */,
+				AA2F1E1317ECD8C0001AB1D6 /* TMIntervalTimer.h */,
+				AA2F1E1417ECD8C0001AB1D6 /* TMIntervalTimer.m */,
 				AA2F1DF617ECD84D001AB1D6 /* Images.xcassets */,
 				AA2F1DE517ECD84D001AB1D6 /* Supporting Files */,
 			);
@@ -255,7 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA2F1DF517ECD84D001AB1D6 /* MainViewController.m in Sources */,
-				AA2F1E1517ECD8C0001AB1D6 /* TimerManager.m in Sources */,
+				AA2F1E1517ECD8C0001AB1D6 /* TMIntervalTimer.m in Sources */,
 				AA2F1DEF17ECD84D001AB1D6 /* AppDelegate.m in Sources */,
 				AA2F1DEB17ECD84D001AB1D6 /* main.m in Sources */,
 			);
@@ -466,6 +466,7 @@
 				AA2F1E0F17ECD84D001AB1D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AA2F1E1017ECD84D001AB1D6 /* Build configuration list for PBXNativeTarget "TimeMeTests" */ = {
 			isa = XCConfigurationList;
@@ -474,6 +475,7 @@
 				AA2F1E1217ECD84D001AB1D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

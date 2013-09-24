@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 KCBODK. All rights reserved.
 //
 
-#import "TimerManager.h"
+#import "TMIntervalTimer.h"
 
 
 /*  User sets interval for a duration,
@@ -14,7 +14,7 @@
     When app is awake, flash on interval.
 */
 
-@implementation TimerManager
+@implementation TMIntervalTimer
 
 @synthesize intervalLength = _intervalLength;
 @synthesize timerLength = _timerLength;
