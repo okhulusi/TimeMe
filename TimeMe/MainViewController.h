@@ -10,18 +10,20 @@
 #import "TMIntervalTimer.h"
 
 @interface MainViewController : UIViewController<UIPickerViewDelegate,UIPickerViewDataSource>
-{}
-
-@property (nonatomic, strong) UILabel *titleLabel;
-
-@property (nonatomic, strong) UILabel *totalTimePickerLabel;
-@property (nonatomic, strong) UIPickerView *totalTimePickerView;
-
-@property (nonatomic, strong) UILabel *pickerViewLabel;
-@property (nonatomic, strong) UIPickerView *intervalPickerView;
-
-@property (nonatomic, strong) TMIntervalTimer *timer;
-
-@property (nonatomic, strong) UIButton *startButton;
+{
+    UILabel *secLabel;
+    UILabel *minLabel;
+    UILabel *hourLabel;
+    
+    UILabel *totalTimePickerLabel;
+    UIPickerView *totalTimePickerView;
+    
+    UILabel *pickerViewLabel;
+    UIPickerView *intervalPickerView;
+    
+    TMIntervalTimer *timer;
+    
+    UIButton *timerToggleButton;
+}
 
 @end
