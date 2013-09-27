@@ -9,81 +9,60 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "TMIntervalTimer.h"
 
-
-/*  User sets interval for a duration,
-    option to vibrate twice on last ring.
-    When app is awake, flash on interval.
-*/
+@interface TMIntervalTimer () {
+    NSTimeInterval _timerStart;
+    NSTimeInterval _intervalStart;
+}
+- (void)_updateTimers;
+@end
 
 @implementation TMIntervalTimer
 
 @synthesize timerLength = _timerLength;
 @synthesize intervalLength = _intervalLength;
 
-@synthesize counter = _counter;
-
-- (id) init
-{
-    if(self = [super init]){
-        _counter = 0;
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _timerLength = 0;
+        _intervalLength = 0;
+        _timerStart = 0;
+        _intervalStart = 0;
     }
-    
     return self;
 }
 
-- (id) initWithTimerLength: (NSTimeInterval)timerLength andIntervalLength: (NSTimeInterval)intervalLength
-{
-    if(self = [super init]){
-        _timerLength = timerLength;
-        _intervalLength = intervalLength;
-        _counter = 0;
-    }
-    
-    return self;
+- (void) startTimer {
+    _running = YES;
+    _timerStart = [NSDate timeIntervalSinceReferenceDate];
+    _intervalStart = _timerStart;
+    [self _updateTimers];
 }
 
-- (void)intervalTimerDidFinishInterval:(TMIntervalTimer *)intervalTimer
-{
-    AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
+- (void) stopTimer {
+    _running = NO;
 }
 
-- (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer
-{
-     AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
-     AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
-    //switch to new scene
-}
-
-- (void) startTimer
-{
-    
-}
-
-- (void) stopTimer
-{
-    
-}
-
-//pseudo code, not to be implemented
-- (void) update:(NSInteger)dt
-{
-    _counter+=dt;
-    if((int)_counter % (int)_timerLength == 0){
-        for(int i = 0; i < 4; i++){
-            AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
-            wait(1);
-            //end timer entirely.
+- (void)_updateTimers {
+    if (_running) {
+        NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
+        
+        NSTimeInterval elapsedTimeForInterval = currentTime - _intervalStart;
+        if (elapsedTimeForInterval >= _intervalLength) {
+            _intervalStart = currentTime;
+            if ([self.delegate respondsToSelector:@selector(intervalTimerDidFinishInterval:)]) {
+                [self.delegate intervalTimerDidFinishInterval:self];
+            }
         }
-    }
-    
-    // Vibrate once per interval
-    if((int)_counter % (int)_intervalLength == 0){
-        AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
-    }
-    
-    //Vibrate an additional time if this is the last interval
-    if((int)_counter % (int)_intervalLength == 0 && _timerLength - _counter == _intervalLength){
-        AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
+        
+        NSTimeInterval elapsedTimeForTimer = currentTime - _timerStart;
+        if (elapsedTimeForTimer >= _timerLength) {
+            _running = NO;
+            if ([self.delegate respondsToSelector:@selector(intervalTimerDidFinishTimer:)]) {
+                [self.delegate intervalTimerDidFinishTimer:self];
+            }
+        }
+        [self performSelector:@selector(_updateTimers) withObject:nil afterDelay:.1];
     }
 }
 
