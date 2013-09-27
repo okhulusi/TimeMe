@@ -16,25 +16,49 @@
 
 @implementation MainViewController
 
-@synthesize label = _label;
+@synthesize titleLabel = _titleLabel;
 @synthesize startButton = _startButton;
-@synthesize pickerView = _pickerView;
 
-- (void)loadView {
+@synthesize totalTimePickerLabel = _totalTimePickerLabel;
+@synthesize totalTimePickerView = _totalTimePickerView;
+
+@synthesize intervalPickerView = _intervalPickerView;
+@synthesize pickerViewLabel = _pickerViewLabel;
+
+- (void)loadView
+{
     [super loadView];
     CGFloat width = self.view.frame.size.width;
-    CGFloat height = self.view.frame.size.height;
+ // CGFloat height = self.view.frame.size.height;
     
-    _label = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 30.0f, 100.0f, 200.0f, 30.0f)];
-    [_label setText:@"Time Me"];
+    //Title label
+    _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 30.0f, 50.0f, 200.0f, 30.0f)];
+    [_titleLabel setText:@"Time Me"];
+    [self.view addSubview:_titleLabel];
     
-    [self.view addSubview:_label];
+    //Total Time Label
+    _totalTimePickerLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f, 140.0f, 200.0f, 30.0f)];
+    [_totalTimePickerLabel setText:@"Enter Total Time Length"];
+    [self.view addSubview:_totalTimePickerLabel];
     
-    _pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 200.0f, 200.0f, 30.0f)];
-    _pickerView.delegate = self;
-    _pickerView.showsSelectionIndicator = YES;
-    [self.view addSubview:_pickerView];
+    //Total Time Picker
+    _totalTimePickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 100.0f, 200.0f, 30.0f)];
+    _totalTimePickerView.delegate = self;
+    _totalTimePickerView.showsSelectionIndicator = YES;
+    [self.view addSubview:_totalTimePickerView];
     
+    //Interval Time Label
+    _pickerViewLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f,290.0f, 200.0f, 30.0f)];
+    [_pickerViewLabel setText:@"Enter a Vibrate Interval"];
+    [self.view addSubview:_pickerViewLabel];
+    
+    //Interval Time Picker
+    _intervalPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 250.0f, 200.0f, 30.0f)];
+    _intervalPickerView.delegate = self;
+    _intervalPickerView.showsSelectionIndicator = YES;
+    [self.view addSubview:_intervalPickerView];
+    
+    //Start Button
     _startButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [_startButton addTarget:self action:@selector(startButtonPressed) forControlEvents:UIControlEventTouchDown];
     [_startButton setTitle:@"Start Timer" forState:UIControlStateNormal];
@@ -50,23 +74,26 @@
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
-    //Handle the selection
+    //Handles the Selection
 }
 
 //Tell the picker how many rows are available for a given component
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component{
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
     NSUInteger numRows = 60;
     
     return numRows;
 }
 
 //Tells picker how many components it will have
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
     return 1;
 }
 
 //Tell the picker the title for the given component
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
     NSString *title;
     title = [@"" stringByAppendingFormat:@"%d", row];
     
@@ -74,13 +101,14 @@
 }
 
 //Tell the picker the width of each row for a given component
-- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component{
+- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
+{
     int sectionWidth = 300;
-    
     return sectionWidth;
 }
 
-- (void) startButtonPressed{
+- (void) startButtonPressed
+{
     //Work with TimePlay Manager
 }
 

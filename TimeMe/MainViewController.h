@@ -11,10 +11,14 @@
 @interface MainViewController : UIViewController<UIPickerViewDelegate,UIPickerViewDataSource>
 {}
 
-@property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) UILabel *titleLabel;
+
+@property (nonatomic, strong) UILabel *totalTimePickerLabel;
+@property (nonatomic, strong) UIPickerView *totalTimePickerView;
 
 @property (nonatomic, strong) UILabel *pickerViewLabel;
-@property (nonatomic, strong) UIPickerView *pickerView;
+@property (nonatomic, strong) UIPickerView *intervalPickerView;
+
 @property (nonatomic, strong) UIButton *startButton;
 
 @end

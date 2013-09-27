@@ -22,9 +22,12 @@
 @property NSTimeInterval intervalLength;
 @property NSTimeInterval timerLength;
 
+@property NSTimeInterval counter;
+
 @property (weak)id<TMIntervalTimerDelegate>delegate;
 
 - (void)startTimer;
 - (void)stopTimer;
+- (void)update: (NSInteger)dt;
 
 @end
