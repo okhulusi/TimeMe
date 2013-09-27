@@ -21,11 +21,9 @@
 
 @synthesize totalTimePickerLabel = _totalTimePickerLabel;
 @synthesize totalTimePickerView = _totalTimePickerView;
-@synthesize totalTime = _totalTime;
 
 @synthesize intervalPickerView = _intervalPickerView;
 @synthesize pickerViewLabel = _pickerViewLabel;
-@synthesize interval = _interval;
 
 @synthesize timer = _timer;
 
@@ -82,12 +80,12 @@
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
      //Handles the Selection
     if(pickerView.tag == 1){
-        _totalTime = row;
+      //  _totalTime = row;
     } else{
-        _interval = row;
+      //  _interval = row;
     }
-    NSLog(@" Total Time: %d", _totalTime);
-    NSLog(@" Interval: %d", _interval);
+ //   NSLog(@" Total Time: %d", _totalTime);
+ //   NSLog(@" Interval: %d", _interval);
 }
 
 //Tell the picker how many rows are available for a given component
@@ -123,8 +121,8 @@
 - (void) startButtonPressed
 {
     //Work with TimePlay Manager
-    _timer 
-//    [timer initWithTimerLength: _totalTime andIntervalLength: _interval];
+    //
+ //   [timer initWithTimerLength: _totalTime andIntervalLength: _interval];
 }
 
 - (void)didReceiveMemoryWarning

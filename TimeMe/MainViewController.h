@@ -16,11 +16,9 @@
 
 @property (nonatomic, strong) UILabel *totalTimePickerLabel;
 @property (nonatomic, strong) UIPickerView *totalTimePickerView;
-@property NSInteger totalTime;
 
 @property (nonatomic, strong) UILabel *pickerViewLabel;
 @property (nonatomic, strong) UIPickerView *intervalPickerView;
-@property NSInteger interval;
 
 @property (nonatomic, strong) TMIntervalTimer *timer;
 
