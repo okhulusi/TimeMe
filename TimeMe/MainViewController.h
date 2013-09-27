@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TMIntervalTimer.h"
 
 @interface MainViewController : UIViewController<UIPickerViewDelegate,UIPickerViewDataSource>
 {}
@@ -20,6 +21,8 @@
 @property (nonatomic, strong) UILabel *pickerViewLabel;
 @property (nonatomic, strong) UIPickerView *intervalPickerView;
 @property NSInteger interval;
+
+@property (nonatomic, strong) TMIntervalTimer *timer;
 
 @property (nonatomic, strong) UIButton *startButton;
 

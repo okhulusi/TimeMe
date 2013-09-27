@@ -7,7 +7,6 @@
 //
 
 #import "MainViewController.h"
-#import "TMIntervalTimer.h"
 
 @interface MainViewController ()
 
@@ -27,6 +26,8 @@
 @synthesize intervalPickerView = _intervalPickerView;
 @synthesize pickerViewLabel = _pickerViewLabel;
 @synthesize interval = _interval;
+
+@synthesize timer = _timer;
 
 - (void)loadView
 {
@@ -121,9 +122,9 @@
 
 - (void) startButtonPressed
 {
-    TMIntervalTimer *timer;
-//    [timer initWithTimerLength: totalTimePicker.value andIntervalLength: intervalTimePicker.value];
     //Work with TimePlay Manager
+    _timer 
+//    [timer initWithTimerLength: _totalTime andIntervalLength: _interval];
 }
 
 - (void)didReceiveMemoryWarning
