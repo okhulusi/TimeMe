@@ -7,6 +7,7 @@
 //
 
 #import "MainViewController.h"
+#import "TMIntervalTimer.h"
 
 @interface MainViewController ()
 
@@ -21,9 +22,11 @@
 
 @synthesize totalTimePickerLabel = _totalTimePickerLabel;
 @synthesize totalTimePickerView = _totalTimePickerView;
+@synthesize totalTime = _totalTime;
 
 @synthesize intervalPickerView = _intervalPickerView;
 @synthesize pickerViewLabel = _pickerViewLabel;
+@synthesize interval = _interval;
 
 - (void)loadView
 {
@@ -46,6 +49,7 @@
     _totalTimePickerView.delegate = self;
     _totalTimePickerView.showsSelectionIndicator = YES;
     [self.view addSubview:_totalTimePickerView];
+    _totalTimePickerView.tag = 1;
     
     //Interval Time Label
     _pickerViewLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f,290.0f, 200.0f, 30.0f)];
@@ -57,6 +61,7 @@
     _intervalPickerView.delegate = self;
     _intervalPickerView.showsSelectionIndicator = YES;
     [self.view addSubview:_intervalPickerView];
+    _intervalPickerView.tag = 2;
     
     //Start Button
     _startButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -74,7 +79,14 @@
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
-    //Handles the Selection
+     //Handles the Selection
+    if(pickerView.tag == 1){
+        _totalTime = row;
+    } else{
+        _interval = row;
+    }
+    NSLog(@" Total Time: %d", _totalTime);
+    NSLog(@" Interval: %d", _interval);
 }
 
 //Tell the picker how many rows are available for a given component
@@ -109,6 +121,8 @@
 
 - (void) startButtonPressed
 {
+    TMIntervalTimer *timer;
+//    [timer initWithTimerLength: totalTimePicker.value andIntervalLength: intervalTimePicker.value];
     //Work with TimePlay Manager
 }
 

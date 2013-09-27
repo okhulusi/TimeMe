@@ -36,9 +36,22 @@
     if(self = [super init]){
         _timerLength = timerLength;
         _intervalLength = intervalLength;
+        _counter = 0;
     }
     
     return self;
+}
+
+- (void)intervalTimerDidFinishInterval:(TMIntervalTimer *)intervalTimer
+{
+    AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
+}
+
+- (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer
+{
+     AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
+     AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
+    //switch to new scene
 }
 
 - (void) startTimer
