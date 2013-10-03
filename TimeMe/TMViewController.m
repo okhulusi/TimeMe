@@ -18,14 +18,13 @@
 
 @end
 
-
 @implementation TMViewController
 
-- (id)init
-{
-    if(self = [super init]){
-        _timer = [[TMIntervalTimer alloc] init];
+- (id)init {
+    if (self = [super init]) {
         [self setTitle:@"TimeMe"];
+        _timer = [[TMIntervalTimer alloc] init];
+
     }
     return self;
 }
@@ -53,6 +52,9 @@
             NSString *titleText = (indexPath.section == TIMER_VIEW_TAG) ? @"Timer Length" : @"Timer Interval";
             titleText = [titleText stringByAppendingString:@":"];
             [cell.textLabel setText:titleText];
+            
+            NSTimeInterval timeInterval = (indexPath.section == TIMER_VIEW_TAG) ? _timer.timerLength : _timer.intervalLength;
+            [cell.detailTextLabel setText:[NSString stringWithFormat:@"%f",timeInterval]];
         } else { //display a pickerview for this one
         
         }
