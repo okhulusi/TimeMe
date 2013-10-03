@@ -8,20 +8,11 @@
 
 #import "TMViewController.h"
 
+#define TIMER_VIEW_TAG 0
+#define INTERVAL_VIEW_TAG 1
+
 @interface TMViewController () {
-    UILabel *_secLabel;
-    UILabel *_minLabel;
-    UILabel *_hourLabel;
-
-    UILabel *_totalTimePickerLabel;
-    UIPickerView *_totalTimePickerView;
-
-    UILabel *_pickerViewLabel;
-    UIPickerView *_intervalPickerView;
-
     TMIntervalTimer *_timer;
-
-    UIButton *_timerToggleButton;
 }
 
 
@@ -39,58 +30,52 @@
     return self;
 }
 
-- (void)loadView
-{
-    [super loadView];
-    
-    [self.view setBackgroundColor:[UIColor orangeColor]];
-    CGFloat width = self.view.frame.size.width;
- // CGFloat height = self.view.frame.size.height;
-    
-    //Total Time Label
-    _totalTimePickerLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f, 140.0f, 200.0f, 30.0f)];
-    [_totalTimePickerLabel setText:@"Total Time Length"];
-    [self.view addSubview:_totalTimePickerLabel];
-    
-    //Total Time Picker
-    _totalTimePickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 100.0f, 200.0f, 30.0f)];
-    _totalTimePickerView.delegate = self;
-    _totalTimePickerView.showsSelectionIndicator = YES;
-    [self.view addSubview:_totalTimePickerView];
-    _totalTimePickerView.tag = 1;
-    
-    //Interval Time Label
-    _pickerViewLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f,290.0f, 200.0f, 30.0f)];
-    [_pickerViewLabel setText:@"Enter a Vibrate Interval"];
-    [self.view addSubview:_pickerViewLabel];
-    
-    //Interval Time Picker
-    _intervalPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 250.0f, 200.0f, 30.0f)];
-    _intervalPickerView.delegate = self;
-    _intervalPickerView.showsSelectionIndicator = YES;
-    [self.view addSubview:_intervalPickerView];
-    _intervalPickerView.tag = 2;
-    
-    //Start Button
-    _timerToggleButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [_timerToggleButton addTarget:self action:@selector(timerToggleButtonPressed) forControlEvents:UIControlEventTouchDown];
-    [_timerToggleButton setTitle:@"Start Timer" forState:UIControlStateNormal];
-    _timerToggleButton.frame = CGRectMake(width/2 - 100.0f, 400.0f, 200.0f, 30.0f);
-    [self.view addSubview:_timerToggleButton];
+#pragma mark - UITableView
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 3;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 1;
 }
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = nil;
+    if (indexPath.section != 2) { //we're a picker section
+        if (indexPath.row == 0) { //we display info on the timer, not the timer picker itself
+            static NSString *kTimerPickerTitleCellID = @"timercelltitlepickerid";
+            cell = [tableView dequeueReusableCellWithIdentifier:kTimerPickerTitleCellID];
+            if (!cell) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
+                                              reuseIdentifier:kTimerPickerTitleCellID];
+            }
+            NSString *titleText = (indexPath.section == TIMER_VIEW_TAG) ? @"Timer Length" : @"Timer Interval";
+            titleText = [titleText stringByAppendingString:@":"];
+            [cell.textLabel setText:titleText];
+        } else { //display a pickerview for this one
+        
+        }
+    } else {
+        static NSString *kTimerToggleCellID = @"timertogglecellid";
+        cell = [tableView dequeueReusableCellWithIdentifier:kTimerToggleCellID];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                          reuseIdentifier:kTimerToggleCellID];
+        }
+        [cell.textLabel setTextAlignment:NSTextAlignmentCenter];
+        [cell.textLabel setText:@"Start Timer"];
+    }
+    return cell;
+}
+
+#pragma mark - UIPickerView
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
      //Handles the Selection
-    if(pickerView.tag == 1){
+    if (pickerView.tag == TIMER_VIEW_TAG) {
         [_timer setTimerLength:row];
-    } else{
+    } else if (pickerView.tag == INTERVAL_VIEW_TAG) {
         [_timer setIntervalLength:row];
     }
 }
@@ -128,11 +113,6 @@
 {
     int sectionWidth = 60;
     return sectionWidth;
-}
-
-- (void) timerToggleButtonPressed
-{
-    [_timer startTimer];
 }
 
 - (void)didReceiveMemoryWarning
