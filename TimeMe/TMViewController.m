@@ -6,15 +6,15 @@
 //  Copyright (c) 2013 KCBODK. All rights reserved.
 //
 
-#import "MainViewController.h"
+#import "TMViewController.h"
 
-@interface MainViewController ()
+@interface TMViewController ()
 
 
 @end
 
 
-@implementation MainViewController
+@implementation TMViewController
 
 - (id)init
 {

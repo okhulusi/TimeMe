@@ -13,7 +13,7 @@
 		AA2F1DE917ECD84D001AB1D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA2F1DE717ECD84D001AB1D6 /* InfoPlist.strings */; };
 		AA2F1DEB17ECD84D001AB1D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1DEA17ECD84D001AB1D6 /* main.m */; };
 		AA2F1DEF17ECD84D001AB1D6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1DEE17ECD84D001AB1D6 /* AppDelegate.m */; };
-		AA2F1DF517ECD84D001AB1D6 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1DF417ECD84D001AB1D6 /* MainViewController.m */; };
+		AA2F1DF517ECD84D001AB1D6 /* TMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1DF417ECD84D001AB1D6 /* TMViewController.m */; };
 		AA2F1DF717ECD84D001AB1D6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA2F1DF617ECD84D001AB1D6 /* Images.xcassets */; };
 		AA2F1DFE17ECD84D001AB1D6 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA2F1DFD17ECD84D001AB1D6 /* XCTest.framework */; };
 		AA2F1DFF17ECD84D001AB1D6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA2F1DDE17ECD84D001AB1D6 /* Foundation.framework */; };
@@ -44,8 +44,8 @@
 		AA2F1DEC17ECD84D001AB1D6 /* TimeMe-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TimeMe-Prefix.pch"; sourceTree = "<group>"; };
 		AA2F1DED17ECD84D001AB1D6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AA2F1DEE17ECD84D001AB1D6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		AA2F1DF317ECD84D001AB1D6 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
-		AA2F1DF417ECD84D001AB1D6 /* MainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		AA2F1DF317ECD84D001AB1D6 /* TMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TMViewController.h; sourceTree = "<group>"; };
+		AA2F1DF417ECD84D001AB1D6 /* TMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TMViewController.m; sourceTree = "<group>"; };
 		AA2F1DF617ECD84D001AB1D6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		AA2F1DFC17ECD84D001AB1D6 /* TimeMeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeMeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA2F1DFD17ECD84D001AB1D6 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -115,8 +115,8 @@
 			children = (
 				AA2F1DED17ECD84D001AB1D6 /* AppDelegate.h */,
 				AA2F1DEE17ECD84D001AB1D6 /* AppDelegate.m */,
-				AA2F1DF317ECD84D001AB1D6 /* MainViewController.h */,
-				AA2F1DF417ECD84D001AB1D6 /* MainViewController.m */,
+				AA2F1DF317ECD84D001AB1D6 /* TMViewController.h */,
+				AA2F1DF417ECD84D001AB1D6 /* TMViewController.m */,
 				AA2F1E1317ECD8C0001AB1D6 /* TMIntervalTimer.h */,
 				AA2F1E1417ECD8C0001AB1D6 /* TMIntervalTimer.m */,
 				AA2F1DF617ECD84D001AB1D6 /* Images.xcassets */,
@@ -250,7 +250,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA2F1DF517ECD84D001AB1D6 /* MainViewController.m in Sources */,
+				AA2F1DF517ECD84D001AB1D6 /* TMViewController.m in Sources */,
 				AA2F1E1517ECD8C0001AB1D6 /* TMIntervalTimer.m in Sources */,
 				AA2F1DEF17ECD84D001AB1D6 /* AppDelegate.m in Sources */,
 				AA2F1DEB17ECD84D001AB1D6 /* main.m in Sources */,

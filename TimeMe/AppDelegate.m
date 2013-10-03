@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "MainViewController.h"
+#import "TMViewController.h"
 
 @implementation AppDelegate
 
@@ -18,7 +18,7 @@
     
     self.window.backgroundColor = [UIColor orangeColor];
     
-    MainViewController *viewController = [[MainViewController alloc] init];
+    TMViewController *viewController = [[TMViewController alloc] init];
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     [self.window setRootViewController:navigationController];

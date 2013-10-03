@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TMIntervalTimer.h"
 
-@interface MainViewController : UIViewController<UIPickerViewDelegate,UIPickerViewDataSource>
+@interface TMViewController : UIViewController<UIPickerViewDelegate,UIPickerViewDataSource>
 {
     UILabel *secLabel;
     UILabel *minLabel;
