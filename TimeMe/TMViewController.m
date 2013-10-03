@@ -8,7 +8,21 @@
 
 #import "TMViewController.h"
 
-@interface TMViewController ()
+@interface TMViewController () {
+    UILabel *_secLabel;
+    UILabel *_minLabel;
+    UILabel *_hourLabel;
+
+    UILabel *_totalTimePickerLabel;
+    UIPickerView *_totalTimePickerView;
+
+    UILabel *_pickerViewLabel;
+    UIPickerView *_intervalPickerView;
+
+    TMIntervalTimer *_timer;
+
+    UIButton *_timerToggleButton;
+}
 
 
 @end
@@ -19,7 +33,7 @@
 - (id)init
 {
     if(self = [super init]){
-        timer = [[TMIntervalTimer alloc] init];
+        _timer = [[TMIntervalTimer alloc] init];
         [self setTitle:@"TimeMe"];
     }
     return self;
@@ -34,35 +48,35 @@
  // CGFloat height = self.view.frame.size.height;
     
     //Total Time Label
-    totalTimePickerLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f, 140.0f, 200.0f, 30.0f)];
-    [totalTimePickerLabel setText:@"Enter Total Time Length"];
-    [self.view addSubview:totalTimePickerLabel];
+    _totalTimePickerLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f, 140.0f, 200.0f, 30.0f)];
+    [_totalTimePickerLabel setText:@"Total Time Length"];
+    [self.view addSubview:_totalTimePickerLabel];
     
     //Total Time Picker
-    totalTimePickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 100.0f, 200.0f, 30.0f)];
-    totalTimePickerView.delegate = self;
-    totalTimePickerView.showsSelectionIndicator = YES;
-    [self.view addSubview:totalTimePickerView];
-    totalTimePickerView.tag = 1;
+    _totalTimePickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 100.0f, 200.0f, 30.0f)];
+    _totalTimePickerView.delegate = self;
+    _totalTimePickerView.showsSelectionIndicator = YES;
+    [self.view addSubview:_totalTimePickerView];
+    _totalTimePickerView.tag = 1;
     
     //Interval Time Label
-    pickerViewLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f,290.0f, 200.0f, 30.0f)];
-    [pickerViewLabel setText:@"Enter a Vibrate Interval"];
-    [self.view addSubview:pickerViewLabel];
+    _pickerViewLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f,290.0f, 200.0f, 30.0f)];
+    [_pickerViewLabel setText:@"Enter a Vibrate Interval"];
+    [self.view addSubview:_pickerViewLabel];
     
     //Interval Time Picker
-    intervalPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 250.0f, 200.0f, 30.0f)];
-    intervalPickerView.delegate = self;
-    intervalPickerView.showsSelectionIndicator = YES;
-    [self.view addSubview:intervalPickerView];
-    intervalPickerView.tag = 2;
+    _intervalPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 250.0f, 200.0f, 30.0f)];
+    _intervalPickerView.delegate = self;
+    _intervalPickerView.showsSelectionIndicator = YES;
+    [self.view addSubview:_intervalPickerView];
+    _intervalPickerView.tag = 2;
     
     //Start Button
-    timerToggleButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [timerToggleButton addTarget:self action:@selector(timerToggleButtonPressed) forControlEvents:UIControlEventTouchDown];
-    [timerToggleButton setTitle:@"Start Timer" forState:UIControlStateNormal];
-    timerToggleButton.frame = CGRectMake(width/2 - 100.0f, 400.0f, 200.0f, 30.0f);
-    [self.view addSubview:timerToggleButton];
+    _timerToggleButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [_timerToggleButton addTarget:self action:@selector(timerToggleButtonPressed) forControlEvents:UIControlEventTouchDown];
+    [_timerToggleButton setTitle:@"Start Timer" forState:UIControlStateNormal];
+    _timerToggleButton.frame = CGRectMake(width/2 - 100.0f, 400.0f, 200.0f, 30.0f);
+    [self.view addSubview:_timerToggleButton];
 }
 
 - (void)viewDidLoad
@@ -75,9 +89,9 @@
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
      //Handles the Selection
     if(pickerView.tag == 1){
-        [timer setTimerLength:row];
+        [_timer setTimerLength:row];
     } else{
-        [timer setIntervalLength:row];
+        [_timer setIntervalLength:row];
     }
 }
 
@@ -113,7 +127,7 @@
 
 - (void) timerToggleButtonPressed
 {
-    [timer startTimer];
+    [_timer startTimer];
 }
 
 - (void)didReceiveMemoryWarning
