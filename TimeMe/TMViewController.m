@@ -99,7 +99,9 @@
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
     NSUInteger numRows = 60;
-    
+    if (component == 0) { //60 is pretty unreasonable for an hour count
+        numRows = 24;
+    }
     return numRows;
 }
 
@@ -112,9 +114,12 @@
 //Tell the picker the title for the given component
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    NSString *title;
-    title = [@"" stringByAppendingFormat:@"%d", row];
+    NSString *timeModifier = (component == 0) ? @"h" : (component == 1) ? @"m" : @"s";
+    NSString *title = [NSString stringWithFormat:@"%02d%@",row,timeModifier];
     
+    if (component != 2) { //if not a second component
+//        title = [title stringByAppendingString:@":"];
+    }
     return title;
 }
 
