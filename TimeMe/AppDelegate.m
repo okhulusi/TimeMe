@@ -16,8 +16,6 @@
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    self.window.backgroundColor = [UIColor orangeColor];
-    
     TMViewController *viewController = [[TMViewController alloc] init];
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];

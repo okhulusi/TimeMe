@@ -28,6 +28,8 @@
 - (void)loadView
 {
     [super loadView];
+    
+    [self.view setBackgroundColor:[UIColor orangeColor]];
     CGFloat width = self.view.frame.size.width;
  // CGFloat height = self.view.frame.size.height;
     
