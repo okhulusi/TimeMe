@@ -24,6 +24,7 @@
     if (self = [super init]) {
         [self setTitle:@"TimeMe"];
         _timer = [[TMIntervalTimer alloc] init];
+        [_timer setDelegate:self];
     }
     return self;
 }
@@ -148,6 +149,19 @@
 {
     int sectionWidth = 60;
     return sectionWidth;
+}
+
+#pragma mark - TMIntervalTimer
+
+- (void)intervalTimerDidFinishInterval:(TMIntervalTimer *)intervalTimer {
+
+}
+
+- (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UITableViewCell *toggleCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:2]];
+        [toggleCell.textLabel setText:@"Start Timer"];
+    });
 }
 
 - (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime {
