@@ -14,8 +14,7 @@
 @interface TMViewController () {
     TMIntervalTimer *_timer;
 }
-
-
+- (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime;
 @end
 
 @implementation TMViewController
@@ -50,11 +49,11 @@
                                               reuseIdentifier:kTimerPickerTitleCellID];
             }
             NSString *titleText = (indexPath.section == TIMER_VIEW_TAG) ? @"Timer Length" : @"Timer Interval";
-            titleText = [titleText stringByAppendingString:@":"];
             [cell.textLabel setText:titleText];
             
             NSTimeInterval timeInterval = (indexPath.section == TIMER_VIEW_TAG) ? _timer.timerLength : _timer.intervalLength;
-            [cell.detailTextLabel setText:[NSString stringWithFormat:@"%f",timeInterval]];
+            NSString *intervalString = [self _stringForCountdownTime:timeInterval];
+            [cell.detailTextLabel setText:intervalString];
         } else { //display a pickerview for this one
         
         }
@@ -117,10 +116,16 @@
     return sectionWidth;
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime {
+    NSCalendar *calender = [NSCalendar currentCalendar];
+    NSDate *startDate = [[NSDate alloc] init];
+    NSDate *endDate = [[NSDate alloc] initWithTimeInterval:countdownTime sinceDate:startDate];
+    
+    unsigned int conversionFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+    
+    NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
+    NSString *intervalString = [NSString stringWithFormat:@"%02d:%02d:%02d",[components hour],[components minute],[components second]];
+    return intervalString;
 }
 
 @end
