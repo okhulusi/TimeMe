@@ -13,6 +13,7 @@
 
 @interface TMViewController () {
     TMIntervalTimer *_timer;
+    BOOL _showingPicker[2];
 }
 - (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime;
 @end
@@ -23,7 +24,6 @@
     if (self = [super init]) {
         [self setTitle:@"TimeMe"];
         _timer = [[TMIntervalTimer alloc] init];
-
     }
     return self;
 }
@@ -35,7 +35,11 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    NSInteger rowCount = 1;
+    if ((section == TIMER_VIEW_TAG && _showingPicker[TIMER_VIEW_TAG]) || (section == INTERVAL_VIEW_TAG && _showingPicker[INTERVAL_VIEW_TAG])) {
+        rowCount++;
+    }
+    return rowCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -55,7 +59,12 @@
             NSString *intervalString = [self _stringForCountdownTime:timeInterval];
             [cell.detailTextLabel setText:intervalString];
         } else { //display a pickerview for this one
-        
+            static NSString *kPickerViewCellID = @"pickerviewcellid";
+            cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];
+            if (!cell) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kPickerViewCellID];
+            }
+            [cell.textLabel setText:@"PICKER!"];
         }
     } else {
         static NSString *kTimerToggleCellID = @"timertogglecellid";
@@ -68,6 +77,31 @@
         [cell.textLabel setText:@"Start Timer"];
     }
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section == 2) { //if its the select button
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if (!_timer.running) {
+            [_timer startTimer];
+            [cell.textLabel setText:@"Stop Timer"];
+        } else {
+            [_timer stopTimer];
+            [cell.textLabel setText:@"Start Timer"];
+        }
+    } else {
+        if (indexPath.row == 0) {
+            NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:indexPath.section];
+            if (!_showingPicker[indexPath.section]) { //if we're not showing a picker show one
+                _showingPicker[indexPath.section] = YES;
+                [tableView insertRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            } else {
+                _showingPicker[indexPath.section] = NO;
+                [tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
+        }
+    }
 }
 
 #pragma mark - UIPickerView
