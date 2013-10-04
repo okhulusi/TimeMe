@@ -21,17 +21,6 @@
 @synthesize timerLength = _timerLength;
 @synthesize intervalLength = _intervalLength;
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _timerLength = 0;
-        _intervalLength = 0;
-        _timerStart = 0;
-        _intervalStart = 0;
-    }
-    return self;
-}
-
 - (void) startTimer {
     _running = YES;
     _timerStart = [NSDate timeIntervalSinceReferenceDate];
