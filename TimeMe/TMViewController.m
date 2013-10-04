@@ -7,6 +7,7 @@
 //
 
 #import "TMViewController.h"
+#import "TMTimePickerCell.h"
 
 #define TIMER_VIEW_TAG 0
 #define INTERVAL_VIEW_TAG 1
@@ -27,6 +28,18 @@
         [_timer setDelegate:self];
     }
     return self;
+}
+
+- (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime {
+    NSCalendar *calender = [NSCalendar currentCalendar];
+    NSDate *startDate = [[NSDate alloc] init];
+    NSDate *endDate = [[NSDate alloc] initWithTimeInterval:countdownTime sinceDate:startDate];
+    
+    unsigned int conversionFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+    
+    NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
+    NSString *intervalString = [NSString stringWithFormat:@"%02d:%02d:%02d",[components hour],[components minute],[components second]];
+    return intervalString;
 }
 
 #pragma mark - UITableView
@@ -63,9 +76,9 @@
             static NSString *kPickerViewCellID = @"pickerviewcellid";
             cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];
             if (!cell) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kPickerViewCellID];
+                cell = [[TMTimePickerCell alloc] initWithReuseIdentifier:kPickerViewCellID];
             }
-            [cell.textLabel setText:@"PICKER!"];
+            cell.tag = indexPath.section;
         }
     } else {
         static NSString *kTimerToggleCellID = @"timertogglecellid";
@@ -105,50 +118,12 @@
     }
 }
 
-#pragma mark - UIPickerView
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
-     //Handles the Selection
-    if (pickerView.tag == TIMER_VIEW_TAG) {
-        [_timer setTimerLength:row];
-    } else if (pickerView.tag == INTERVAL_VIEW_TAG) {
-        [_timer setIntervalLength:row];
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    CGFloat height = 44;
+    if (indexPath.row == 1) { //its a picker row
+        height = 180;
     }
-}
-
-//Tell the picker how many rows are available for a given component
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    NSUInteger numRows = 60;
-    if (component == 0) { //60 is pretty unreasonable for an hour count
-        numRows = 24;
-    }
-    return numRows;
-}
-
-//Tells picker how many components it will have
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 3;
-}
-
-//Tell the picker the title for the given component
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    NSString *timeModifier = (component == 0) ? @"h" : (component == 1) ? @"m" : @"s";
-    NSString *title = [NSString stringWithFormat:@"%02d%@",row,timeModifier];
-    
-    if (component != 2) { //if not a second component
-//        title = [title stringByAppendingString:@":"];
-    }
-    return title;
-}
-
-//Tell the picker the width of each row for a given component
-- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
-{
-    int sectionWidth = 60;
-    return sectionWidth;
+    return height;
 }
 
 #pragma mark - TMIntervalTimer
@@ -164,16 +139,14 @@
     });
 }
 
-- (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime {
-    NSCalendar *calender = [NSCalendar currentCalendar];
-    NSDate *startDate = [[NSDate alloc] init];
-    NSDate *endDate = [[NSDate alloc] initWithTimeInterval:countdownTime sinceDate:startDate];
-    
-    unsigned int conversionFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
-    
-    NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
-    NSString *intervalString = [NSString stringWithFormat:@"%02d:%02d:%02d",[components hour],[components minute],[components second]];
-    return intervalString;
+#pragma mark - TMTimePicker
+
+- (void)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
+    if (timePickerCell.tag == INTERVAL_VIEW_TAG) {
+        [_timer setIntervalLength:timeInterval];
+    } else if (timePickerCell.tag == TIMER_VIEW_TAG) {
+        [_timer setTimerLength:timeInterval];
+    }
 }
 
 @end
