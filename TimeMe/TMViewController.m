@@ -77,6 +77,8 @@
             cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];
             if (!cell) {
                 cell = [[TMTimePickerCell alloc] initWithReuseIdentifier:kPickerViewCellID];
+                ((TMTimePickerCell *)cell).delegate = self;
+                [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             }
             cell.tag = indexPath.section;
         }
@@ -142,6 +144,10 @@
 #pragma mark - TMTimePicker
 
 - (void)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:timePickerCell.tag]];
+    NSString *intervalString = [self _stringForCountdownTime:timeInterval];
+    [cell.detailTextLabel setText:intervalString];
+    
     if (timePickerCell.tag == INTERVAL_VIEW_TAG) {
         [_timer setIntervalLength:timeInterval];
     } else if (timePickerCell.tag == TIMER_VIEW_TAG) {
