@@ -59,6 +59,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = nil;
     if (indexPath.section != 2) { //we're a picker section
+        NSTimeInterval timeInterval = (indexPath.section == TIMER_VIEW_TAG) ? _timer.timerLength : _timer.intervalLength;
         if (indexPath.row == 0) { //we display info on the timer, not the timer picker itself
             static NSString *kTimerPickerTitleCellID = @"timercelltitlepickerid";
             cell = [tableView dequeueReusableCellWithIdentifier:kTimerPickerTitleCellID];
@@ -69,7 +70,6 @@
             NSString *titleText = (indexPath.section == TIMER_VIEW_TAG) ? @"Timer Length" : @"Timer Interval";
             [cell.textLabel setText:titleText];
             
-            NSTimeInterval timeInterval = (indexPath.section == TIMER_VIEW_TAG) ? _timer.timerLength : _timer.intervalLength;
             NSString *intervalString = [self _stringForCountdownTime:timeInterval];
             [cell.detailTextLabel setText:intervalString];
         } else { //display a pickerview for this one
@@ -80,6 +80,7 @@
                 ((TMTimePickerCell *)cell).delegate = self;
                 [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             }
+            [((TMTimePickerCell *)cell) configureForTimeInterval:timeInterval];
             cell.tag = indexPath.section;
         }
     } else {

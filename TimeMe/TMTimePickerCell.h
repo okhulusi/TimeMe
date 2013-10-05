@@ -17,6 +17,7 @@
 @interface TMTimePickerCell : UITableViewCell<UIPickerViewDelegate,UIPickerViewDataSource>
 
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier;
+- (void)configureForTimeInterval:(NSTimeInterval)timeInterval;
 @property (weak) id<TMTimePickerDelegate>delegate;
 @property (readonly) UIPickerView *pickerView;
 
