@@ -8,6 +8,11 @@
 
 #import "TMTimePickerCell.h"
 
+@interface TMTimePickerCell ()
+- (NSTimeInterval)_timeInterval;
+@end
+
+
 @implementation TMTimePickerCell
 
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier {
@@ -21,11 +26,21 @@
     return self;
 }
 
+- (NSTimeInterval)_timeInterval {
+    NSTimeInterval timeInterval = 0;
+    for (int i = 0; i < _pickerView.numberOfComponents; i++) {
+        NSInteger selectedRow = [_pickerView selectedRowInComponent:i];
+        NSTimeInterval timeIntervalForComponent = pow(60,_pickerView.numberOfComponents - i - 1) * selectedRow;
+        timeInterval += timeIntervalForComponent;
+    }
+    return timeInterval;
+}
+
 #pragma mark - UIPickerView
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     if ([self.delegate respondsToSelector:@selector(timePickerCell:didSetTimeInterval:)]) {
-        NSTimeInterval timeInterval = 0;
+        NSTimeInterval timeInterval = [self _timeInterval];
         [self.delegate timePickerCell:self didSetTimeInterval:timeInterval];
     }
 }
