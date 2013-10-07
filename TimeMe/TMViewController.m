@@ -47,9 +47,22 @@
     CGFloat width = self.view.frame.size.width;
  // CGFloat height = self.view.frame.size.height;
     
+    //Second/Minute/Hour Labels (initalized to hidden)
+    _secLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 + 85.0f, 140.0f, 200.0f, 30.0f)];
+    [_secLabel setHidden:YES];
+    [self.view addSubview:_secLabel];
+    _minLabel= [[UILabel alloc] initWithFrame:CGRectMake(width/2, 140.0f, 200.0f, 30.0f)];
+    [_minLabel setHidden:YES];
+    [self.view addSubview:_minLabel];
+    _hourLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f, 140.0f, 200.0f, 30.0f)];
+    [_hourLabel setHidden:YES];
+    [self.view addSubview:_hourLabel];
+    
     //Total Time Label
     _totalTimePickerLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f, 140.0f, 200.0f, 30.0f)];
+    _totalTimePickerLabel.font = [UIFont fontWithName:@"Courier" size:16.0f];
     [_totalTimePickerLabel setText:@"Total Time Length"];
+    
     [self.view addSubview:_totalTimePickerLabel];
     
     //Total Time Picker
@@ -61,6 +74,7 @@
     
     //Interval Time Label
     _pickerViewLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f,290.0f, 200.0f, 30.0f)];
+     _pickerViewLabel.font = [UIFont fontWithName:@"Courier" size:12.0f];
     [_pickerViewLabel setText:@"Enter a Vibrate Interval"];
     [self.view addSubview:_pickerViewLabel];
     
@@ -132,7 +146,25 @@
 
 - (void) timerToggleButtonPressed
 {
-    [_timer startTimer];
+    if(!_timer.running){
+        [_totalTimePickerLabel setHidden:YES];
+        [_totalTimePickerView setHidden:YES];
+        [_pickerViewLabel setHidden:YES];
+        [_intervalPickerView setHidden:YES];
+        
+        [_timerToggleButton setTitle:@"Pause" forState:UIControlStateNormal];
+        [_secLabel setText:[NSString stringWithFormat:@"%f", _timer.timerLength/60]];
+        [_secLabel setHidden:NO];
+        [_minLabel setText:[NSString stringWithFormat:@"%f", (_timer.timerLength - _timer.timerLength/60)/60]];
+        [_minLabel setHidden:NO];
+        [_hourLabel setText:[NSString stringWithFormat:@"%f", _timer.timerLength - (_timer.timerLength - _timer.timerLength/60)/60]];
+        [_hourLabel setHidden:NO];
+        
+        [_timer startTimer];
+    } else{
+        
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning
