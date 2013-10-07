@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TMIntervalTimer.h"
+#import "TMTimePickerCell.h"
 
-@interface TMViewController : UIViewController<UIPickerViewDelegate,UIPickerViewDataSource>
-
-
+@interface TMViewController : UITableViewController<TMTimePickerDelegate,TMIntervalTimerDelegate>
 @end

@@ -7,38 +7,30 @@
 //
 
 #import "TMViewController.h"
+#import "TMTimePickerCell.h"
+
+#define TIMER_VIEW_TAG 0
+#define INTERVAL_VIEW_TAG 1
 
 @interface TMViewController () {
-    UILabel *_secLabel;
-    UILabel *_minLabel;
-    UILabel *_hourLabel;
-
-    UILabel *_totalTimePickerLabel;
-    UIPickerView *_totalTimePickerView;
-
-    UILabel *_pickerViewLabel;
-    UIPickerView *_intervalPickerView;
-
     TMIntervalTimer *_timer;
-
-    UIButton *_timerToggleButton;
+    BOOL _showingPicker[2];
 }
-
-
+- (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime;
 @end
-
 
 @implementation TMViewController
 
-- (id)init
-{
-    if(self = [super init]){
-        _timer = [[TMIntervalTimer alloc] init];
+- (id)init {
+    if (self = [super init]) {
         [self setTitle:@"TimeMe"];
+        _timer = [[TMIntervalTimer alloc] init];
+        [_timer setDelegate:self];
     }
     return self;
 }
 
+<<<<<<< HEAD
 - (void)loadView
 {
     [super loadView];
@@ -64,14 +56,16 @@
     [_totalTimePickerLabel setText:@"Total Time Length"];
     
     [self.view addSubview:_totalTimePickerLabel];
+=======
+- (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime {
+    NSCalendar *calender = [NSCalendar currentCalendar];
+    NSDate *startDate = [[NSDate alloc] init];
+    NSDate *endDate = [[NSDate alloc] initWithTimeInterval:countdownTime sinceDate:startDate];
+>>>>>>> 3c48e9e6522dc7d7a97e405f98d5cbb586d0d4f8
     
-    //Total Time Picker
-    _totalTimePickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 100.0f, 200.0f, 30.0f)];
-    _totalTimePickerView.delegate = self;
-    _totalTimePickerView.showsSelectionIndicator = YES;
-    [self.view addSubview:_totalTimePickerView];
-    _totalTimePickerView.tag = 1;
+    unsigned int conversionFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
     
+<<<<<<< HEAD
     //Interval Time Label
     _pickerViewLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f,290.0f, 200.0f, 30.0f)];
      _pickerViewLabel.font = [UIFont fontWithName:@"Courier" size:12.0f];
@@ -91,59 +85,118 @@
     [_timerToggleButton setTitle:@"Start Timer" forState:UIControlStateNormal];
     _timerToggleButton.frame = CGRectMake(width/2 - 100.0f, 400.0f, 200.0f, 30.0f);
     [self.view addSubview:_timerToggleButton];
+=======
+    NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
+    NSString *intervalString = [NSString stringWithFormat:@"%02d:%02d:%02d",[components hour],[components minute],[components second]];
+    return intervalString;
+>>>>>>> 3c48e9e6522dc7d7a97e405f98d5cbb586d0d4f8
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+#pragma mark - UITableView
 
-}
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
-     //Handles the Selection
-    if(pickerView.tag == 1){
-        [_timer setTimerLength:row];
-    } else{
-        [_timer setIntervalLength:row];
-    }
-}
-
-//Tell the picker how many rows are available for a given component
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    NSUInteger numRows = 60;
-    if (component == 0) { //60 is pretty unreasonable for an hour count
-        numRows = 24;
-    }
-    return numRows;
-}
-
-//Tells picker how many components it will have
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 3;
 }
 
-//Tell the picker the title for the given component
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    NSString *timeModifier = (component == 0) ? @"h" : (component == 1) ? @"m" : @"s";
-    NSString *title = [NSString stringWithFormat:@"%02d%@",row,timeModifier];
-    
-    if (component != 2) { //if not a second component
-//        title = [title stringByAppendingString:@":"];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSInteger rowCount = 1;
+    if ((section == TIMER_VIEW_TAG && _showingPicker[TIMER_VIEW_TAG]) || (section == INTERVAL_VIEW_TAG && _showingPicker[INTERVAL_VIEW_TAG])) {
+        rowCount++;
     }
-    return title;
+    return rowCount;
 }
 
-//Tell the picker the width of each row for a given component
-- (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
-{
-    int sectionWidth = 60;
-    return sectionWidth;
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = nil;
+    if (indexPath.section != 2) { //we're a picker section
+        NSTimeInterval timeInterval = (indexPath.section == TIMER_VIEW_TAG) ? _timer.timerLength : _timer.intervalLength;
+        if (indexPath.row == 0) { //we display info on the timer, not the timer picker itself
+            static NSString *kTimerPickerTitleCellID = @"timercelltitlepickerid";
+            cell = [tableView dequeueReusableCellWithIdentifier:kTimerPickerTitleCellID];
+            if (!cell) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
+                                              reuseIdentifier:kTimerPickerTitleCellID];
+            }
+            NSString *titleText = (indexPath.section == TIMER_VIEW_TAG) ? @"Timer Length" : @"Timer Interval";
+            [cell.textLabel setText:titleText];
+            
+            NSString *intervalString = [self _stringForCountdownTime:timeInterval];
+            [cell.detailTextLabel setText:intervalString];
+        } else { //display a pickerview for this one
+            static NSString *kPickerViewCellID = @"pickerviewcellid";
+            cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];
+            if (!cell) {
+                cell = [[TMTimePickerCell alloc] initWithReuseIdentifier:kPickerViewCellID];
+                ((TMTimePickerCell *)cell).delegate = self;
+                [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            }
+            [((TMTimePickerCell *)cell) configureForTimeInterval:timeInterval];
+            cell.tag = indexPath.section;
+        }
+    } else {
+        static NSString *kTimerToggleCellID = @"timertogglecellid";
+        cell = [tableView dequeueReusableCellWithIdentifier:kTimerToggleCellID];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                          reuseIdentifier:kTimerToggleCellID];
+        }
+        [cell.textLabel setTextAlignment:NSTextAlignmentCenter];
+        [cell.textLabel setText:@"Start Timer"];
+    }
+    return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section == 2) { //if its the select button
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if (!_timer.running) {
+            [_timer startTimer];
+            [cell.textLabel setText:@"Stop Timer"];
+        } else {
+            [_timer stopTimer];
+            [cell.textLabel setText:@"Start Timer"];
+        }
+    } else {
+        if (indexPath.row == 0) {
+            NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:indexPath.section];
+            if (!_showingPicker[indexPath.section]) { //if we're not showing a picker show one
+                _showingPicker[indexPath.section] = YES;
+                [tableView insertRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                NSIndexPath *removePath = nil;
+                if (indexPath.section == TIMER_VIEW_TAG && _showingPicker[INTERVAL_VIEW_TAG]) {
+                    _showingPicker[INTERVAL_VIEW_TAG] = NO;
+                    removePath = [NSIndexPath indexPathForRow:1 inSection:INTERVAL_VIEW_TAG];
+                } else if (indexPath.section == INTERVAL_VIEW_TAG && _showingPicker[TIMER_VIEW_TAG]) {
+                    _showingPicker[TIMER_VIEW_TAG] = NO;
+                    removePath = [NSIndexPath indexPathForRow:1 inSection:TIMER_VIEW_TAG];
+                }
+                if (removePath) {
+                    [tableView deleteRowsAtIndexPaths:@[removePath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                }
+            } else {
+                _showingPicker[indexPath.section] = NO;
+                [tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
+        }
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    CGFloat height = 44;
+    if (indexPath.row == 1) { //its a picker row
+        height = 180;
+    }
+    return height;
+}
+
+#pragma mark - TMIntervalTimer
+
+- (void)intervalTimerDidFinishInterval:(TMIntervalTimer *)intervalTimer {
+
+}
+
+<<<<<<< HEAD
 - (void) timerToggleButtonPressed
 {
     if(!_timer.running){
@@ -165,12 +218,27 @@
         
     }
     
+=======
+- (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UITableViewCell *toggleCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:2]];
+        [toggleCell.textLabel setText:@"Start Timer"];
+    });
+>>>>>>> 3c48e9e6522dc7d7a97e405f98d5cbb586d0d4f8
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - TMTimePicker
+
+- (void)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:timePickerCell.tag]];
+    NSString *intervalString = [self _stringForCountdownTime:timeInterval];
+    [cell.detailTextLabel setText:intervalString];
+    
+    if (timePickerCell.tag == INTERVAL_VIEW_TAG) {
+        [_timer setIntervalLength:timeInterval];
+    } else if (timePickerCell.tag == TIMER_VIEW_TAG) {
+        [_timer setTimerLength:timeInterval];
+    }
 }
 
 @end

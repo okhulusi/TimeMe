@@ -21,6 +21,7 @@
 		AA2F1E0817ECD84D001AB1D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA2F1E0617ECD84D001AB1D6 /* InfoPlist.strings */; };
 		AA2F1E0A17ECD84D001AB1D6 /* TimeMeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1E0917ECD84D001AB1D6 /* TimeMeTests.m */; };
 		AA2F1E1517ECD8C0001AB1D6 /* TMIntervalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1E1417ECD8C0001AB1D6 /* TMIntervalTimer.m */; };
+		D3377F8217FF71F400993815 /* TMTimePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D3377F8117FF71F400993815 /* TMTimePickerCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		AA2F1E0917ECD84D001AB1D6 /* TimeMeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeMeTests.m; sourceTree = "<group>"; };
 		AA2F1E1317ECD8C0001AB1D6 /* TMIntervalTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMIntervalTimer.h; sourceTree = "<group>"; };
 		AA2F1E1417ECD8C0001AB1D6 /* TMIntervalTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMIntervalTimer.m; sourceTree = "<group>"; };
+		D3377F8017FF71F400993815 /* TMTimePickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimePickerCell.h; sourceTree = "<group>"; };
+		D3377F8117FF71F400993815 /* TMTimePickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimePickerCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 				AA2F1DF417ECD84D001AB1D6 /* TMViewController.m */,
 				AA2F1E1317ECD8C0001AB1D6 /* TMIntervalTimer.h */,
 				AA2F1E1417ECD8C0001AB1D6 /* TMIntervalTimer.m */,
+				D3377F8017FF71F400993815 /* TMTimePickerCell.h */,
+				D3377F8117FF71F400993815 /* TMTimePickerCell.m */,
 				AA2F1DF617ECD84D001AB1D6 /* Images.xcassets */,
 				AA2F1DE517ECD84D001AB1D6 /* Supporting Files */,
 			);
@@ -254,6 +259,7 @@
 				AA2F1E1517ECD8C0001AB1D6 /* TMIntervalTimer.m in Sources */,
 				AA2F1DEF17ECD84D001AB1D6 /* AppDelegate.m in Sources */,
 				AA2F1DEB17ECD84D001AB1D6 /* main.m in Sources */,
+				D3377F8217FF71F400993815 /* TMTimePickerCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
