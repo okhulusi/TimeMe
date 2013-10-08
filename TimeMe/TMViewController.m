@@ -15,6 +15,8 @@
 @interface TMViewController () {
     TMIntervalTimer *_timer;
     BOOL _showingPicker[2];
+    
+    UIButton *toggleTimerButton;
 }
 - (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime;
 @end
@@ -47,7 +49,7 @@
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -56,6 +58,24 @@
         rowCount++;
     }
     return rowCount;
+}
+
+- (void) loadView {
+    [super loadView];
+    
+    toggleTimerButton = [[UIButton alloc] init];
+    toggleTimerButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
+    CGRect screenBound = [[UIScreen mainScreen] bounds];
+    CGSize screenSize = screenBound.size;
+    CGFloat screenWidth = screenSize.width;
+    CGFloat screenHeight = screenSize.height;
+    toggleTimerButton.frame = CGRectMake(screenWidth/2, screenHeight/2 + 100.0f, 100.0f, 150.0f);
+    [toggleTimerButton addTarget:self action:@selector(toggleTimerButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    toggleTimerButton.titleLabel.textColor = [UIColor greenColor];
+    [toggleTimerButton setTitle:@"Start Timer" forState:UIControlStateNormal];
+    toggleTimerButton.backgroundColor = [UIColor colorWithRed:0.5f green:0.0f blue:0.5f alpha:0.15f];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath { // should be lightweight
@@ -87,35 +107,24 @@
             [((TMTimePickerCell *)cell) configureForTimeInterval:timeInterval];
             cell.tag = indexPath.section;
         }
-    } else { // get rid of this
-        static NSString *kTimerToggleCellID = @"timertogglecellid";
-        cell = [tableView dequeueReusableCellWithIdentifier:kTimerToggleCellID];
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                          reuseIdentifier:kTimerToggleCellID];
-        }
-        [cell.textLabel setTextAlignment:NSTextAlignmentCenter];
-        cell.textLabel.textColor = [UIColor greenColor];
-        cell.contentView.backgroundColor = [UIColor colorWithRed:0.5f green:0.0f blue:0.5f alpha:0.15f];
-        [cell.textLabel setText:@"Start Timer"];
     }
     return cell;
 }
 
+- (void)toggleTimerButtonPressed {
+    if (!_timer.running) {
+        [_timer startTimer];
+        toggleTimerButton.titleLabel.textColor = [UIColor redColor];
+        [toggleTimerButton setTitle:@"Stop Timer" forState:UIControlStateNormal];
+    } else {
+        [_timer stopTimer];
+        toggleTimerButton.titleLabel.textColor = [UIColor greenColor];
+        [toggleTimerButton setTitle:@"Start Timer" forState:UIControlStateNormal];
+    }
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 2) { //if its the select button
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        if (!_timer.running) {
-            [_timer startTimer];
-            cell.textLabel.textColor = [UIColor redColor];
-            [cell.textLabel setText:@"Stop Timer"];
-        } else {
-            [_timer stopTimer];
-            cell.textLabel.textColor = [UIColor greenColor];
-            [cell.textLabel setText:@"Start Timer"];
-        }
-    } else {
         if (indexPath.row == 0) {
             NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:indexPath.section];
             if (!_showingPicker[indexPath.section]) { //if we're not showing a picker show one
@@ -137,7 +146,6 @@
                 [tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             }
         }
-    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
