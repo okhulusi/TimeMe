@@ -32,16 +32,66 @@
     return self;
 }
 
+<<<<<<< HEAD
+- (void)loadView
+{
+    [super loadView];
+    
+    [self.view setBackgroundColor:[UIColor orangeColor]];
+    CGFloat width = self.view.frame.size.width;
+ // CGFloat height = self.view.frame.size.height;
+    
+    //Second/Minute/Hour Labels (initalized to hidden)
+    _secLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 + 85.0f, 140.0f, 200.0f, 30.0f)];
+    [_secLabel setHidden:YES];
+    [self.view addSubview:_secLabel];
+    _minLabel= [[UILabel alloc] initWithFrame:CGRectMake(width/2, 140.0f, 200.0f, 30.0f)];
+    [_minLabel setHidden:YES];
+    [self.view addSubview:_minLabel];
+    _hourLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f, 140.0f, 200.0f, 30.0f)];
+    [_hourLabel setHidden:YES];
+    [self.view addSubview:_hourLabel];
+    
+    //Total Time Label
+    _totalTimePickerLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f, 140.0f, 200.0f, 30.0f)];
+    _totalTimePickerLabel.font = [UIFont fontWithName:@"Courier" size:16.0f];
+    [_totalTimePickerLabel setText:@"Total Time Length"];
+    
+    [self.view addSubview:_totalTimePickerLabel];
+=======
 - (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime {
     NSCalendar *calender = [NSCalendar currentCalendar];
     NSDate *startDate = [[NSDate alloc] init];
     NSDate *endDate = [[NSDate alloc] initWithTimeInterval:countdownTime sinceDate:startDate];
+>>>>>>> 3c48e9e6522dc7d7a97e405f98d5cbb586d0d4f8
     
     unsigned int conversionFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
     
+<<<<<<< HEAD
+    //Interval Time Label
+    _pickerViewLabel = [[UILabel alloc] initWithFrame:CGRectMake(width/2 - 85.0f,290.0f, 200.0f, 30.0f)];
+     _pickerViewLabel.font = [UIFont fontWithName:@"Courier" size:12.0f];
+    [_pickerViewLabel setText:@"Enter a Vibrate Interval"];
+    [self.view addSubview:_pickerViewLabel];
+    
+    //Interval Time Picker
+    _intervalPickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(width/2 - 100.0f, 250.0f, 200.0f, 30.0f)];
+    _intervalPickerView.delegate = self;
+    _intervalPickerView.showsSelectionIndicator = YES;
+    [self.view addSubview:_intervalPickerView];
+    _intervalPickerView.tag = 2;
+    
+    //Start Button
+    _timerToggleButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [_timerToggleButton addTarget:self action:@selector(timerToggleButtonPressed) forControlEvents:UIControlEventTouchDown];
+    [_timerToggleButton setTitle:@"Start Timer" forState:UIControlStateNormal];
+    _timerToggleButton.frame = CGRectMake(width/2 - 100.0f, 400.0f, 200.0f, 30.0f);
+    [self.view addSubview:_timerToggleButton];
+=======
     NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
     NSString *intervalString = [NSString stringWithFormat:@"%02d:%02d:%02d",[components hour],[components minute],[components second]];
     return intervalString;
+>>>>>>> 3c48e9e6522dc7d7a97e405f98d5cbb586d0d4f8
 }
 
 #pragma mark - UITableView
@@ -154,12 +204,36 @@
 
 }
 
+<<<<<<< HEAD
+- (void) timerToggleButtonPressed
+{
+    if(!_timer.running){
+        [_totalTimePickerLabel setHidden:YES];
+        [_totalTimePickerView setHidden:YES];
+        [_pickerViewLabel setHidden:YES];
+        [_intervalPickerView setHidden:YES];
+        
+        [_timerToggleButton setTitle:@"Pause" forState:UIControlStateNormal];
+        [_secLabel setText:[NSString stringWithFormat:@"%f", _timer.timerLength/60]];
+        [_secLabel setHidden:NO];
+        [_minLabel setText:[NSString stringWithFormat:@"%f", (_timer.timerLength - _timer.timerLength/60)/60]];
+        [_minLabel setHidden:NO];
+        [_hourLabel setText:[NSString stringWithFormat:@"%f", _timer.timerLength - (_timer.timerLength - _timer.timerLength/60)/60]];
+        [_hourLabel setHidden:NO];
+        
+        [_timer startTimer];
+    } else{
+        
+    }
+    
+=======
 - (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer {
     dispatch_async(dispatch_get_main_queue(), ^{
         UITableViewCell *toggleCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:2]];
         toggleCell.textLabel.textColor = [UIColor greenColor];
         [toggleCell.textLabel setText:@"Start Timer"];
     });
+>>>>>>> 3c48e9e6522dc7d7a97e405f98d5cbb586d0d4f8
 }
 
 #pragma mark - TMTimePicker
