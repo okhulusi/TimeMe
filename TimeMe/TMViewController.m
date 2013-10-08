@@ -24,7 +24,7 @@
 - (id)init {
     if (self = [super init]) {
         [self setTitle:@"TimeMe"];
-        self.tableView.scrollEnabled = NO;  //Locks tableView
+        self.tableView.scrollEnabled = NO;  //Locks tableView in place
         
         _timer = [[TMIntervalTimer alloc] init];
         [_timer setDelegate:self];
