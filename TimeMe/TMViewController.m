@@ -24,6 +24,8 @@
 - (id)init {
     if (self = [super init]) {
         [self setTitle:@"TimeMe"];
+        self.tableView.scrollEnabled = NO;  //Locks tableView
+        
         _timer = [[TMIntervalTimer alloc] init];
         [_timer setDelegate:self];
     }
@@ -56,7 +58,7 @@
     return rowCount;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath { // should be lightweight
     UITableViewCell *cell = nil;
     if (indexPath.section != 2) { //we're a picker section
         NSTimeInterval timeInterval = (indexPath.section == TIMER_VIEW_TAG) ? _timer.timerLength : _timer.intervalLength;
@@ -72,6 +74,8 @@
             
             NSString *intervalString = [self _stringForCountdownTime:timeInterval];
             [cell.detailTextLabel setText:intervalString];
+            cell.contentView.backgroundColor = [UIColor colorWithRed:0.5f green:0.0f blue:0.5f alpha:0.15f];
+            cell.textLabel.textColor = [UIColor purpleColor];
         } else { //display a pickerview for this one
             static NSString *kPickerViewCellID = @"pickerviewcellid";
             cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];
@@ -83,7 +87,7 @@
             [((TMTimePickerCell *)cell) configureForTimeInterval:timeInterval];
             cell.tag = indexPath.section;
         }
-    } else {
+    } else { // get rid of this
         static NSString *kTimerToggleCellID = @"timertogglecellid";
         cell = [tableView dequeueReusableCellWithIdentifier:kTimerToggleCellID];
         if (!cell) {
@@ -91,6 +95,8 @@
                                           reuseIdentifier:kTimerToggleCellID];
         }
         [cell.textLabel setTextAlignment:NSTextAlignmentCenter];
+        cell.textLabel.textColor = [UIColor greenColor];
+        cell.contentView.backgroundColor = [UIColor colorWithRed:0.5f green:0.0f blue:0.5f alpha:0.15f];
         [cell.textLabel setText:@"Start Timer"];
     }
     return cell;
@@ -102,9 +108,11 @@
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         if (!_timer.running) {
             [_timer startTimer];
+            cell.textLabel.textColor = [UIColor redColor];
             [cell.textLabel setText:@"Stop Timer"];
         } else {
             [_timer stopTimer];
+            cell.textLabel.textColor = [UIColor greenColor];
             [cell.textLabel setText:@"Start Timer"];
         }
     } else {
@@ -149,6 +157,7 @@
 - (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer {
     dispatch_async(dispatch_get_main_queue(), ^{
         UITableViewCell *toggleCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:2]];
+        toggleCell.textLabel.textColor = [UIColor greenColor];
         [toggleCell.textLabel setText:@"Start Timer"];
     });
 }
@@ -159,6 +168,7 @@
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:timePickerCell.tag]];
     NSString *intervalString = [self _stringForCountdownTime:timeInterval];
     [cell.detailTextLabel setText:intervalString];
+    cell.tintColor = [UIColor purpleColor];
     
     if (timePickerCell.tag == INTERVAL_VIEW_TAG) {
         [_timer setIntervalLength:timeInterval];
