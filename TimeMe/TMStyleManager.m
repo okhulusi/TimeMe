@@ -21,4 +21,21 @@ static TMStyleManager *__instance = nil;
     return __instance;
 }
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        _backgroundColor = [UIColor colorWithWhite:.2 alpha:1];
+        _highlightBackgroundColor = [UIColor colorWithWhite:.8 alpha:1];
+        
+        _textColor = [UIColor whiteColor];
+        _highlightTextColor = [_backgroundColor copy];
+        
+        _detailTextColor = [UIColor colorWithRed:0xC2/256. green:0x77/256. blue:0x9A/256. alpha:1];
+        
+        _navigationBarTintColor = [UIColor colorWithRed:0x79/256. green:0x60/256. blue:0x60/256. alpha:1];
+        _navigationBarTitleColor = [UIColor whiteColor];
+    }
+    return self;
+}
+
 @end

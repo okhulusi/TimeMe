@@ -9,6 +9,8 @@
 #import "TMViewController.h"
 #import "TMTimePickerCell.h"
 
+#import "TMStyleManager.h"
+
 #define TIMER_VIEW_TAG 0
 #define INTERVAL_VIEW_TAG 1
 
@@ -63,6 +65,11 @@
 
 - (void)loadView {
     [super loadView];
+    
+    TMStyleManager *styleManager = [TMStyleManager getInstance];
+    [self.view setBackgroundColor:styleManager.backgroundColor];
+    [self.navigationController.navigationBar setBarTintColor:styleManager.navigationBarTintColor];
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : styleManager.navigationBarTitleColor}];
     
     CGFloat buttonHeight = 70;
     CGRect tableFrame = self.view.frame;

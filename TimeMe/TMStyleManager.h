@@ -12,4 +12,17 @@
 
 + (instancetype)getInstance;
 
+@property (readonly) UIColor *backgroundColor;
+@property (readonly) UIColor *highlightBackgroundColor;
+
+@property (readonly) UIColor *textColor;
+@property (readonly) UIColor *highlightTextColor;
+
+@property (readonly) UIColor *detailTextColor;
+@property (readonly) UIColor *highlightDetailTextColor;
+
+@property (readonly) UIColor *navigationBarTintColor;
+@property (readonly) UIColor *navigationBarTitleColor;
+
+
 @end
