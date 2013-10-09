@@ -7,6 +7,8 @@
 //
 
 #import "TMViewController.h"
+
+#import "TMTimeLabelTableViewCell.h"
 #import "TMTimePickerCell.h"
 
 #import "TMStyleManager.h"
@@ -109,8 +111,8 @@
         static NSString *kTimerPickerTitleCellID = @"timercelltitlepickerid";
         cell = [tableView dequeueReusableCellWithIdentifier:kTimerPickerTitleCellID];
         if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
-                                          reuseIdentifier:kTimerPickerTitleCellID];
+            cell = [[TMTimeLabelTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
+                                                   reuseIdentifier:kTimerPickerTitleCellID];
         }
         NSString *titleText = (indexPath.section == TIMER_VIEW_TAG) ? @"Timer Length" : @"Timer Interval";
         [cell.textLabel setText:titleText];

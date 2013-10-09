@@ -23,6 +23,7 @@
 		AA2F1E1517ECD8C0001AB1D6 /* TMIntervalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1E1417ECD8C0001AB1D6 /* TMIntervalTimer.m */; };
 		D3377F8217FF71F400993815 /* TMTimePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D3377F8117FF71F400993815 /* TMTimePickerCell.m */; };
 		D38DE83F1805F22000771267 /* TMStyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE83E1805F22000771267 /* TMStyleManager.m */; };
+		D38DE8421805FC4300771267 /* TMTimeLabelTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE8411805FC4300771267 /* TMTimeLabelTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,8 @@
 		D3377F8117FF71F400993815 /* TMTimePickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimePickerCell.m; sourceTree = "<group>"; };
 		D38DE83D1805F22000771267 /* TMStyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMStyleManager.h; sourceTree = "<group>"; };
 		D38DE83E1805F22000771267 /* TMStyleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMStyleManager.m; sourceTree = "<group>"; };
+		D38DE8401805FC4300771267 /* TMTimeLabelTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimeLabelTableViewCell.h; sourceTree = "<group>"; };
+		D38DE8411805FC4300771267 /* TMTimeLabelTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimeLabelTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +130,8 @@
 				AA2F1E1417ECD8C0001AB1D6 /* TMIntervalTimer.m */,
 				D3377F8017FF71F400993815 /* TMTimePickerCell.h */,
 				D3377F8117FF71F400993815 /* TMTimePickerCell.m */,
+				D38DE8401805FC4300771267 /* TMTimeLabelTableViewCell.h */,
+				D38DE8411805FC4300771267 /* TMTimeLabelTableViewCell.m */,
 				D38DE83D1805F22000771267 /* TMStyleManager.h */,
 				D38DE83E1805F22000771267 /* TMStyleManager.m */,
 				AA2F1DF617ECD84D001AB1D6 /* Images.xcassets */,
@@ -260,6 +265,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D38DE8421805FC4300771267 /* TMTimeLabelTableViewCell.m in Sources */,
 				AA2F1DF517ECD84D001AB1D6 /* TMViewController.m in Sources */,
 				AA2F1E1517ECD8C0001AB1D6 /* TMIntervalTimer.m in Sources */,
 				AA2F1DEF17ECD84D001AB1D6 /* AppDelegate.m in Sources */,
