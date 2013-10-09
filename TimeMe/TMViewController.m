@@ -14,6 +14,8 @@
 
 @interface TMViewController () {
     TMIntervalTimer *_timer;
+    UIButton *_timerToggleButton;
+    
     BOOL _showingPicker[2];
 }
 - (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime;
