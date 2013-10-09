@@ -73,11 +73,13 @@
     [self.navigationController.navigationBar setBarTintColor:styleManager.navigationBarTintColor];
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : styleManager.navigationBarTitleColor}];
     
-    CGFloat buttonHeight = 70;
+    CGFloat buttonHeight = 75;
     CGRect tableFrame = self.view.frame;
     tableFrame.size.height -= buttonHeight;
     
     _tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
+    [_tableView setBackgroundColor:styleManager.backgroundColor];
+    [_tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [_tableView setScrollEnabled:NO];
     [_tableView setDataSource:self];
     [_tableView setDelegate:self];
@@ -160,7 +162,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat height = 44;
+    CGFloat height = 75;
     if (indexPath.row == 1) { //its a picker row
         height = 180;
     }
