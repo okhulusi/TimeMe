@@ -14,11 +14,16 @@
 
 @interface TMViewController () {
     TMIntervalTimer *_timer;
+    
     UIButton *_timerToggleButton;
     
     BOOL _showingPicker[2];
 }
+
+@property UITableView *tableView;
+
 - (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime;
+- (void)_toggleButtonPressed;
 @end
 
 @implementation TMViewController
@@ -45,12 +50,32 @@
     return intervalString;
 }
 
+- (void)_toggleButtonPressed {
+    
+}
+
 #pragma mark - UIViewController
 
 - (void)loadView {
     [super loadView];
-    [self.tableView setScrollEnabled:NO];
+    
+    CGFloat buttonHeight = 70;
+    CGRect tableFrame = self.view.frame;
+    tableFrame.size.height -= buttonHeight;
+    
+    _tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
+    [_tableView setDataSource:self];
+    [_tableView setDelegate:self];
+    [self.view addSubview:_tableView];
+    
+    _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
+    [_timerToggleButton setFrame:CGRectMake(0, CGRectGetMaxY(tableFrame),
+                                           CGRectGetWidth(self.view.frame), buttonHeight)];
+    
+    [self.view addSubview:_timerToggleButton];
 }
+
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
