@@ -24,7 +24,6 @@
 - (id)init {
     if (self = [super init]) {
         [self setTitle:@"TimeMe"];
-        self.tableView.scrollEnabled = NO;  //Locks tableView in place
         
         _timer = [[TMIntervalTimer alloc] init];
         [_timer setDelegate:self];
@@ -44,6 +43,12 @@
     return intervalString;
 }
 
+#pragma mark - UIViewController
+
+- (void)loadView {
+    [super loadView];
+    [self.tableView setScrollEnabled:NO];
+}
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
