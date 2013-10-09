@@ -51,7 +51,12 @@
 }
 
 - (void)_toggleButtonPressed {
-    
+    if (!_timer.running) {
+        [_timer startTimer];
+    } else {
+        [_timer stopTimer];
+    }
+    //adjust button color
 }
 
 #pragma mark - UIViewController
@@ -79,7 +84,7 @@
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -119,55 +124,31 @@
             [((TMTimePickerCell *)cell) configureForTimeInterval:timeInterval];
             cell.tag = indexPath.section;
         }
-    } else { // get rid of this
-        static NSString *kTimerToggleCellID = @"timertogglecellid";
-        cell = [tableView dequeueReusableCellWithIdentifier:kTimerToggleCellID];
-        if (!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                          reuseIdentifier:kTimerToggleCellID];
-        }
-        [cell.textLabel setTextAlignment:NSTextAlignmentCenter];
-        cell.textLabel.textColor = [UIColor greenColor];
-        cell.contentView.backgroundColor = [UIColor colorWithRed:0.5f green:0.0f blue:0.5f alpha:0.15f];
-        [cell.textLabel setText:@"Start Timer"];
     }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 2) { //if its the select button
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        if (!_timer.running) {
-            [_timer startTimer];
-            cell.textLabel.textColor = [UIColor redColor];
-            [cell.textLabel setText:@"Stop Timer"];
-        } else {
-            [_timer stopTimer];
-            cell.textLabel.textColor = [UIColor greenColor];
-            [cell.textLabel setText:@"Start Timer"];
-        }
-    } else {
-        if (indexPath.row == 0) {
-            NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:indexPath.section];
-            if (!_showingPicker[indexPath.section]) { //if we're not showing a picker show one
-                _showingPicker[indexPath.section] = YES;
-                [tableView insertRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                NSIndexPath *removePath = nil;
-                if (indexPath.section == TIMER_VIEW_TAG && _showingPicker[INTERVAL_VIEW_TAG]) {
-                    _showingPicker[INTERVAL_VIEW_TAG] = NO;
-                    removePath = [NSIndexPath indexPathForRow:1 inSection:INTERVAL_VIEW_TAG];
-                } else if (indexPath.section == INTERVAL_VIEW_TAG && _showingPicker[TIMER_VIEW_TAG]) {
-                    _showingPicker[TIMER_VIEW_TAG] = NO;
-                    removePath = [NSIndexPath indexPathForRow:1 inSection:TIMER_VIEW_TAG];
-                }
-                if (removePath) {
-                    [tableView deleteRowsAtIndexPaths:@[removePath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                }
-            } else {
-                _showingPicker[indexPath.section] = NO;
-                [tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    if (indexPath.row == 0) {
+        NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:indexPath.section];
+        if (!_showingPicker[indexPath.section]) { //if we're not showing a picker show one
+            _showingPicker[indexPath.section] = YES;
+            [tableView insertRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            NSIndexPath *removePath = nil;
+            if (indexPath.section == TIMER_VIEW_TAG && _showingPicker[INTERVAL_VIEW_TAG]) {
+                _showingPicker[INTERVAL_VIEW_TAG] = NO;
+                removePath = [NSIndexPath indexPathForRow:1 inSection:INTERVAL_VIEW_TAG];
+            } else if (indexPath.section == INTERVAL_VIEW_TAG && _showingPicker[TIMER_VIEW_TAG]) {
+                _showingPicker[TIMER_VIEW_TAG] = NO;
+                removePath = [NSIndexPath indexPathForRow:1 inSection:TIMER_VIEW_TAG];
             }
+            if (removePath) {
+                [tableView deleteRowsAtIndexPaths:@[removePath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            }
+        } else {
+            _showingPicker[indexPath.section] = NO;
+            [tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         }
     }
 }
