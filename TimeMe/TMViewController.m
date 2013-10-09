@@ -78,6 +78,7 @@
     tableFrame.size.height -= buttonHeight;
     
     _tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
+    [_tableView setScrollEnabled:NO];
     [_tableView setDataSource:self];
     [_tableView setDelegate:self];
     [self.view addSubview:_tableView];
