@@ -8,6 +8,7 @@
 
 #import "TMTimerView.h"
 #import "TMIntervalTimer.h"
+#import "TMStyleManager.h"
 
 #define UPDATE_INTERVAL .1
 
@@ -30,8 +31,23 @@
         _timer = timer;
         _updating = NO;
         
-        [self setBackgroundColor:[UIColor blueColor]];
-        //layout labels
+        TMStyleManager *styleManager = [TMStyleManager getInstance];
+        CGRect labelFrame = CGRectMake(0, 0, frame.size.width, frame.size.height/2);
+        _timerLabel = [[UILabel alloc] initWithFrame:labelFrame];
+        [_timerLabel setTextAlignment:NSTextAlignmentCenter];
+        [_timerLabel setFont:[styleManager.font fontWithSize:70]];
+        [_timerLabel setText:@"00:00:00"];
+        [_timerLabel sizeToFit];
+        [_timerLabel setFrame:CGRectMake(0, frame.size.height/2 - _timerLabel.frame.size.height,
+                                         frame.size.width, _timerLabel.frame.size.height)];
+        [self addSubview:_timerLabel];
+        
+        labelFrame = CGRectMake(0, frame.size.height/2, frame.size.width, frame.size.height/2);
+        _intervalLabel = [[UILabel alloc] initWithFrame:labelFrame];
+        [_intervalLabel setTextAlignment:NSTextAlignmentCenter];
+        [_intervalLabel setFont:[styleManager.font fontWithSize:60]];
+        [_intervalLabel setText:@"00:00:00"];
+        [self addSubview:_intervalLabel];
     }
     return self;
 }
