@@ -11,6 +11,8 @@
 #import "TMTimeLabelTableViewCell.h"
 #import "TMTimePickerCell.h"
 
+#import "TMTimerView.h"
+
 #import "TMStyleManager.h"
 
 #define TIMER_VIEW_TAG 0
@@ -19,13 +21,17 @@
 @interface TMViewController () {
     TMIntervalTimer *_timer;
     UITableView *_tableView;
+    TMTimerView *_timerView;
+    
     UIButton *_timerToggleButton;
+
     
     BOOL _showingPicker[2];
 }
 
 - (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime;
 - (void)_toggleButtonPressed;
+- (void)_fadeInView:(UIView *)inView outView:(UIView *)outView;
 @end
 
 @implementation TMViewController
@@ -55,17 +61,35 @@
 - (void)_toggleButtonPressed {
     NSString *buttonTitle = nil;
     UIColor *titleColor = nil;
+    UIView *inView = nil;
+    UIView *outView = nil;
     if (!_timer.running) {
         [_timer startTimer];
         buttonTitle = @"Stop";
         titleColor = [UIColor redColor];
+        inView = _timerView;
+        outView = _tableView;
     } else {
         [_timer stopTimer];
         buttonTitle = @"Start";
         titleColor = [UIColor greenColor];
+        inView = _tableView;
+        outView = _timerView;
     }
     [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
     [_timerToggleButton setTitleColor:titleColor forState:UIControlStateNormal];
+    [self _fadeInView:inView outView:outView];
+}
+
+- (void)_fadeInView:(UIView *)inView outView:(UIView *)outView {
+    [self.view addSubview:inView];
+    [UIView animateWithDuration:.3
+                     animations:^{
+                         [inView setAlpha:1];
+                         [outView setAlpha:0];
+                     } completion:^(BOOL finished) {
+                         [outView removeFromSuperview];
+                     }];
 }
 
 #pragma mark - UIViewController
@@ -89,6 +113,8 @@
     [_tableView setDataSource:self];
     [_tableView setDelegate:self];
     [self.view addSubview:_tableView];
+    
+    _timerView = [[TMTimerView alloc] initWithFrame:tableFrame intervalTimer:_timer];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
@@ -186,6 +212,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
         [_timerToggleButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
+        [self _fadeInView:_tableView outView:_timerView];
     });
 }
 
