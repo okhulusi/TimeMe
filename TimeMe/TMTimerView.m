@@ -21,6 +21,7 @@
 }
 
 - (void)_updateLabels;
+- (NSString *)_stringForElapsedTime:(NSTimeInterval)elapsedTime forLength:(NSTimeInterval)length;
 @end
 
 @implementation TMTimerView
@@ -52,20 +53,45 @@
     return self;
 }
 
+- (NSString *)_stringForElapsedTime:(NSTimeInterval)elapsedTime forLength:(NSTimeInterval)length {
+    NSTimeInterval countdownTime = length - elapsedTime;
+    
+    NSCalendar *calender = [NSCalendar currentCalendar];
+    NSDate *startDate = [[NSDate alloc] init];
+    NSDate *endDate = [[NSDate alloc] initWithTimeInterval:countdownTime sinceDate:startDate];
+    
+    
+    unsigned int conversionFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
+    
+    NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
+    NSString *intervalString = [NSString stringWithFormat:@"%02d:%02d:%02d",[components hour],[components minute],[components second]];
+    return intervalString;
+}
+
 - (void)setHighlighted:(BOOL)highlighted {
 
 }
 
 - (void)beginUpdating {
-
+    _updating = YES;
+    [self _updateLabels];
 }
 
 - (void)_updateLabels {
-    
+    NSString *timerText = [self _stringForElapsedTime:_timer.timerElapsedTime forLength:_timer.timerLength];
+    NSString *intervalText = [self _stringForElapsedTime:_timer.intervalElapsedTime forLength:_timer.intervalLength];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_timerLabel setText:timerText];
+        [_intervalLabel setText:intervalText];
+    });
+
+    if (_updating) {
+        [self performSelector:@selector(_updateLabels) withObject:nil afterDelay:UPDATE_INTERVAL];
+    }
 }
 
 - (void)endUpdating {
-    
+    _updating = NO;
 }
 
 

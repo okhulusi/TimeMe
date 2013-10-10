@@ -69,12 +69,16 @@
         titleColor = [UIColor redColor];
         inView = _timerView;
         outView = _tableView;
+        
+        [_timerView beginUpdating];
     } else {
         [_timer stopTimer];
         buttonTitle = @"Start";
         titleColor = [UIColor greenColor];
         inView = _tableView;
         outView = _timerView;
+        
+        [_timerView endUpdating];
     }
     [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
     [_timerToggleButton setTitleColor:titleColor forState:UIControlStateNormal];
@@ -210,6 +214,7 @@
 
 - (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer {
     dispatch_async(dispatch_get_main_queue(), ^{
+        [_timerView endUpdating];
         [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
         [_timerToggleButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
         [self _fadeInView:_tableView outView:_timerView];
