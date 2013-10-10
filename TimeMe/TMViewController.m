@@ -55,12 +55,19 @@
 }
 
 - (void)_toggleButtonPressed {
+    NSString *buttonTitle = nil;
+    UIColor *titleColor = nil;
     if (!_timer.running) {
         [_timer startTimer];
+        buttonTitle = @"Stop";
+        titleColor = [UIColor redColor];
     } else {
         [_timer stopTimer];
+        buttonTitle = @"Start";
+        titleColor = [UIColor greenColor];
     }
-    //adjust button color
+    [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
+    [_timerToggleButton setTitleColor:titleColor forState:UIControlStateNormal];
 }
 
 #pragma mark - UIViewController
@@ -86,10 +93,12 @@
     [self.view addSubview:_tableView];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
+    [_timerToggleButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
     [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
     [_timerToggleButton setFrame:CGRectMake(0, CGRectGetMaxY(tableFrame),
                                            CGRectGetWidth(self.view.frame), buttonHeight)];
-    
+    [_timerToggleButton addTarget:self action:@selector(_toggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_timerToggleButton];
 }
 
@@ -177,6 +186,8 @@
 
 - (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer {
     dispatch_async(dispatch_get_main_queue(), ^{
+        [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
+        [_timerToggleButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
     });
 }
 
