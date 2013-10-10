@@ -36,16 +36,16 @@
     if (_running) {
         NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
         
-        NSTimeInterval elapsedTimeForInterval = currentTime - _intervalStart;
-        if (elapsedTimeForInterval >= _intervalLength) {
+        _intervalElapsedTime = currentTime - _intervalStart;
+        if (_intervalElapsedTime >= _intervalLength) {
             _intervalStart = currentTime;
             if ([self.delegate respondsToSelector:@selector(intervalTimerDidFinishInterval:)]) {
                 [self.delegate intervalTimerDidFinishInterval:self];
             }
         }
         
-        NSTimeInterval elapsedTimeForTimer = currentTime - _timerStart;
-        if (elapsedTimeForTimer >= _timerLength) {
+        _timerElapsedTime = currentTime - _timerStart;
+        if (_timerElapsedTime >= _timerLength) {
             _running = NO;
             if ([self.delegate respondsToSelector:@selector(intervalTimerDidFinishTimer:)]) {
                 [self.delegate intervalTimerDidFinishTimer:self];
