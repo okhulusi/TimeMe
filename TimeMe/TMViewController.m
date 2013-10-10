@@ -18,13 +18,11 @@
 
 @interface TMViewController () {
     TMIntervalTimer *_timer;
-    
+    UITableView *_tableView;
     UIButton *_timerToggleButton;
     
     BOOL _showingPicker[2];
 }
-
-@property UITableView *tableView;
 
 - (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime;
 - (void)_toggleButtonPressed;
@@ -194,7 +192,7 @@
 #pragma mark - TMTimePicker
 
 - (void)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:timePickerCell.tag]];
+    UITableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:timePickerCell.tag]];
     NSString *intervalString = [self _stringForCountdownTime:timeInterval];
     [cell.detailTextLabel setText:intervalString];
     
