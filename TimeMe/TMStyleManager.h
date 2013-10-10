@@ -24,5 +24,5 @@
 @property (readonly) UIColor *navigationBarTintColor;
 @property (readonly) UIColor *navigationBarTitleColor;
 
-
+@property (readonly) UIFont *font;
 @end

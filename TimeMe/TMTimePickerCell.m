@@ -7,6 +7,7 @@
 //
 
 #import "TMTimePickerCell.h"
+#import "TMStyleManager.h"
 
 @interface TMTimePickerCell ()
 - (NSTimeInterval)_timeInterval;
@@ -18,7 +19,10 @@
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {
+        TMStyleManager *styleManger = [TMStyleManager getInstance];
+        [self setBackgroundColor:styleManger.backgroundColor];
         _pickerView = [[UIPickerView alloc] initWithFrame:self.contentView.frame];
+        [_pickerView setBackgroundColor:styleManger.backgroundColor];
         [_pickerView setDelegate:self];
         [_pickerView setDataSource:self];
         [self.contentView addSubview:_pickerView];
@@ -51,6 +55,24 @@
 }
 
 #pragma mark - UIPickerView
+
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view {
+    UILabel *rowLabel = (UILabel *)view;
+    if (!rowLabel) {
+        rowLabel = [[UILabel alloc] initWithFrame:(CGRect){0,0,[pickerView rowSizeForComponent:component]}];
+        [rowLabel setTextAlignment:NSTextAlignmentCenter];
+        TMStyleManager *styleManager = [TMStyleManager getInstance];
+        [rowLabel setTextColor:styleManager.textColor];
+        [rowLabel setFont:styleManager.font];
+    }
+    NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02d",row] : [NSString stringWithFormat:@"%d",row];
+    
+    if (component != 2) { //if not a second component
+        title = [title stringByAppendingString:@":"];
+    }
+    [rowLabel setText:title];
+    return rowLabel;
+}
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     if ([self.delegate respondsToSelector:@selector(timePickerCell:didSetTimeInterval:)]) {
