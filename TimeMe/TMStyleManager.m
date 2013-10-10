@@ -25,7 +25,7 @@ static TMStyleManager *__instance = nil;
     self = [super init];
     if (self) {
         _backgroundColor = [UIColor colorWithWhite:.2 alpha:1];
-        _highlightBackgroundColor = [UIColor colorWithWhite:.8 alpha:1];
+        _highlightBackgroundColor = [UIColor colorWithRed:0x85/256. green:0x75/256. blue:0x75/256. alpha:1];
         
         _textColor = [UIColor whiteColor];
         _highlightTextColor = [_backgroundColor copy];
