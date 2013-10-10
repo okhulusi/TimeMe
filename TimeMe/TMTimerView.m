@@ -37,6 +37,7 @@
         _timerLabel = [[UILabel alloc] initWithFrame:labelFrame];
         [_timerLabel setTextAlignment:NSTextAlignmentCenter];
         [_timerLabel setFont:[styleManager.font fontWithSize:70]];
+        [_timerLabel setTextColor:styleManager.textColor];
         [_timerLabel setText:@"00:00:00"];
         [_timerLabel sizeToFit];
         [_timerLabel setFrame:CGRectMake(0, frame.size.height/2 - _timerLabel.frame.size.height,
@@ -46,6 +47,7 @@
         labelFrame = CGRectMake(0, frame.size.height/2, frame.size.width, frame.size.height/2);
         _intervalLabel = [[UILabel alloc] initWithFrame:labelFrame];
         [_intervalLabel setTextAlignment:NSTextAlignmentCenter];
+        [_intervalLabel setTextColor:styleManager.textColor];
         [_intervalLabel setFont:[styleManager.font fontWithSize:60]];
         [_intervalLabel setText:@"00:00:00"];
         [self addSubview:_intervalLabel];
