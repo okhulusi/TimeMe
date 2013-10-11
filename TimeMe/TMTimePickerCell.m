@@ -9,9 +9,15 @@
 #import "TMTimePickerCell.h"
 #import "TMStyleManager.h"
 
-@interface TMTimePickerCell ()
+@interface TMTimePickerCell () {
+    BOOL _labelPosistionedForComponent[2];
+    CGFloat _componentWidth;
+    CGFloat _componentHeight;
+
+}
 - (NSTimeInterval)_timeInterval;
 - (void)_configureForTimeInterval:(NSTimeInterval)timeInterval animated:(BOOL)animated;
+- (void)_addLabelForComponent:(NSInteger)compontent;
 @end
 
 
@@ -20,6 +26,9 @@
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {
+        _componentWidth = 60;
+        _componentHeight = 60;
+        
         TMStyleManager *styleManger = [TMStyleManager getInstance];
         [self setBackgroundColor:styleManger.backgroundColor];
         _pickerView = [[UIPickerView alloc] initWithFrame:self.contentView.frame];
@@ -59,9 +68,33 @@
     [self _configureForTimeInterval:timeInterval animated:NO];
 }
 
+- (void)_addLabelForComponent:(NSInteger)component {
+    CGFloat labelWidth = 10;
+    CGFloat labelHeight = 30;
+    CGRect labelFrame = CGRectMake((component+2)*_componentWidth + 2, (160 - labelHeight)/2., labelWidth, labelHeight);
+    if (component == 0) {
+        labelFrame.origin.x += 6;
+    }
+    UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
+    [label setBackgroundColor:[UIColor clearColor]];
+    
+    [label setText:@":"];
+    [label setTextAlignment:NSTextAlignmentCenter];
+    
+    TMStyleManager *styleManager = [TMStyleManager getInstance];
+    [label setTextColor:styleManager.textColor];
+    [label setFont:[styleManager.font fontWithSize:35]];
+    [self.pickerView addSubview:label];
+}
+
 #pragma mark - UIPickerView
 
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view {
+    if (component < 2 && !_labelPosistionedForComponent[component]) {
+        [self _addLabelForComponent:component];
+        _labelPosistionedForComponent[component] = YES;
+    }
+    
     UILabel *rowLabel = (UILabel *)view;
     if (!rowLabel) {
         rowLabel = [[UILabel alloc] initWithFrame:(CGRect){0,0,[pickerView rowSizeForComponent:component]}];
@@ -71,9 +104,6 @@
     }
     NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02ld",(long)row] : [NSString stringWithFormat:@"%ld",(long)row];
     
-    if (component != 2) { //if not a second component
-        title = [title stringByAppendingString:@" : "];
-    }
     [rowLabel setText:title];
     NSTextAlignment alignment;
     switch (component) {
@@ -105,7 +135,7 @@
 }
 
 - (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component {
-    return 60;
+    return 70;
 }
 
 //Tell the picker how many rows are available for a given component
