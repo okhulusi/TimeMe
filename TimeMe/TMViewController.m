@@ -26,7 +26,6 @@
     UIButton *_timerToggleButton;
 
     BOOL _showingPicker[2];
-    
     UIButton *toggleTimerButton;
 }
 
@@ -172,18 +171,6 @@
         cell.tag = indexPath.section;
     }
     return cell;
-}
-
-- (void)toggleTimerButtonPressed {
-    if (!_timer.running) {
-        [_timer startTimer];
-        toggleTimerButton.titleLabel.textColor = [UIColor redColor];
-        [toggleTimerButton setTitle:@"Stop Timer" forState:UIControlStateNormal];
-    } else {
-        [_timer stopTimer];
-        toggleTimerButton.titleLabel.textColor = [UIColor greenColor];
-        [toggleTimerButton setTitle:@"Start Timer" forState:UIControlStateNormal];
-    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
