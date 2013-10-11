@@ -21,6 +21,8 @@
 
 @property NSTimeInterval intervalLength;
 @property NSTimeInterval timerLength;
+@property (readonly) NSTimeInterval timerElapsedTime;
+@property (readonly) NSTimeInterval intervalElapsedTime;
 @property (readonly) BOOL running;
 @property (weak)id<TMIntervalTimerDelegate>delegate;
 

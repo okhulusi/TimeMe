@@ -11,6 +11,8 @@
 #import "TMTimeLabelTableViewCell.h"
 #import "TMTimePickerCell.h"
 
+#import "TMTimerView.h"
+
 #import "TMStyleManager.h"
 
 #define TIMER_VIEW_TAG 0
@@ -18,18 +20,20 @@
 
 @interface TMViewController () {
     TMIntervalTimer *_timer;
+    UITableView *_tableView;
+    TMTimerView *_timerView;
     
     UIButton *_timerToggleButton;
+
     
     BOOL _showingPicker[2];
     
     UIButton *toggleTimerButton;
 }
 
-@property UITableView *tableView;
-
 - (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime;
 - (void)_toggleButtonPressed;
+- (void)_fadeInView:(UIView *)inView outView:(UIView *)outView;
 @end
 
 @implementation TMViewController
@@ -57,12 +61,41 @@
 }
 
 - (void)_toggleButtonPressed {
+    NSString *buttonTitle = nil;
+    UIColor *titleColor = nil;
+    UIView *inView = nil;
+    UIView *outView = nil;
     if (!_timer.running) {
         [_timer startTimer];
+        buttonTitle = @"Stop";
+        titleColor = [UIColor redColor];
+        inView = _timerView;
+        outView = _tableView;
+        
+        [_timerView beginUpdating];
     } else {
         [_timer stopTimer];
+        buttonTitle = @"Start";
+        titleColor = [UIColor greenColor];
+        inView = _tableView;
+        outView = _timerView;
+        
+        [_timerView endUpdating];
     }
-    //adjust button color
+    [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
+    [_timerToggleButton setTitleColor:titleColor forState:UIControlStateNormal];
+    [self _fadeInView:inView outView:outView];
+}
+
+- (void)_fadeInView:(UIView *)inView outView:(UIView *)outView {
+    [self.view addSubview:inView];
+    [UIView animateWithDuration:.3
+                     animations:^{
+                         [inView setAlpha:1];
+                         [outView setAlpha:0];
+                     } completion:^(BOOL finished) {
+                         [outView removeFromSuperview];
+                     }];
 }
 
 #pragma mark - UIViewController
@@ -87,11 +120,15 @@
     [_tableView setDelegate:self];
     [self.view addSubview:_tableView];
     
+    _timerView = [[TMTimerView alloc] initWithFrame:tableFrame intervalTimer:_timer];
+    
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
+    [_timerToggleButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
     [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
     [_timerToggleButton setFrame:CGRectMake(0, CGRectGetMaxY(tableFrame),
                                            CGRectGetWidth(self.view.frame), buttonHeight)];
-    
+    [_timerToggleButton addTarget:self action:@selector(_toggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_timerToggleButton];
 }
 
@@ -198,7 +235,7 @@
         NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:indexPath.section];
         if (!_showingPicker[indexPath.section]) { //if we're not showing a picker show one
             _showingPicker[indexPath.section] = YES;
-            [tableView insertRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationTop];
             NSIndexPath *removePath = nil;
             if (indexPath.section == TIMER_VIEW_TAG && _showingPicker[INTERVAL_VIEW_TAG]) {
                 _showingPicker[INTERVAL_VIEW_TAG] = NO;
@@ -208,12 +245,16 @@
                 removePath = [NSIndexPath indexPathForRow:1 inSection:TIMER_VIEW_TAG];
             }
             if (removePath) {
+<<<<<<< HEAD
                 [tableView deleteRowsAtIndexPaths:@[removePath] withRowAnimation:UITableViewRowAnimationFade];
 >>>>>>> c0ba35617eda7724904e6616072ac5e0aad633bc
+=======
+                [tableView deleteRowsAtIndexPaths:@[removePath] withRowAnimation:UITableViewRowAnimationTop];
+>>>>>>> e5bdaa46d01c06cdacabb6b887e92adc3b69551f
             }
         } else {
             _showingPicker[indexPath.section] = NO;
-            [tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationTop];
         }
 }
 
@@ -233,13 +274,17 @@
 
 - (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer {
     dispatch_async(dispatch_get_main_queue(), ^{
+        [_timerView endUpdating];
+        [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
+        [_timerToggleButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
+        [self _fadeInView:_tableView outView:_timerView];
     });
 }
 
 #pragma mark - TMTimePicker
 
 - (void)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:timePickerCell.tag]];
+    UITableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:timePickerCell.tag]];
     NSString *intervalString = [self _stringForCountdownTime:timeInterval];
     [cell.detailTextLabel setText:intervalString];
     
