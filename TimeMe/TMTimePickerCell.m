@@ -65,7 +65,6 @@
     UILabel *rowLabel = (UILabel *)view;
     if (!rowLabel) {
         rowLabel = [[UILabel alloc] initWithFrame:(CGRect){0,0,[pickerView rowSizeForComponent:component]}];
-        [rowLabel setTextAlignment:NSTextAlignmentCenter];
         TMStyleManager *styleManager = [TMStyleManager getInstance];
         [rowLabel setTextColor:styleManager.textColor];
         [rowLabel setFont:styleManager.font];
@@ -76,6 +75,22 @@
         title = [title stringByAppendingString:@":"];
     }
     [rowLabel setText:title];
+    NSTextAlignment alignment;
+    switch (component) {
+        case 0:
+            alignment = NSTextAlignmentRight;
+            break;
+        case 1:
+            alignment = NSTextAlignmentCenter;
+            break;
+        case 2:
+            alignment = NSTextAlignmentLeft;
+            break;
+        default:
+            alignment = NSTextAlignmentCenter;
+            break;
+    }
+    [rowLabel setTextAlignment:alignment];
     return rowLabel;
 }
 
