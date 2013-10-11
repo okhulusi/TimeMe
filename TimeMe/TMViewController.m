@@ -26,7 +26,6 @@
     UIButton *_timerToggleButton;
 
     BOOL _showingPicker[2];
-    UIButton *toggleTimerButton;
 }
 
 - (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime;
