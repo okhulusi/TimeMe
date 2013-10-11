@@ -33,9 +33,9 @@
 
 - (NSTimeInterval)_timeInterval {
     NSTimeInterval timeInterval = 0;
-    for (int i = 0; i < _pickerView.numberOfComponents; i++) {
+    for (int i = 0; i < _pickerView.numberOfComponents; i+=2) {
         NSInteger selectedRow = [_pickerView selectedRowInComponent:i];
-        NSTimeInterval timeIntervalForComponent = pow(60,_pickerView.numberOfComponents - i - 1) * selectedRow;
+        NSTimeInterval timeIntervalForComponent = pow(60,(_pickerView.numberOfComponents - i - 1)/2) * selectedRow;
         timeInterval += timeIntervalForComponent;
     }
     return timeInterval;
@@ -51,8 +51,8 @@
     NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
     
     [_pickerView selectRow:[components hour] inComponent:0 animated:animated];
-    [_pickerView selectRow:[components minute] inComponent:1 animated:animated];
-    [_pickerView selectRow:[components second] inComponent:2 animated:animated];
+    [_pickerView selectRow:[components minute] inComponent:2 animated:animated];
+    [_pickerView selectRow:[components second] inComponent:4 animated:animated];
 }
 
 - (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
@@ -71,8 +71,8 @@
     }
     NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02ld",(long)row] : [NSString stringWithFormat:@"%ld",(long)row];
     
-    if (component != 2) { //if not a second component
-        title = [title stringByAppendingString:@" : "];
+    if (component % 2 != 0) { //if an even component
+        title = @" : ";
     }
     [rowLabel setText:title];
     NSTextAlignment alignment;
@@ -80,10 +80,10 @@
         case 0:
             alignment = NSTextAlignmentRight;
             break;
-        case 1:
+        case 2:
             alignment = NSTextAlignmentCenter;
             break;
-        case 2:
+        case 4:
             alignment = NSTextAlignmentLeft;
             break;
         default:
@@ -114,6 +114,8 @@
     NSUInteger numRows = 60;
     if (component == 0) { //60 is pretty unreasonable for an hour count
         numRows = 24;
+    } else if(component % 2 != 0){
+        numRows = 1;
     }
     return numRows;
 }
@@ -121,7 +123,7 @@
 //Tells picker how many components it will have
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
-    return 3;
+    return 5;
 }
 
 //Tell the picker the title for the given component
@@ -129,8 +131,8 @@
 {
     NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02ld",(long)row] : [NSString stringWithFormat:@"%ld",(long)row];
     
-    if (component != 2) { //if not a second component
-        title = [title stringByAppendingString:@":"];
+    if (component %2 != 0) { //if not a second component
+        title = @" : ";
     }
     return title;
 }
