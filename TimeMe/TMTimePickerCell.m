@@ -65,7 +65,7 @@
         [rowLabel setTextColor:styleManager.textColor];
         [rowLabel setFont:styleManager.font];
     }
-    NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02d",row] : [NSString stringWithFormat:@"%d",row];
+    NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02ld",(long)row] : [NSString stringWithFormat:@"%ld",(long)row];
     
     if (component != 2) { //if not a second component
         title = [title stringByAppendingString:@":"];
@@ -100,7 +100,7 @@
 //Tell the picker the title for the given component
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02d",row] : [NSString stringWithFormat:@"%d",row];
+    NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02ld",(long)row] : [NSString stringWithFormat:@"%ld",(long)row];
     
     if (component != 2) { //if not a second component
         title = [title stringByAppendingString:@":"];

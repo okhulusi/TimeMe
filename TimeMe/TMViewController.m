@@ -53,7 +53,7 @@
     unsigned int conversionFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
 
     NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
-    NSString *intervalString = [NSString stringWithFormat:@"%02d:%02d:%02d",[components hour],[components minute],[components second]];
+    NSString *intervalString = [NSString stringWithFormat:@"%02ld:%02ld:%02ld",(long)[components hour],(long)[components minute],(long)[components second]];
     return intervalString;
 }
 
