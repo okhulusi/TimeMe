@@ -230,16 +230,22 @@
 
 #pragma mark - TMTimePicker
 
-- (void)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
-    UITableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:timePickerCell.tag]];
-    NSString *intervalString = [self _stringForCountdownTime:timeInterval];
-    [cell.detailTextLabel setText:intervalString];
-    
+- (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
+    NSTimeInterval validTimeInterval = timeInterval;
+
     if (timePickerCell.tag == INTERVAL_VIEW_TAG) {
-        [_timer setIntervalLength:timeInterval];
+        if (timeInterval > _timer.timerLength) {
+            validTimeInterval = _timer.timerLength;
+        }
+        [_timer setIntervalLength:validTimeInterval];
     } else if (timePickerCell.tag == TIMER_VIEW_TAG) {
-        [_timer setTimerLength:timeInterval];
+        [_timer setTimerLength:validTimeInterval];
     }
+    
+    UITableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:timePickerCell.tag]];
+    NSString *intervalString = [self _stringForCountdownTime:validTimeInterval];
+    [cell.detailTextLabel setText:intervalString];
+    return validTimeInterval;
 }
 
 @end

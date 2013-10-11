@@ -11,6 +11,7 @@
 
 @interface TMTimePickerCell ()
 - (NSTimeInterval)_timeInterval;
+- (void)_configureForTimeInterval:(NSTimeInterval)timeInterval animated:(BOOL)animated;
 @end
 
 
@@ -40,7 +41,7 @@
     return timeInterval;
 }
 
-- (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
+- (void)_configureForTimeInterval:(NSTimeInterval)timeInterval animated:(BOOL)animated {
     NSCalendar *calender = [NSCalendar currentCalendar];
     NSDate *startDate = [[NSDate alloc] init];
     NSDate *endDate = [[NSDate alloc] initWithTimeInterval:timeInterval sinceDate:startDate];
@@ -49,9 +50,13 @@
     
     NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
     
-    [_pickerView selectRow:[components hour] inComponent:0 animated:NO];
-    [_pickerView selectRow:[components minute] inComponent:1 animated:NO];
-    [_pickerView selectRow:[components second] inComponent:2 animated:NO];
+    [_pickerView selectRow:[components hour] inComponent:0 animated:animated];
+    [_pickerView selectRow:[components minute] inComponent:1 animated:animated];
+    [_pickerView selectRow:[components second] inComponent:2 animated:animated];
+}
+
+- (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
+    [self _configureForTimeInterval:timeInterval animated:NO];
 }
 
 #pragma mark - UIPickerView
@@ -77,7 +82,10 @@
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     if ([self.delegate respondsToSelector:@selector(timePickerCell:didSetTimeInterval:)]) {
         NSTimeInterval timeInterval = [self _timeInterval];
-        [self.delegate timePickerCell:self didSetTimeInterval:timeInterval];
+        NSTimeInterval validTimeInvterval = [self.delegate timePickerCell:self didSetTimeInterval:timeInterval];
+        if (timeInterval != validTimeInvterval) {
+            [self _configureForTimeInterval:validTimeInvterval animated:YES];
+        }
     }
 }
 

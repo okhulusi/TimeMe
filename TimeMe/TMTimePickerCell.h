@@ -11,7 +11,8 @@
 @class TMTimePickerCell;
 
 @protocol TMTimePickerDelegate <NSObject>
-- (void)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval;
+//returns the timeinterval that the picker should set itself to, return the time interval sent to keep the changes
+- (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval;
 @end
 
 @interface TMTimePickerCell : UITableViewCell<UIPickerViewDelegate,UIPickerViewDataSource>
