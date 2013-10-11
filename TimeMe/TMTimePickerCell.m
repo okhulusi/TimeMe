@@ -67,12 +67,12 @@
         rowLabel = [[UILabel alloc] initWithFrame:(CGRect){0,0,[pickerView rowSizeForComponent:component]}];
         TMStyleManager *styleManager = [TMStyleManager getInstance];
         [rowLabel setTextColor:styleManager.textColor];
-        [rowLabel setFont:styleManager.font];
+        [rowLabel setFont:[styleManager.font fontWithSize:35]];
     }
     NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02ld",(long)row] : [NSString stringWithFormat:@"%ld",(long)row];
     
     if (component != 2) { //if not a second component
-        title = [title stringByAppendingString:@":"];
+        title = [title stringByAppendingString:@" : "];
     }
     [rowLabel setText:title];
     NSTextAlignment alignment;
@@ -102,6 +102,10 @@
             [self _configureForTimeInterval:validTimeInvterval animated:YES];
         }
     }
+}
+
+- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component {
+    return 60;
 }
 
 //Tell the picker how many rows are available for a given component
