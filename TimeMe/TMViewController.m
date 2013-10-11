@@ -146,24 +146,6 @@
     return rowCount;
 }
 
-- (void) loadView {
-    [super loadView];
-    
-    toggleTimerButton = [[UIButton alloc] init];
-    toggleTimerButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    
-    CGRect screenBound = [[UIScreen mainScreen] bounds];
-    CGSize screenSize = screenBound.size;
-    CGFloat screenWidth = screenSize.width;
-    CGFloat screenHeight = screenSize.height;
-    toggleTimerButton.frame = CGRectMake(screenWidth/2, screenHeight/2 + 100.0f, 100.0f, 150.0f);
-    [toggleTimerButton addTarget:self action:@selector(toggleTimerButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
-    toggleTimerButton.titleLabel.textColor = [UIColor greenColor];
-    [toggleTimerButton setTitle:@"Start Timer" forState:UIControlStateNormal];
-    toggleTimerButton.backgroundColor = [UIColor colorWithRed:0.5f green:0.0f blue:0.5f alpha:0.15f];
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath { // should be lightweight
     UITableViewCell *cell = nil;
     NSTimeInterval timeInterval = (indexPath.section == TIMER_VIEW_TAG) ? _timer.timerLength : _timer.intervalLength;
@@ -174,8 +156,6 @@
             cell = [[TMTimeLabelTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                                    reuseIdentifier:kTimerPickerTitleCellID];
         }
-<<<<<<< HEAD
-=======
         NSString *titleText = (indexPath.section == TIMER_VIEW_TAG) ? @"Timer Length" : @"Timer Interval";
         [cell.textLabel setText:titleText];
         
@@ -191,7 +171,6 @@
         }
         [((TMTimePickerCell *)cell) configureForTimeInterval:timeInterval];
         cell.tag = indexPath.section;
->>>>>>> c0ba35617eda7724904e6616072ac5e0aad633bc
     }
     return cell;
 }
@@ -210,7 +189,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-<<<<<<< HEAD
         if (indexPath.row == 0) {
             NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:indexPath.section];
             if (!_showingPicker[indexPath.section]) { //if we're not showing a picker show one
@@ -230,7 +208,8 @@
             } else {
                 _showingPicker[indexPath.section] = NO;
                 [tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-=======
+            }
+        }
     if (indexPath.row == 0) {
         NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:indexPath.section];
         if (!_showingPicker[indexPath.section]) { //if we're not showing a picker show one
@@ -245,17 +224,14 @@
                 removePath = [NSIndexPath indexPathForRow:1 inSection:TIMER_VIEW_TAG];
             }
             if (removePath) {
-<<<<<<< HEAD
                 [tableView deleteRowsAtIndexPaths:@[removePath] withRowAnimation:UITableViewRowAnimationFade];
->>>>>>> c0ba35617eda7724904e6616072ac5e0aad633bc
-=======
                 [tableView deleteRowsAtIndexPaths:@[removePath] withRowAnimation:UITableViewRowAnimationTop];
->>>>>>> e5bdaa46d01c06cdacabb6b887e92adc3b69551f
             }
         } else {
             _showingPicker[indexPath.section] = NO;
             [tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationTop];
         }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
