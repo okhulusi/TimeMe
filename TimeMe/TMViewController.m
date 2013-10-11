@@ -63,13 +63,15 @@
     UIView *inView = nil;
     UIView *outView = nil;
     if (!_timer.running) {
-        [_timer startTimer];
-        buttonTitle = @"Stop";
-        titleColor = [UIColor redColor];
-        inView = _timerView;
-        outView = _tableView;
-        
-        [_timerView beginUpdating];
+        if (_timer.timerLength) {
+            [_timer startTimer];
+            buttonTitle = @"Stop";
+            titleColor = [UIColor redColor];
+            inView = _timerView;
+            outView = _tableView;
+            
+            [_timerView beginUpdating];
+        }
     } else {
         [_timer stopTimer];
         buttonTitle = @"Start";
@@ -79,9 +81,15 @@
         
         [_timerView endUpdating];
     }
-    [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
-    [_timerToggleButton setTitleColor:titleColor forState:UIControlStateNormal];
-    [self _fadeInView:inView outView:outView];
+    if (buttonTitle) {
+        [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
+    }
+    if (titleColor) {
+        [_timerToggleButton setTitleColor:titleColor forState:UIControlStateNormal];
+    }
+    if (inView && outView) {
+        [self _fadeInView:inView outView:outView];
+    }
 }
 
 - (void)_fadeInView:(UIView *)inView outView:(UIView *)outView {
