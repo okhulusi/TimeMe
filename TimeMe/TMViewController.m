@@ -49,32 +49,29 @@
     NSDate *startDate = [[NSDate alloc] init];
     NSDate *endDate = [[NSDate alloc] initWithTimeInterval:countdownTime sinceDate:startDate];
 
-    
     unsigned int conversionFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
 
     NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
-    NSMutableString *intervalString = nil;
-    if([components hour] != 0){
-            intervalString = [NSMutableString stringWithFormat:@"%02d hr", [components hour]];
+    
+    NSString *intervalString = @"";
+    if([components hour]){
+        intervalString = [NSString stringWithFormat:@"%d hr", [components hour]];
     }
-    if([components minute] != 0){
-        if(intervalString == nil){
-            intervalString = [NSMutableString stringWithFormat:@"%02d min", [components minute]];
-        } else{
-            [intervalString appendFormat:@", %02d min", [components minute]];
+    
+    if([components minute]){
+        NSString *minuteString = [NSString stringWithFormat:@"%d min",[components minute]];
+        if ([intervalString length]) {
+            intervalString = [intervalString stringByAppendingString:@", "];
         }
+        intervalString = [intervalString stringByAppendingString:minuteString];
     }
-    if([components second] != 0){
-        if(intervalString == nil){
-            intervalString = [NSMutableString stringWithFormat:@"%02d sec", [components second]];
-        } else{
-            [intervalString appendFormat:@", %02d sec", [components second]];
-        }
+    
+    NSString *secondString = [NSString stringWithFormat:@"%ld sec",(long)[components second]];
+    if ([intervalString length]) {
+        intervalString = [intervalString stringByAppendingString:@", "];
     }
-         
-    if([components hour] == 0 && [components minute] == 0 && [components second] == 0){
-        intervalString = [NSMutableString stringWithFormat:@"%02d sec", [components second]];
-    }
+    intervalString = [intervalString stringByAppendingString:secondString];
+    
     return intervalString;
 }
 
