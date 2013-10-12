@@ -131,18 +131,13 @@
 			children = (
 				AA2F1DED17ECD84D001AB1D6 /* AppDelegate.h */,
 				AA2F1DEE17ECD84D001AB1D6 /* AppDelegate.m */,
-				AA2F1DF317ECD84D001AB1D6 /* TMViewController.h */,
-				AA2F1DF417ECD84D001AB1D6 /* TMViewController.m */,
-				D38DE84318071F6A00771267 /* TMTimerView.h */,
-				D38DE84418071F6A00771267 /* TMTimerView.m */,
 				AA2F1E1317ECD8C0001AB1D6 /* TMIntervalTimer.h */,
 				AA2F1E1417ECD8C0001AB1D6 /* TMIntervalTimer.m */,
-				D3377F8017FF71F400993815 /* TMTimePickerCell.h */,
-				D3377F8117FF71F400993815 /* TMTimePickerCell.m */,
-				D38DE8401805FC4300771267 /* TMTimeLabelTableViewCell.h */,
-				D38DE8411805FC4300771267 /* TMTimeLabelTableViewCell.m */,
+				AA2F1DF317ECD84D001AB1D6 /* TMViewController.h */,
+				AA2F1DF417ECD84D001AB1D6 /* TMViewController.m */,
 				D38DE83D1805F22000771267 /* TMStyleManager.h */,
 				D38DE83E1805F22000771267 /* TMStyleManager.m */,
+				D38DE8481809BD4800771267 /* Views */,
 				AA2F1DF617ECD84D001AB1D6 /* Images.xcassets */,
 				AA2F1DE517ECD84D001AB1D6 /* Supporting Files */,
 			);
@@ -176,6 +171,19 @@
 				AA2F1E0617ECD84D001AB1D6 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D38DE8481809BD4800771267 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D38DE84318071F6A00771267 /* TMTimerView.h */,
+				D38DE84418071F6A00771267 /* TMTimerView.m */,
+				D3377F8017FF71F400993815 /* TMTimePickerCell.h */,
+				D3377F8117FF71F400993815 /* TMTimePickerCell.m */,
+				D38DE8401805FC4300771267 /* TMTimeLabelTableViewCell.h */,
+				D38DE8411805FC4300771267 /* TMTimeLabelTableViewCell.m */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
