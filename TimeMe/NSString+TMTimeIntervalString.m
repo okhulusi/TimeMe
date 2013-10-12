@@ -21,7 +21,7 @@
     
     NSString *intervalString = @"";
     if([components hour]){
-        intervalString = [NSString stringWithFormat:@"%ld hours", (long)[components hour]];
+        intervalString = [NSString stringWithFormat:@"%ld hour",(long)[components hour]];
         if ([components hour] != 1) {
             intervalString = [intervalString stringByAppendingString:@"s"];
         }
@@ -42,8 +42,8 @@
     if ([components second] != 1) {
         secondString = [secondString stringByAppendingString:@"s"];
     }
-    if ([intervalString length]) {
-        intervalString = [intervalString stringByAppendingString:@", "];
+    if ([intervalString length] && [components second]) {
+        intervalString = [intervalString stringByAppendingString:@", and "];
     }
     if ([components second] || ![intervalString length]) {
         intervalString = [intervalString stringByAppendingString:secondString];

@@ -10,10 +10,11 @@
 
 #import "TMTimeLabelTableViewCell.h"
 #import "TMTimePickerCell.h"
-
 #import "TMTimerView.h"
 
 #import "TMStyleManager.h"
+
+#import "NSString+TMTimeIntervalString.h"
 
 #import <AudioToolbox/AudioToolbox.h>
 
@@ -30,7 +31,6 @@
     BOOL _showingPicker[2];
 }
 
-- (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime;
 - (void)_toggleButtonPressed;
 - (void)_fadeInView:(UIView *)inView outView:(UIView *)outView;
 @end
@@ -45,36 +45,6 @@
         [_timer setDelegate:self];
     }
     return self;
-}
-- (NSString *)_stringForCountdownTime:(NSTimeInterval)countdownTime {
-    NSCalendar *calender = [NSCalendar currentCalendar];
-    NSDate *startDate = [[NSDate alloc] init];
-    NSDate *endDate = [[NSDate alloc] initWithTimeInterval:countdownTime sinceDate:startDate];
-
-    unsigned int conversionFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
-
-    NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
-    
-    NSString *intervalString = @"";
-    if([components hour]){
-        intervalString = [NSString stringWithFormat:@"%d hr", [components hour]];
-    }
-    
-    if([components minute]){
-        NSString *minuteString = [NSString stringWithFormat:@"%d min",[components minute]];
-        if ([intervalString length]) {
-            intervalString = [intervalString stringByAppendingString:@", "];
-        }
-        intervalString = [intervalString stringByAppendingString:minuteString];
-    }
-    
-    NSString *secondString = [NSString stringWithFormat:@"%ld sec",(long)[components second]];
-    if ([intervalString length]) {
-        intervalString = [intervalString stringByAppendingString:@", "];
-    }
-    intervalString = [intervalString stringByAppendingString:secondString];
-    
-    return intervalString;
 }
 
 - (void)_toggleButtonPressed {
@@ -184,7 +154,7 @@
         NSString *titleText = (indexPath.section == TIMER_VIEW_TAG) ? @"For" : @"Alert me every";
         [cell.textLabel setText:titleText];
         
-        NSString *intervalString = [self _stringForCountdownTime:timeInterval];
+        NSString *intervalString = [NSString stringForTimeInterval:timeInterval];
         [cell.detailTextLabel setText:intervalString];
     } else { //display a pickerview for this one
         static NSString *kPickerViewCellID = @"pickerviewcellid";
@@ -265,7 +235,7 @@
     }
     
     UITableViewCell *cell = [_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:timePickerCell.tag]];
-    NSString *intervalString = [self _stringForCountdownTime:validTimeInterval];
+    NSString *intervalString = [NSString stringForTimeInterval:validTimeInterval];
     [cell.detailTextLabel setText:intervalString];
     return validTimeInterval;
 }
