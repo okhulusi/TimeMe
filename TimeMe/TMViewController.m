@@ -15,6 +15,8 @@
 
 #import "TMStyleManager.h"
 
+#import <AudioToolbox/AudioToolbox.h>
+
 #define TIMER_VIEW_TAG 0
 #define INTERVAL_VIEW_TAG 1
 
@@ -234,7 +236,9 @@
 #pragma mark - TMIntervalTimer
 
 - (void)intervalTimerDidFinishInterval:(TMIntervalTimer *)intervalTimer {
-
+    dispatch_async(dispatch_get_main_queue(), ^{
+        AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
+    });
 }
 
 - (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer {
