@@ -10,6 +10,10 @@
 
 @interface TMAlertManager : NSObject
 
-- (instancetype)getInstance;
++ (instancetype)getInstance;
+- (void)scheduleAlertsForLength:(NSTimeInterval)length interval:(NSTimeInterval)interval;
+
+- (void)scheduleAlertsForBackground;
+- (void)cancelBackgroundAlerts;
 
 @end

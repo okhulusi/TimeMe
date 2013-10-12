@@ -17,8 +17,8 @@
 
 #import <AudioToolbox/AudioToolbox.h>
 
-#define TIMER_VIEW_TAG 0
-#define INTERVAL_VIEW_TAG 1
+#define TIMER_VIEW_TAG 1
+#define INTERVAL_VIEW_TAG 0
 
 @interface TMViewController () {
     TMIntervalTimer *_timer;
@@ -181,7 +181,7 @@
             cell = [[TMTimeLabelTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                                    reuseIdentifier:kTimerPickerTitleCellID];
         }
-        NSString *titleText = (indexPath.section == TIMER_VIEW_TAG) ? @"Timer Length" : @"Timer Interval";
+        NSString *titleText = (indexPath.section == TIMER_VIEW_TAG) ? @"For" : @"Alert me every";
         [cell.textLabel setText:titleText];
         
         NSString *intervalString = [self _stringForCountdownTime:timeInterval];

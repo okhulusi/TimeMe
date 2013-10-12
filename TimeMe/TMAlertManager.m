@@ -11,7 +11,7 @@
 @implementation TMAlertManager
 
 static TMAlertManager *__instance = nil;
-- (instancetype)getInstance {
++ (instancetype)getInstance {
     if (!__instance) {
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
@@ -21,4 +21,16 @@ static TMAlertManager *__instance = nil;
     return __instance;
 }
 
+- (void)scheduleAlertsForLength:(NSTimeInterval)length interval:(NSTimeInterval)interval {
+    
+}
+
+
+- (void)scheduleAlertsForBackground {
+
+}
+
+- (void)cancelBackgroundAlerts {
+
+}
 @end
