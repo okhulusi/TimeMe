@@ -8,7 +8,7 @@
 
 #import "TMViewController.h"
 
-#import "TMTimeLabelTableViewCell.h"
+#import "TMTimeLabelCell.h"
 #import "TMTimePickerCell.h"
 #import "TMTimerView.h"
 
@@ -148,7 +148,7 @@
         static NSString *kTimerPickerTitleCellID = @"timercelltitlepickerid";
         cell = [tableView dequeueReusableCellWithIdentifier:kTimerPickerTitleCellID];
         if (!cell) {
-            cell = [[TMTimeLabelTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
+            cell = [[TMTimeLabelCell alloc] initWithStyle:UITableViewCellStyleValue1
                                                    reuseIdentifier:kTimerPickerTitleCellID];
         }
         NSString *titleText = (indexPath.section == TIMER_VIEW_TAG) ? @"For" : @"Alert me every";

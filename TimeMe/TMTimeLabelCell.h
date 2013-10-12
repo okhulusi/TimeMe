@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TMTimeLabelTableViewCell : UITableViewCell
+@interface TMTimeLabelCell : UITableViewCell
 
 @end

@@ -6,10 +6,10 @@
 //  Copyright (c) 2013 KCBODK. All rights reserved.
 //
 
-#import "TMTimeLabelTableViewCell.h"
+#import "TMTimeLabelCell.h"
 #import "TMStyleManager.h"
 
-@implementation TMTimeLabelTableViewCell
+@implementation TMTimeLabelCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

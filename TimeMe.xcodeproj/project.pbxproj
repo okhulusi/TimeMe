@@ -23,7 +23,7 @@
 		AA2F1E1517ECD8C0001AB1D6 /* TMIntervalTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1E1417ECD8C0001AB1D6 /* TMIntervalTimer.m */; };
 		D3377F8217FF71F400993815 /* TMTimePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D3377F8117FF71F400993815 /* TMTimePickerCell.m */; };
 		D38DE83F1805F22000771267 /* TMStyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE83E1805F22000771267 /* TMStyleManager.m */; };
-		D38DE8421805FC4300771267 /* TMTimeLabelTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE8411805FC4300771267 /* TMTimeLabelTableViewCell.m */; };
+		D38DE8421805FC4300771267 /* TMTimeLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE8411805FC4300771267 /* TMTimeLabelCell.m */; };
 		D38DE84518071F6A00771267 /* TMTimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE84418071F6A00771267 /* TMTimerView.m */; };
 		D38DE8471809184D00771267 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D38DE8461809184D00771267 /* AudioToolbox.framework */; };
 		D38DE84B1809BFA400771267 /* TMAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE84A1809BFA400771267 /* TMAlertManager.m */; };
@@ -65,8 +65,8 @@
 		D3377F8117FF71F400993815 /* TMTimePickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimePickerCell.m; sourceTree = "<group>"; };
 		D38DE83D1805F22000771267 /* TMStyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMStyleManager.h; sourceTree = "<group>"; };
 		D38DE83E1805F22000771267 /* TMStyleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMStyleManager.m; sourceTree = "<group>"; };
-		D38DE8401805FC4300771267 /* TMTimeLabelTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimeLabelTableViewCell.h; sourceTree = "<group>"; };
-		D38DE8411805FC4300771267 /* TMTimeLabelTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimeLabelTableViewCell.m; sourceTree = "<group>"; };
+		D38DE8401805FC4300771267 /* TMTimeLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimeLabelCell.h; sourceTree = "<group>"; };
+		D38DE8411805FC4300771267 /* TMTimeLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimeLabelCell.m; sourceTree = "<group>"; };
 		D38DE84318071F6A00771267 /* TMTimerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimerView.h; sourceTree = "<group>"; };
 		D38DE84418071F6A00771267 /* TMTimerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimerView.m; sourceTree = "<group>"; };
 		D38DE8461809184D00771267 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -190,8 +190,8 @@
 				D38DE84418071F6A00771267 /* TMTimerView.m */,
 				D3377F8017FF71F400993815 /* TMTimePickerCell.h */,
 				D3377F8117FF71F400993815 /* TMTimePickerCell.m */,
-				D38DE8401805FC4300771267 /* TMTimeLabelTableViewCell.h */,
-				D38DE8411805FC4300771267 /* TMTimeLabelTableViewCell.m */,
+				D38DE8401805FC4300771267 /* TMTimeLabelCell.h */,
+				D38DE8411805FC4300771267 /* TMTimeLabelCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -292,7 +292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D38DE8421805FC4300771267 /* TMTimeLabelTableViewCell.m in Sources */,
+				D38DE8421805FC4300771267 /* TMTimeLabelCell.m in Sources */,
 				AA2F1DF517ECD84D001AB1D6 /* TMViewController.m in Sources */,
 				D38DE84B1809BFA400771267 /* TMAlertManager.m in Sources */,
 				AA2F1E1517ECD8C0001AB1D6 /* TMIntervalTimer.m in Sources */,
