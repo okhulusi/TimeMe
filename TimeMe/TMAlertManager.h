@@ -10,6 +10,8 @@
 
 @interface TMAlertManager : NSObject
 
++ (NSArray *)alertIntervalsForCountdown:(NSTimeInterval)countdown;
+
 + (instancetype)getInstance;
 - (void)scheduleAlertsForLength:(NSTimeInterval)length interval:(NSTimeInterval)interval;
 

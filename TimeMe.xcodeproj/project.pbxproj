@@ -28,6 +28,7 @@
 		D38DE8471809184D00771267 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D38DE8461809184D00771267 /* AudioToolbox.framework */; };
 		D38DE84B1809BFA400771267 /* TMAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE84A1809BFA400771267 /* TMAlertManager.m */; };
 		D38DE84E1809C5E900771267 /* NSString+TMTimeIntervalString.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE84D1809C5E900771267 /* NSString+TMTimeIntervalString.m */; };
+		D38DE851180A30B200771267 /* NSMutableArray+TMFrontLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE850180A30B200771267 /* NSMutableArray+TMFrontLoading.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +75,8 @@
 		D38DE84A1809BFA400771267 /* TMAlertManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMAlertManager.m; sourceTree = "<group>"; };
 		D38DE84C1809C5E900771267 /* NSString+TMTimeIntervalString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+TMTimeIntervalString.h"; sourceTree = "<group>"; };
 		D38DE84D1809C5E900771267 /* NSString+TMTimeIntervalString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TMTimeIntervalString.m"; sourceTree = "<group>"; };
+		D38DE84F180A30B200771267 /* NSMutableArray+TMFrontLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+TMFrontLoading.h"; sourceTree = "<group>"; };
+		D38DE850180A30B200771267 /* NSMutableArray+TMFrontLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+TMFrontLoading.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +150,8 @@
 				D38DE84A1809BFA400771267 /* TMAlertManager.m */,
 				D38DE84C1809C5E900771267 /* NSString+TMTimeIntervalString.h */,
 				D38DE84D1809C5E900771267 /* NSString+TMTimeIntervalString.m */,
+				D38DE84F180A30B200771267 /* NSMutableArray+TMFrontLoading.h */,
+				D38DE850180A30B200771267 /* NSMutableArray+TMFrontLoading.m */,
 				D38DE8481809BD4800771267 /* Views */,
 				AA2F1DF617ECD84D001AB1D6 /* Images.xcassets */,
 				AA2F1DE517ECD84D001AB1D6 /* Supporting Files */,
@@ -301,6 +306,7 @@
 				AA2F1DEB17ECD84D001AB1D6 /* main.m in Sources */,
 				D38DE84518071F6A00771267 /* TMTimerView.m in Sources */,
 				D38DE83F1805F22000771267 /* TMStyleManager.m in Sources */,
+				D38DE851180A30B200771267 /* NSMutableArray+TMFrontLoading.m in Sources */,
 				D3377F8217FF71F400993815 /* TMTimePickerCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

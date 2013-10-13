@@ -18,8 +18,7 @@
 
 #import <AudioToolbox/AudioToolbox.h>
 
-#define TIMER_VIEW_TAG 1
-#define INTERVAL_VIEW_TAG 0
+#define TIMER_VIEW_TAG 0
 
 @interface TMViewController () {
     TMIntervalTimer *_timer;
@@ -27,8 +26,6 @@
     TMTimerView *_timerView;
     
     UIButton *_timerToggleButton;
-
-    BOOL _showingPicker[2];
 }
 
 - (void)_toggleButtonPressed;
@@ -135,7 +132,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger rowCount = 1;
-    if ((section == TIMER_VIEW_TAG && _showingPicker[TIMER_VIEW_TAG]) || (section == INTERVAL_VIEW_TAG && _showingPicker[INTERVAL_VIEW_TAG])) {
+    if ((section == TIMER_VIEW_TAG && _showingPicker[TIMER_VIEW_TAG])
         rowCount++;
     }
     return rowCount;

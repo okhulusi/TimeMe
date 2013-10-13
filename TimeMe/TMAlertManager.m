@@ -7,8 +7,19 @@
 //
 
 #import "TMAlertManager.h"
+#define TWO_MINUTES 2.*60.
+#define ONE_MINUTE 60.
+#define THIRTY_SECONDS 30.
+#define TEN_SECONDS 10.
 
 @implementation TMAlertManager
+
++ (NSArray *)alertIntervalsForCountdown:(NSTimeInterval)countdown {
+    NSMutableArray *alerts = [[NSMutableArray alloc] initWithCapacity:5];
+    while (countdown >= TWO_MINUTES) {
+        
+    }
+}
 
 static TMAlertManager *__instance = nil;
 + (instancetype)getInstance {
