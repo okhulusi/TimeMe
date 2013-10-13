@@ -7,18 +7,33 @@
 //
 
 #import "TMAlertManager.h"
-#define TWO_MINUTES 2.*60.
-#define ONE_MINUTE 60.
-#define THIRTY_SECONDS 30.
-#define TEN_SECONDS 10.
+#import "NSMutableArray+TMFrontLoading.h"
+
+#define TWO_MINUTES (2.*60.)
+#define ONE_MINUTE (60.)
+#define THIRTY_SECONDS (30.)
+#define TEN_SECONDS (10.)
 
 @implementation TMAlertManager
 
 + (NSArray *)alertIntervalsForCountdown:(NSTimeInterval)countdown {
+    static NSArray *__baseTimes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        __baseTimes = @[@TEN_SECONDS,@THIRTY_SECONDS,@ONE_MINUTE,@TWO_MINUTES];
+    });
     NSMutableArray *alerts = [[NSMutableArray alloc] initWithCapacity:5];
-    while (countdown >= TWO_MINUTES) {
-        
+
+    while (countdown/2. > TWO_MINUTES) {
+        [alerts addObject:@(countdown/2.)];
+        countdown = countdown/2.;
     }
+    for (NSNumber *alertTime in __baseTimes) {
+        if ([alertTime doubleValue] < countdown) {
+            [alerts addObject:alertTime];
+        }
+    }
+    return alerts;
 }
 
 static TMAlertManager *__instance = nil;
