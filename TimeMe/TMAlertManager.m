@@ -14,27 +14,13 @@
 #define THIRTY_SECONDS (30.)
 #define TEN_SECONDS (10.)
 
+@interface TMAlertManager ()
+- (NSArray *)_alertIntervalsForCountdown:(NSTimeInterval)countdown;
+@end
+
 @implementation TMAlertManager
 
-+ (NSArray *)alertIntervalsForCountdown:(NSTimeInterval)countdown {
-    static NSArray *__baseTimes;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        __baseTimes = @[@TEN_SECONDS,@THIRTY_SECONDS,@ONE_MINUTE,@TWO_MINUTES];
-    });
-    NSMutableArray *alerts = [[NSMutableArray alloc] initWithCapacity:5];
 
-    while (countdown/2. > TWO_MINUTES) {
-        [alerts addObject:@(countdown/2.)];
-        countdown = countdown/2.;
-    }
-    for (NSNumber *alertTime in __baseTimes) {
-        if ([alertTime doubleValue] < countdown) {
-            [alerts addObject:alertTime];
-        }
-    }
-    return alerts;
-}
 
 static TMAlertManager *__instance = nil;
 + (instancetype)getInstance {
@@ -45,6 +31,39 @@ static TMAlertManager *__instance = nil;
         });
     }
     return __instance;
+}
+
+- (NSArray *)_alertIntervalsForCountdown:(NSTimeInterval)countdown {
+    static NSArray *__baseTimes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        __baseTimes = @[@TWO_MINUTES,@ONE_MINUTE, @THIRTY_SECONDS, @TEN_SECONDS];
+    });
+    NSMutableArray *alerts = [[NSMutableArray alloc] initWithCapacity:5];
+    
+    while (countdown/2. > TWO_MINUTES) {
+        NSTimeInterval alertTime = (countdown/2.);
+        alertTime = round(alertTime/15.0);
+        alertTime = alertTime * 15;
+        [alerts addObject:@(alertTime)];
+        countdown = alertTime;
+    }
+    for (NSNumber *alertTime in __baseTimes) {
+        if ([alertTime doubleValue] < countdown) {
+            [alerts addObject:alertTime];
+        }
+    }
+    return alerts;
+}
+
+- (void)setTimerLength:(NSTimeInterval)timerLength {
+    _timerLength = timerLength;
+    _alertIntervals = nil;
+}
+
+- (NSArray *)alertIntervals {
+    _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
+    return _alertIntervals;
 }
 
 - (void)scheduleAlertsForLength:(NSTimeInterval)length interval:(NSTimeInterval)interval {

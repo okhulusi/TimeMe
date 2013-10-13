@@ -8,14 +8,25 @@
 
 #import <Foundation/Foundation.h>
 
+@class TMAlertManager;
+
+@protocol TMAlertDelegate <NSObject>
+- (void)alertManager:(TMAlertManager *)alertManager didFireAlert:(NSNumber *)alert;
+@end
+
 @interface TMAlertManager : NSObject
 
-+ (NSArray *)alertIntervalsForCountdown:(NSTimeInterval)countdown;
-
 + (instancetype)getInstance;
-- (void)scheduleAlertsForLength:(NSTimeInterval)length interval:(NSTimeInterval)interval;
+
+- (void)startAlerts;
+- (void)stopAlerts;
 
 - (void)scheduleAlertsForBackground;
 - (void)cancelBackgroundAlerts;
+
+@property (nonatomic) NSTimeInterval timerLength;
+@property (nonatomic) NSArray *alertIntervals;
+@property (nonatomic) BOOL generatingAlerts;
+@property (weak) id<TMAlertDelegate>delegate;
 
 @end
