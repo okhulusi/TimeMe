@@ -29,6 +29,7 @@
 		D38DE84B1809BFA400771267 /* TMAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE84A1809BFA400771267 /* TMAlertManager.m */; };
 		D38DE84E1809C5E900771267 /* NSString+TMTimeIntervalString.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE84D1809C5E900771267 /* NSString+TMTimeIntervalString.m */; };
 		D38DE851180A30B200771267 /* NSMutableArray+TMFrontLoading.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE850180A30B200771267 /* NSMutableArray+TMFrontLoading.m */; };
+		D3BDE84C180A4398005D0AC3 /* TMIntervalLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D3BDE84B180A4398005D0AC3 /* TMIntervalLabelCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,8 @@
 		D38DE84D1809C5E900771267 /* NSString+TMTimeIntervalString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+TMTimeIntervalString.m"; sourceTree = "<group>"; };
 		D38DE84F180A30B200771267 /* NSMutableArray+TMFrontLoading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+TMFrontLoading.h"; sourceTree = "<group>"; };
 		D38DE850180A30B200771267 /* NSMutableArray+TMFrontLoading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+TMFrontLoading.m"; sourceTree = "<group>"; };
+		D3BDE84A180A4398005D0AC3 /* TMIntervalLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMIntervalLabelCell.h; sourceTree = "<group>"; };
+		D3BDE84B180A4398005D0AC3 /* TMIntervalLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMIntervalLabelCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +191,8 @@
 		D38DE8481809BD4800771267 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D3BDE84A180A4398005D0AC3 /* TMIntervalLabelCell.h */,
+				D3BDE84B180A4398005D0AC3 /* TMIntervalLabelCell.m */,
 				D38DE84318071F6A00771267 /* TMTimerView.h */,
 				D38DE84418071F6A00771267 /* TMTimerView.m */,
 				D3377F8017FF71F400993815 /* TMTimePickerCell.h */,
@@ -307,6 +312,7 @@
 			files = (
 				D38DE8421805FC4300771267 /* TMTimeLabelCell.m in Sources */,
 				AA2F1DF517ECD84D001AB1D6 /* TMViewController.m in Sources */,
+				D3BDE84C180A4398005D0AC3 /* TMIntervalLabelCell.m in Sources */,
 				D38DE84B1809BFA400771267 /* TMAlertManager.m in Sources */,
 				AA2F1E1517ECD8C0001AB1D6 /* TMIntervalTimer.m in Sources */,
 				AA2F1DEF17ECD84D001AB1D6 /* AppDelegate.m in Sources */,

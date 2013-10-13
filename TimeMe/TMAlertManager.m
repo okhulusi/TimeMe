@@ -58,18 +58,17 @@ static TMAlertManager *__instance = nil;
 
 - (void)setTimerLength:(NSTimeInterval)timerLength {
     _timerLength = timerLength;
-    _alertIntervals = nil;
-}
-
-- (NSArray *)alertIntervals {
     _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
-    return _alertIntervals;
 }
 
-- (void)scheduleAlertsForLength:(NSTimeInterval)length interval:(NSTimeInterval)interval {
-    
+
+- (void)startAlerts {
+
 }
 
+- (void)stopAlerts {
+
+}
 
 - (void)scheduleAlertsForBackground {
 
