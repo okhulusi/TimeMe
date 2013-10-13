@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+enum{
+    TMTimeIntervalStringWords,
+    TMTimeIntervalStringDigital
+} typedef TMTimeIntervalStringStyle;
+
 @interface NSString (TMTimeIntervalString)
-+ (NSString *)stringForTimeInterval:(NSTimeInterval)timeInterval;
++ (NSString *)stringForTimeInterval:(NSTimeInterval)timeInterval style:(TMTimeIntervalStringStyle)style;
 @end

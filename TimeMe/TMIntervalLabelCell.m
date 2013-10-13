@@ -7,23 +7,27 @@
 //
 
 #import "TMIntervalLabelCell.h"
+#import "TMStyleManager.h"
+#import "NSString+TMTimeIntervalString.h"
 
 @implementation TMIntervalLabelCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+- (id)initWithReuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithReuseIdentifier:reuseIdentifier];
     if (self) {
-        // Initialization code
+        TMStyleManager *styleManager = [TMStyleManager getInstance];
+        [self setBackgroundColor:styleManager.backgroundColor];
+        [self.textLabel setTextColor:styleManager.detailTextColor];
+        [self.textLabel setHighlightedTextColor:styleManager.highlightDetailTextColor];
+        
+        [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
     return self;
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+- (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
+    NSString *intervalString = [NSString stringForTimeInterval:timeInterval style:TMTimeIntervalStringDigital];
+    [self.textLabel setText:intervalString];
 }
 
 @end

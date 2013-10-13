@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TMTableViewCell.h"
 
-@interface TMTimeLabelCell : UITableViewCell
+@interface TMTimeLabelCell : TMTableViewCell
 
 @end

@@ -35,7 +35,7 @@ static TMStyleManager *__instance = nil;
         _navigationBarTintColor = [UIColor colorWithRed:0x79/256. green:0x60/256. blue:0x60/256. alpha:1];
         _navigationBarTitleColor = [UIColor whiteColor];
         
-        _font = [UIFont boldSystemFontOfSize:20];
+        _font = [UIFont systemFontOfSize:20];
     }
     return self;
 }

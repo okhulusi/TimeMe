@@ -8,12 +8,13 @@
 
 #import "TMTimeLabelCell.h"
 #import "TMStyleManager.h"
+#import "NSString+TMTimeIntervalString.h"
 
 @implementation TMTimeLabelCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (id)initWithReuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    self = [super initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:reuseIdentifier];
     if (self) {
         TMStyleManager *styleManager = [TMStyleManager getInstance];
         [self setBackgroundColor:styleManager.backgroundColor];
@@ -21,7 +22,6 @@
         [self.textLabel setHighlightedTextColor:styleManager.highlightTextColor];
         [self.detailTextLabel setTextColor:styleManager.detailTextColor];
         [self.detailTextLabel setHighlightedTextColor:styleManager.highlightTextColor];
-        
     }
     return self;
 }
@@ -32,6 +32,11 @@
     UIColor *backgroundColor = highlighted ? styleManager.highlightBackgroundColor : styleManager.backgroundColor;
     [self.contentView setBackgroundColor:backgroundColor];
     [self setBackgroundColor:backgroundColor];
+}
+
+- (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
+    NSString *intervalString = [NSString stringForTimeInterval:timeInterval style:TMTimeIntervalStringWords];
+    [self.detailTextLabel setText:intervalString];
 }
 
 @end

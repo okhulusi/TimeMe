@@ -12,8 +12,6 @@
 @interface TMTimePickerCell () {
     BOOL _labelPosistionedForComponent[2];
     CGFloat _componentWidth;
-    CGFloat _componentHeight;
-
 }
 - (NSTimeInterval)_timeInterval;
 - (void)_configureForTimeInterval:(NSTimeInterval)timeInterval animated:(BOOL)animated;
@@ -27,7 +25,6 @@
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {
         _componentWidth = 60;
-        _componentHeight = 60;
         
         TMStyleManager *styleManger = [TMStyleManager getInstance];
         [self setBackgroundColor:styleManger.backgroundColor];
@@ -36,6 +33,8 @@
         [_pickerView setDelegate:self];
         [_pickerView setDataSource:self];
         [self.contentView addSubview:_pickerView];
+        
+        [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
     return self;
 }
@@ -155,8 +154,7 @@
 //Tell the picker the width of each row for a given component
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
-    int sectionWidth = 60;
-    return sectionWidth;
+    return _componentWidth;
 }
 
 @end

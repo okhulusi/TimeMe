@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TMTableViewCell.h"
 
-@interface TMIntervalLabelCell : UITableViewCell
+@interface TMIntervalLabelCell : TMTableViewCell
 
 @end

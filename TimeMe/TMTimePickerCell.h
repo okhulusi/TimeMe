@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "TMTableViewCell.h"
 @class TMTimePickerCell;
 
 @protocol TMTimePickerDelegate <NSObject>
@@ -15,10 +15,8 @@
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval;
 @end
 
-@interface TMTimePickerCell : UITableViewCell<UIPickerViewDelegate,UIPickerViewDataSource>
+@interface TMTimePickerCell : TMTableViewCell<UIPickerViewDelegate,UIPickerViewDataSource>
 
-- (id)initWithReuseIdentifier:(NSString *)reuseIdentifier;
-- (void)configureForTimeInterval:(NSTimeInterval)timeInterval;
 @property (weak) id<TMTimePickerDelegate>delegate;
 @property (readonly) UIPickerView *pickerView;
 
