@@ -28,6 +28,8 @@
     
     UIButton *_timerToggleButton;
     BOOL _showingPicker;
+    
+    NSMutableDictionary *_selectedAlerts;
 }
 
 - (void)_toggleButtonPressed;
@@ -43,6 +45,8 @@
         _showingPicker = NO;
         _timer = [[TMIntervalTimer alloc] init];
         [_timer setDelegate:self];
+        
+        _selectedAlerts = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -201,7 +205,10 @@ static CGFloat __headerHeight = 50;
         if (!cell) {
             cell = [[TMIntervalLabelCell alloc] initWithReuseIdentifier:kAlertIntervalCellID];
         }
-        timeInterval = [[alertManager.alertIntervals objectAtIndex:indexPath.row] doubleValue];
+        NSNumber *alertInterval = [alertManager.alertIntervals objectAtIndex:indexPath.row];
+        BOOL isChecked = [[_selectedAlerts objectForKey:alertInterval] boolValue];
+        timeInterval = [alertInterval doubleValue];
+        [(TMIntervalLabelCell *)cell setChecked:isChecked animated:NO];
     }
     [cell configureForTimeInterval:timeInterval];
     return cell;
@@ -219,8 +226,13 @@ static CGFloat __headerHeight = 50;
             [_tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 
         }
-    } else {
-        //select this one for alerts
+    } else if (indexPath.section == 1){
+        TMAlertManager *alertManager = [TMAlertManager getInstance];
+        NSNumber *alertInterval = [alertManager.alertIntervals objectAtIndex:indexPath.row];
+        BOOL checked = ![[_selectedAlerts objectForKey:alertInterval] boolValue];
+        [_selectedAlerts setObject:[NSNumber numberWithBool:checked] forKey:alertInterval];
+        TMIntervalLabelCell *cell = (TMIntervalLabelCell *)[tableView cellForRowAtIndexPath:indexPath];
+        [cell setChecked:checked animated:YES];
     }
 }
 
@@ -261,6 +273,12 @@ static CGFloat __headerHeight = 50;
     
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     [alertManager setTimerLength:timeInterval];
+    
+    [_selectedAlerts removeAllObjects];
+    NSArray *availableAlerts = alertManager.alertIntervals;
+    for (NSNumber *alertInterval in availableAlerts) {
+        [_selectedAlerts setObject:@YES forKey:alertInterval];
+    }
     
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];            
     

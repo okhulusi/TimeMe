@@ -35,7 +35,7 @@
 }
 
 - (void)setChecked:(BOOL)checked animated:(BOOL)animated {
-    
+    [self.accessoryView setHidden:!checked];
 }
 
 @end
