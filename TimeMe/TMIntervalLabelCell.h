@@ -10,5 +10,5 @@
 #import "TMTableViewCell.h"
 
 @interface TMIntervalLabelCell : TMTableViewCell
-
+- (void)setChecked:(BOOL)checked animated:(BOOL)animated;
 @end

@@ -8,6 +8,10 @@
 
 #import "TMStyleManager.h"
 
+@interface TMStyleManager ()
+- (UIImage *)_generateCheckImage;
+@end
+
 @implementation TMStyleManager
 
 static TMStyleManager *__instance = nil;
@@ -36,8 +40,30 @@ static TMStyleManager *__instance = nil;
         _navigationBarTitleColor = [UIColor whiteColor];
         
         _font = [UIFont systemFontOfSize:20];
+        
+        _checkImage = [self _generateCheckImage];
     }
     return self;
+}
+
+static UIImage *__checkImage = nil;
+- (UIImage *)_generateCheckImage {
+    if (!__checkImage) {
+        static dispatch_once_t onceTokenImage;
+        dispatch_once(&onceTokenImage, ^{
+            CGFloat height = 44;
+            UIGraphicsBeginImageContext(CGSizeMake(height, height));
+            CGContextRef context = UIGraphicsGetCurrentContext();
+            CGRect ellipseRect = CGRectMake(height/4, height/4, height/2, height/2);
+            CGRect fillRect = CGRectInset(ellipseRect, 1, 1);
+            CGContextSetFillColorWithColor(context, _detailTextColor.CGColor);
+            CGContextFillEllipseInRect(context, fillRect);
+            CGContextFillPath(context);
+            __checkImage = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        });
+    }
+    return __checkImage;
 }
 
 @end

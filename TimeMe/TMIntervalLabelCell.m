@@ -21,6 +21,10 @@
         [self.textLabel setHighlightedTextColor:styleManager.highlightDetailTextColor];
         
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+        
+        UIImageView *checkView = [[UIImageView alloc] initWithImage:styleManager.checkImage];
+        self.accessoryView = checkView;
+        
     }
     return self;
 }
@@ -28,6 +32,10 @@
 - (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
     NSString *intervalString = [NSString stringForTimeInterval:timeInterval style:TMTimeIntervalStringDigital];
     [self.textLabel setText:intervalString];
+}
+
+- (void)setChecked:(BOOL)checked animated:(BOOL)animated {
+    
 }
 
 @end
