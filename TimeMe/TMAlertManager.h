@@ -18,7 +18,7 @@
 
 + (instancetype)getInstance;
 
-- (void)startAlerts;
+- (void)startAlerts:(NSArray *)alerts;
 - (void)stopAlerts;
 
 - (void)scheduleAlertsForBackground;

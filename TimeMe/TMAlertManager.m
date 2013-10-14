@@ -14,8 +14,11 @@
 #define THIRTY_SECONDS (30.)
 #define TEN_SECONDS (10.)
 
-@interface TMAlertManager ()
+@interface TMAlertManager () {
+    NSMutableSet *_scheduledAlerts;
+}
 - (NSArray *)_alertIntervalsForCountdown:(NSTimeInterval)countdown;
+- (void)_alertDidFire:(NSNumber *)alertInterval;
 @end
 
 @implementation TMAlertManager
@@ -31,6 +34,14 @@ static TMAlertManager *__instance = nil;
         });
     }
     return __instance;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _scheduledAlerts = [[NSMutableSet alloc] init];
+    }
+    return self;
 }
 
 - (NSArray *)_alertIntervalsForCountdown:(NSTimeInterval)countdown {
@@ -61,13 +72,31 @@ static TMAlertManager *__instance = nil;
     _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
 }
 
+- (void)_alertDidFire:(NSNumber *)alertInterval {
+    NSLog(@"alertDidFire: %@",alertInterval);
+    [_scheduledAlerts removeObject:alertInterval];
+    if (![_scheduledAlerts count]) {
+        NSLog(@"alertDidFire finished");
+        //tell everyone we're done
+    }
+}
 
-- (void)startAlerts {
+- (void)startAlerts:(NSArray *)alerts {
+    _generatingAlerts = YES;
+    for (NSNumber *alertTime in alerts) {
+        NSTimeInterval delay = _timerLength - [alertTime doubleValue];
+        [self performSelector:@selector(_alertDidFire:) withObject:alertTime afterDelay:delay];
+        [_scheduledAlerts addObject:alertTime];
+    }
+    [self performSelector:@selector(_alertDidFire:) withObject:@(_timerLength) afterDelay:_timerLength];
+    [_scheduledAlerts addObject:@(_timerLength)];
 
 }
 
 - (void)stopAlerts {
-
+    _generatingAlerts = NO;
+    [_scheduledAlerts removeAllObjects];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
 
 - (void)scheduleAlertsForBackground {

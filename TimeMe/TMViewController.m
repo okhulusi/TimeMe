@@ -34,6 +34,7 @@
 
 - (void)_toggleButtonPressed;
 - (void)_fadeInView:(UIView *)inView outView:(UIView *)outView;
+- (NSArray *)_selectedAlerts;
 @end
 
 @implementation TMViewController
@@ -56,24 +57,22 @@
     UIColor *titleColor = nil;
     UIView *inView = nil;
     UIView *outView = nil;
-    if (!_timer.running) {
-        if (_timer.timerLength) {
-            [_timer startTimer];
+    TMAlertManager *alertManager = [TMAlertManager getInstance];
+    if (!alertManager.generatingAlerts) {
+        NSArray *selectedAlerts = [self _selectedAlerts];
+        if ([selectedAlerts count]) {
+            [alertManager startAlerts:selectedAlerts];
             buttonTitle = @"Stop";
             titleColor = [UIColor redColor];
             inView = _timerView;
             outView = _tableView;
-            
-            [_timerView beginUpdating];
         }
     } else {
-        [_timer stopTimer];
+        [alertManager stopAlerts];
         buttonTitle = @"Start";
         titleColor = [UIColor greenColor];
         inView = _tableView;
         outView = _timerView;
-        
-        [_timerView endUpdating];
     }
     if (buttonTitle) {
         [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
@@ -95,6 +94,17 @@
                      } completion:^(BOOL finished) {
                          [outView removeFromSuperview];
                      }];
+}
+
+- (NSArray *)_selectedAlerts {
+    NSMutableArray *selectedAlerts = [[NSMutableArray alloc] init];
+    for (NSNumber *alertInterval in _selectedAlerts) {
+        NSNumber *isSelected = [_selectedAlerts objectForKey:alertInterval];
+        if ([isSelected boolValue]) {
+            [selectedAlerts addObject:alertInterval];
+        }
+    }
+    return selectedAlerts;
 }
 
 #pragma mark - UIViewController
