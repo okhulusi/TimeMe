@@ -7,11 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-@class TMIntervalTimer;
 
 @interface TMTimerView : UIView
-
-- (instancetype)initWithFrame:(CGRect)frame intervalTimer:(TMIntervalTimer *)timer;
 - (void)beginUpdating;
 - (void)endUpdating;
 - (void)setHighlighted:(BOOL)highlighted;

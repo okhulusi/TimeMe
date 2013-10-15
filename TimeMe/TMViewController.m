@@ -251,23 +251,6 @@ static CGFloat __headerHeight = 50;
     return height;
 }
 
-#pragma mark - TMIntervalTimer
-
-- (void)intervalTimerDidFinishInterval:(TMIntervalTimer *)intervalTimer {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
-    });
-}
-
-- (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_timerView endUpdating];
-        [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
-        [_timerToggleButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
-        [self _fadeInView:_tableView outView:_timerView];
-    });
-}
-
 #pragma mark - TMTimePicker
 
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {

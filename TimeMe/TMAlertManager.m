@@ -7,7 +7,6 @@
 //
 
 #import "TMAlertManager.h"
-#import "TMIntervalTimer.h"
 
 #import "NSMutableArray+TMFrontLoading.h"
 
@@ -33,15 +32,6 @@ static TMAlertManager *__instance = nil;
         });
     }
     return __instance;
-}
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _timer = [[TMIntervalTimer alloc] init];
-        [_timer setDelegate:self];
-    }
-    return self;
 }
 
 - (NSArray *)_alertIntervalsForCountdown:(NSTimeInterval)countdown {
@@ -74,15 +64,12 @@ static TMAlertManager *__instance = nil;
 
 - (void)startAlerts:(NSArray *)alerts {
     _generatingAlerts = YES;
-    [_timer setIntervals:[NSMutableArray arrayWithArray:alerts]];
-    [_timer startTimer];
 }
 
 
 
 - (void)stopAlerts {
     _generatingAlerts = NO;
-    [_timer stopTimer];
 }
 
 - (void)scheduleAlertsForBackground {
@@ -93,16 +80,6 @@ static TMAlertManager *__instance = nil;
 
 - (void)cancelBackgroundAlerts {
     //figure out who has the 
-
-}
-
-#pragma mark - TMTimerDelegate
-
-- (void)intervalTimerDidFinishInterval:(TMIntervalTimer *)intervalTimer {
-
-}
-
-- (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer {
 
 }
 @end

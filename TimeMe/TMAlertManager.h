@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TMIntervalTimer.h"
 
 @class TMAlertManager;
 
@@ -16,7 +15,7 @@
 - (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert;
 @end
 
-@interface TMAlertManager : NSObject<TMIntervalTimerDelegate>
+@interface TMAlertManager : NSObject
 
 + (instancetype)getInstance;
 
@@ -26,9 +25,15 @@
 - (void)scheduleAlertsForBackground;
 - (void)cancelBackgroundAlerts;
 
+@property (readonly) NSArray *alertIntervals;
+
 @property (nonatomic) NSTimeInterval timerLength;
-@property (readonly) TMIntervalTimer *timer;
-@property (nonatomic) NSArray *alertIntervals;
+@property (readonly) NSTimeInterval intervalLength;
+
+@property (readonly) NSTimeInterval timerStart;
+@property (readonly) NSTimeInterval intervalStart;
+
+
 @property (nonatomic) BOOL generatingAlerts;
 @property (weak) id<TMAlertDelegate>delegate;
 

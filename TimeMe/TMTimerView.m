@@ -7,13 +7,11 @@
 //
 
 #import "TMTimerView.h"
-#import "TMIntervalTimer.h"
 #import "TMStyleManager.h"
 
 #define UPDATE_INTERVAL .1
 
 @interface TMTimerView () {
-    TMIntervalTimer *_timer;
     BOOL _updating;
     
     UILabel *_timerLabel;
@@ -26,10 +24,9 @@
 
 @implementation TMTimerView
 
-- (id)initWithFrame:(CGRect)frame intervalTimer:(TMIntervalTimer *)timer {
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _timer = timer;
         _updating = NO;
         
         TMStyleManager *styleManager = [TMStyleManager getInstance];
@@ -80,13 +77,7 @@
 }
 
 - (void)_updateLabels {
-    NSString *timerText = [self _stringForElapsedTime:_timer.timerElapsedTime forLength:_timer.timerLength];
-    NSString *intervalText = [self _stringForElapsedTime:_timer.intervalElapsedTime forLength:_timer.intervalLength];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [_timerLabel setText:timerText];
-        [_intervalLabel setText:intervalText];
-    });
-
+    NSLog(@"updateLabels");
     if (_updating) {
         [self performSelector:@selector(_updateLabels) withObject:nil afterDelay:UPDATE_INTERVAL];
     }
