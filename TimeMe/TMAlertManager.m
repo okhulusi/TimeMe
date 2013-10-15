@@ -75,12 +75,19 @@ static TMAlertManager *__instance = nil;
 
 - (void)startAlerts:(NSArray *)alerts {
     _generatingAlerts = YES;
-    [_currentAlerts removeAllObjects];
-    [_currentAlerts addObjectsFromArray:alerts];
+
     NSDate *now = [NSDate date];
+    _timerStart = [now timeIntervalSinceReferenceDate];
+    _intervalStart = [now timeIntervalSinceReferenceDate];
     //schedule the alerts
+    if ([alerts count]) {
+        _intervalLength = _timerLength - [[alerts firstObject] doubleValue];
+    }
+    
+    [_currentAlerts removeAllObjects];
     for (NSNumber *alertInterval in alerts) {
         NSTimeInterval delay = _timerLength - [alertInterval doubleValue];
+        [_currentAlerts addObject:@(delay)];
         NSDate *alertDate = [NSDate dateWithTimeInterval:delay sinceDate:now];
         UILocalNotification *notification = [[UILocalNotification alloc] init];
         [notification setFireDate:alertDate];
@@ -92,6 +99,10 @@ static TMAlertManager *__instance = nil;
     [finalNotification setFireDate:finalDate];
     [finalNotification setAlertBody:@"00:00"];
     [[UIApplication sharedApplication] scheduleLocalNotification:finalNotification];
+}
+
+- (void)didFireAlert:(NSNumber *)alert {
+    
 }
 
 - (void)stopAlerts {

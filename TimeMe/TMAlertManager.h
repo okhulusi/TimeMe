@@ -20,6 +20,7 @@
 + (instancetype)getInstance;
 
 - (void)startAlerts:(NSArray *)alerts;
+- (void)didFireAlert:(NSNumber *)alert;
 - (void)stopAlerts;
 
 - (void)reloadTimeValues;
