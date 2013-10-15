@@ -9,6 +9,7 @@
 #import "TMAlertManager.h"
 
 #import "NSMutableArray+TMFrontLoading.h"
+#import "NSString+TMTimeIntervalString.h"
 
 #define TWO_MINUTES (2.*60.)
 #define ONE_MINUTE (60.)
@@ -16,6 +17,7 @@
 #define TEN_SECONDS (10.)
 
 @interface TMAlertManager () {
+    NSMutableArray *_currentAlerts;
 }
 
 - (NSArray *)_alertIntervalsForCountdown:(NSTimeInterval)countdown;
@@ -32,6 +34,14 @@ static TMAlertManager *__instance = nil;
         });
     }
     return __instance;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _currentAlerts = [[NSMutableArray alloc] init];
+    }
+    return self;
 }
 
 - (NSArray *)_alertIntervalsForCountdown:(NSTimeInterval)countdown {
@@ -58,28 +68,43 @@ static TMAlertManager *__instance = nil;
 }
 
 - (void)setTimerLength:(NSTimeInterval)timerLength {
+    NSAssert(!_generatingAlerts, @"Tried to change timerLength when running");
     _timerLength = timerLength;
     _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
 }
 
 - (void)startAlerts:(NSArray *)alerts {
     _generatingAlerts = YES;
+    [_currentAlerts removeAllObjects];
+    [_currentAlerts addObjectsFromArray:alerts];
+    NSDate *now = [NSDate date];
+    //schedule the alerts
+    for (NSNumber *alertInterval in alerts) {
+        NSTimeInterval delay = _timerLength - [alertInterval doubleValue];
+        NSDate *alertDate = [NSDate dateWithTimeInterval:delay sinceDate:now];
+        UILocalNotification *notification = [[UILocalNotification alloc] init];
+        [notification setFireDate:alertDate];
+        [notification setAlertBody:[NSString stringForTimeInterval:[alertInterval doubleValue] style:TMTimeIntervalStringDigital]];
+        [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+    }
+    UILocalNotification *finalNotification = [[UILocalNotification alloc] init];
+    NSDate *finalDate = [NSDate dateWithTimeInterval:_timerLength sinceDate:now];
+    [finalNotification setFireDate:finalDate];
+    [finalNotification setAlertBody:@"00:00"];
+    [[UIApplication sharedApplication] scheduleLocalNotification:finalNotification];
 }
-
-
 
 - (void)stopAlerts {
     _generatingAlerts = NO;
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
 
-- (void)scheduleAlertsForBackground {
-    //stop the timer
-    //grab the current alerts from the timer
-    //schedule in background
+- (void)reloadTimeValues {
+    //check if we have any expired timers
 }
 
-- (void)cancelBackgroundAlerts {
-    //figure out who has the 
-
+- (void)saveValues {
+    //write them back
 }
+
 @end

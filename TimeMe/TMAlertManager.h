@@ -22,8 +22,8 @@
 - (void)startAlerts:(NSArray *)alerts;
 - (void)stopAlerts;
 
-- (void)scheduleAlertsForBackground;
-- (void)cancelBackgroundAlerts;
+- (void)reloadTimeValues;
+- (void)saveValues;
 
 @property (readonly) NSArray *alertIntervals;
 
@@ -32,7 +32,6 @@
 
 @property (readonly) NSTimeInterval timerStart;
 @property (readonly) NSTimeInterval intervalStart;
-
 
 @property (nonatomic) BOOL generatingAlerts;
 @property (weak) id<TMAlertDelegate>delegate;

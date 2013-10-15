@@ -56,13 +56,11 @@
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     if (!alertManager.generatingAlerts) {
         NSArray *selectedAlerts = [self _selectedAlerts];
-        if ([selectedAlerts count]) {
-            [alertManager startAlerts:selectedAlerts];
-            buttonTitle = @"Stop";
-            titleColor = [UIColor redColor];
-            inView = _timerView;
-            outView = _tableView;
-        }
+        [alertManager startAlerts:selectedAlerts];
+        buttonTitle = @"Stop";
+        titleColor = [UIColor redColor];
+        inView = _timerView;
+        outView = _tableView;
     } else {
         [alertManager stopAlerts];
         buttonTitle = @"Start";
