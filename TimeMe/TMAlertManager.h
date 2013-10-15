@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern const NSString *kTMAlertKey;
+
 @class TMAlertManager;
 
 @protocol TMAlertDelegate <NSObject>
@@ -38,3 +40,4 @@
 @property (weak) id<TMAlertDelegate>delegate;
 
 @end
+

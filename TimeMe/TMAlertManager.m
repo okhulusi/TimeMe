@@ -16,6 +16,8 @@
 #define THIRTY_SECONDS (30.)
 #define TEN_SECONDS (10.)
 
+const NSString *kTMAlertKey = @"tmalertkey";
+
 @interface TMAlertManager () {
     NSMutableArray *_currentAlerts;
 }
@@ -92,6 +94,7 @@ static TMAlertManager *__instance = nil;
         UILocalNotification *notification = [[UILocalNotification alloc] init];
         [notification setFireDate:alertDate];
         [notification setAlertBody:[NSString stringForTimeInterval:[alertInterval doubleValue] style:TMTimeIntervalStringDigital]];
+        [notification setUserInfo:@{kTMAlertKey:alertInterval}];
         [[UIApplication sharedApplication] scheduleLocalNotification:notification];
     }
     UILocalNotification *finalNotification = [[UILocalNotification alloc] init];
@@ -102,7 +105,19 @@ static TMAlertManager *__instance = nil;
 }
 
 - (void)didFireAlert:(NSNumber *)alert {
-    
+    if ([_currentAlerts count]) {
+        NSTimeInterval delay = _timerLength - [alert doubleValue];
+        NSAssert(delay == [[_currentAlerts firstObject] doubleValue], @"Alerts are out of order");
+        _intervalStart = [[NSDate date] timeIntervalSinceReferenceDate];
+        NSTimeInterval oldInterval = [[_currentAlerts firstObject] doubleValue];
+        [_currentAlerts removeObjectAtIndex:0];
+        NSTimeInterval nextInterval = [_currentAlerts count] ? [[_currentAlerts firstObject] doubleValue] : _timerLength;
+        _intervalLength = nextInterval - oldInterval;
+        //set up the new delay
+    } else {
+        //we're done
+        _generatingAlerts = NO;
+    }
 }
 
 - (void)stopAlerts {

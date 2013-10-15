@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "TMViewController.h"
+#import "TMAlertManager.h"
 
 @implementation AppDelegate
 
@@ -54,7 +55,11 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
-    NSLog(@"notification: %@",notification);
+    if ([application applicationState] == UIApplicationStateActive) {
+        TMAlertManager *alertManager = [TMAlertManager getInstance];
+        NSNumber *alert = [[notification userInfo] objectForKey:kTMAlertKey];
+        [alertManager didFireAlert:alert];
+    }
 }
 
 @end
