@@ -21,8 +21,6 @@
 #import "NSString+TMTimeIntervalString.h"
 
 @interface TMViewController () {
-    TMIntervalTimer *_timer;
-    
     UITableView *_tableView;
     TMTimerView *_timerView;
     
@@ -44,8 +42,6 @@
         [self setTitle:@"TimeMe"];
         
         _showingPicker = NO;
-        _timer = [[TMIntervalTimer alloc] init];
-        [_timer setDelegate:self];
         
         _selectedAlerts = [[NSMutableDictionary alloc] init];
     }
@@ -127,8 +123,6 @@
     [_tableView setDataSource:self];
     [_tableView setDelegate:self];
     [self.view addSubview:_tableView];
-    
-    _timerView = [[TMTimerView alloc] initWithFrame:tableFrame intervalTimer:_timer];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];

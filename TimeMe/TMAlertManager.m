@@ -15,7 +15,7 @@
 #define TEN_SECONDS (10.)
 
 @interface TMAlertManager () {
-    NSMutableSet *_scheduledAlerts;
+    NSMutableArray *_scheduledAlerts;
 }
 - (NSArray *)_alertIntervalsForCountdown:(NSTimeInterval)countdown;
 - (void)_alertDidFire:(NSNumber *)alertInterval;
@@ -39,7 +39,7 @@ static TMAlertManager *__instance = nil;
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _scheduledAlerts = [[NSMutableSet alloc] init];
+        _scheduledAlerts = [[NSMutableArray alloc] init];
     }
     return self;
 }

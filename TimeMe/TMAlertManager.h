@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class TMAlertManager;
+@class TMIntervalTimer;
 
 @protocol TMAlertDelegate <NSObject>
 - (void)alertManager:(TMAlertManager *)alertManager didFireAlert:(NSNumber *)alert;
@@ -25,6 +26,7 @@
 - (void)cancelBackgroundAlerts;
 
 @property (nonatomic) NSTimeInterval timerLength;
+@property (nonatomic) TMIntervalTimer *timer;
 @property (nonatomic) NSArray *alertIntervals;
 @property (nonatomic) BOOL generatingAlerts;
 @property (weak) id<TMAlertDelegate>delegate;
