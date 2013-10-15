@@ -19,8 +19,9 @@
 
 @interface TMIntervalTimer : NSObject
 
-@property NSTimeInterval intervalLength;
+@property (nonatomic,copy) NSMutableArray *intervals;
 @property NSTimeInterval timerLength;
+@property (readonly) NSTimeInterval intervalLength;
 @property (readonly) NSTimeInterval timerElapsedTime;
 @property (readonly) NSTimeInterval intervalElapsedTime;
 @property (readonly) BOOL running;

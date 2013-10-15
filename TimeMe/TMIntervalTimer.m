@@ -19,7 +19,6 @@
 @implementation TMIntervalTimer
 
 @synthesize timerLength = _timerLength;
-@synthesize intervalLength = _intervalLength;
 
 - (void) startTimer {
     _running = YES;
@@ -36,11 +35,16 @@
     if (_running) {
         NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
         
-        _intervalElapsedTime = currentTime - _intervalStart;
-        if (_intervalElapsedTime >= _intervalLength) {
-            _intervalStart = currentTime;
-            if ([self.delegate respondsToSelector:@selector(intervalTimerDidFinishInterval:)]) {
-                [self.delegate intervalTimerDidFinishInterval:self];
+        if ([_intervals count]) {
+            _intervalElapsedTime = currentTime - _intervalStart;
+            NSTimeInterval currentInterval = [[_intervals firstObject] doubleValue];
+            if (_intervalElapsedTime >= currentInterval) {
+                _intervalStart = currentTime;
+                [_intervals removeObjectAtIndex:0];
+                _intervalLength = [_intervals count] ? [[_intervals firstObject] doubleValue] : 0;
+                if ([self.delegate respondsToSelector:@selector(intervalTimerDidFinishInterval:)]) {
+                    [self.delegate intervalTimerDidFinishInterval:self];
+                }
             }
         }
         

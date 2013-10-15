@@ -7,6 +7,8 @@
 //
 
 #import "TMAlertManager.h"
+#import "TMIntervalTimer.h"
+
 #import "NSMutableArray+TMFrontLoading.h"
 
 #define TWO_MINUTES (2.*60.)
@@ -15,15 +17,12 @@
 #define TEN_SECONDS (10.)
 
 @interface TMAlertManager () {
-    NSMutableArray *_scheduledAlerts;
 }
+
 - (NSArray *)_alertIntervalsForCountdown:(NSTimeInterval)countdown;
-- (void)_alertDidFire:(NSNumber *)alertInterval;
 @end
 
 @implementation TMAlertManager
-
-
 
 static TMAlertManager *__instance = nil;
 + (instancetype)getInstance {
@@ -39,7 +38,8 @@ static TMAlertManager *__instance = nil;
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _scheduledAlerts = [[NSMutableArray alloc] init];
+        _timer = [[TMIntervalTimer alloc] init];
+        [_timer setDelegate:self];
     }
     return self;
 }
@@ -72,38 +72,37 @@ static TMAlertManager *__instance = nil;
     _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
 }
 
-- (void)_alertDidFire:(NSNumber *)alertInterval {
-    NSLog(@"alertDidFire: %@",alertInterval);
-    [_scheduledAlerts removeObject:alertInterval];
-    if (![_scheduledAlerts count]) {
-        NSLog(@"alertDidFire finished");
-        //tell everyone we're done
-    }
-}
-
 - (void)startAlerts:(NSArray *)alerts {
     _generatingAlerts = YES;
-    for (NSNumber *alertTime in alerts) {
-        NSTimeInterval delay = _timerLength - [alertTime doubleValue];
-        [self performSelector:@selector(_alertDidFire:) withObject:alertTime afterDelay:delay];
-        [_scheduledAlerts addObject:alertTime];
-    }
-    [self performSelector:@selector(_alertDidFire:) withObject:@(_timerLength) afterDelay:_timerLength];
-    [_scheduledAlerts addObject:@(_timerLength)];
-
+    [_timer setIntervals:[NSMutableArray arrayWithArray:alerts]];
+    [_timer startTimer];
 }
+
+
 
 - (void)stopAlerts {
     _generatingAlerts = NO;
-    [_scheduledAlerts removeAllObjects];
-    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [_timer stopTimer];
 }
 
 - (void)scheduleAlertsForBackground {
-
+    //stop the timer
+    //grab the current alerts from the timer
+    //schedule in background
 }
 
 - (void)cancelBackgroundAlerts {
+    //figure out who has the 
+
+}
+
+#pragma mark - TMTimerDelegate
+
+- (void)intervalTimerDidFinishInterval:(TMIntervalTimer *)intervalTimer {
+
+}
+
+- (void)intervalTimerDidFinishTimer:(TMIntervalTimer *)intervalTimer {
 
 }
 @end
