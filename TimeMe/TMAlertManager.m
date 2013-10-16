@@ -113,10 +113,16 @@ static TMAlertManager *__instance = nil;
         [_currentAlerts removeObjectAtIndex:0];
         NSTimeInterval nextInterval = [_currentAlerts count] ? [[_currentAlerts firstObject] doubleValue] : _timerLength;
         _intervalLength = nextInterval - oldInterval;
+        if ([self.delegate respondsToSelector:@selector(alertManager:didFireAlert:)]) {
+            [self.delegate alertManager:self didFireAlert:alert];
+        }
     } else {
-        //we're done
         _generatingAlerts = NO;
+        if ([self.delegate respondsToSelector:@selector(alertManager:didFinishAlerts:)]) {
+            [self.delegate alertManager:self didFinishAlerts:alert];
+        }
     }
+
 }
 
 - (void)stopAlerts {

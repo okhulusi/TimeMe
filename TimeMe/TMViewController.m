@@ -40,10 +40,10 @@
 - (id)init {
     if (self = [super init]) {
         [self setTitle:@"TimeMe"];
-        
         _showingPicker = NO;
-        
         _selectedAlerts = [[NSMutableDictionary alloc] init];
+        TMAlertManager *alertManager = [TMAlertManager getInstance];
+        [alertManager setDelegate:self];
     }
     return self;
 }
@@ -121,6 +121,8 @@
     [_tableView setDataSource:self];
     [_tableView setDelegate:self];
     [self.view addSubview:_tableView];
+    
+    _timerView = [[TMTimerView alloc] initWithFrame:tableFrame];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
@@ -268,6 +270,20 @@ static CGFloat __headerHeight = 50;
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];            
     
     return timeInterval;
+}
+
+#pragma mark - TMAlertManager
+
+- (void)alertManager:(TMAlertManager *)alertManager didFireAlert:(NSNumber *)alert {
+
+}
+
+- (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert {
+    NSString *buttonTitle = @"Start";
+    UIColor *titleColor = [UIColor greenColor];
+    [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
+    [_timerToggleButton setTitleColor:titleColor forState:UIControlStateNormal];
+    [self _fadeInView:_tableView outView:_timerView];
 }
 
 @end
