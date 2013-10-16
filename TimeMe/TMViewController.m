@@ -57,16 +57,24 @@
     if (!alertManager.generatingAlerts) {
         NSArray *selectedAlerts = [self _selectedAlerts];
         [alertManager startAlerts:selectedAlerts];
+        
         buttonTitle = @"Stop";
         titleColor = [UIColor redColor];
+        
         inView = _timerView;
         outView = _tableView;
+        
+        [_timerView beginUpdating];
     } else {
         [alertManager stopAlerts];
+        
         buttonTitle = @"Start";
         titleColor = [UIColor greenColor];
+        
         inView = _tableView;
         outView = _timerView;
+        
+        [_timerView endUpdating];
     }
     if (buttonTitle) {
         [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
@@ -284,6 +292,7 @@ static CGFloat __headerHeight = 50;
     [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
     [_timerToggleButton setTitleColor:titleColor forState:UIControlStateNormal];
     [self _fadeInView:_tableView outView:_timerView];
+    [_timerView endUpdating];
 }
 
 @end

@@ -76,6 +76,9 @@ static TMAlertManager *__instance = nil;
 }
 
 - (void)startAlerts:(NSArray *)alerts {
+    if (_generatingAlerts) {
+        [self stopAlerts];
+    }
     _generatingAlerts = YES;
 
     NSDate *now = [NSDate date];
@@ -106,8 +109,6 @@ static TMAlertManager *__instance = nil;
 
 - (void)didFireAlert:(NSNumber *)alert {
     if ([_currentAlerts count]) {
-        NSTimeInterval delay = _timerLength - [alert doubleValue];
-        NSAssert(delay == [[_currentAlerts firstObject] doubleValue], @"Alerts are out of order");
         _intervalStart = [[NSDate date] timeIntervalSinceReferenceDate];
         NSTimeInterval oldInterval = [[_currentAlerts firstObject] doubleValue];
         [_currentAlerts removeObjectAtIndex:0];

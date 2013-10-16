@@ -8,8 +8,9 @@
 
 #import "TMTimerView.h"
 #import "TMStyleManager.h"
+#import "TMAlertManager.h"
 
-#define UPDATE_INTERVAL .1
+#define UPDATE_INTERVAL .05
 
 @interface TMTimerView () {
     BOOL _updating;
@@ -77,7 +78,16 @@
 }
 
 - (void)_updateLabels {
-    NSLog(@"updateLabels");
+    TMAlertManager *alertManager = [TMAlertManager getInstance];
+    NSTimeInterval now = [[NSDate date] timeIntervalSinceReferenceDate];
+    NSTimeInterval elapsedTimer = now - alertManager.timerStart;
+    NSString *timerText = [self _stringForElapsedTime:elapsedTimer forLength:alertManager.timerLength];
+    NSTimeInterval elapsedInterval = now - alertManager.intervalStart;
+    NSString *intervalText = [self _stringForElapsedTime:elapsedInterval forLength:alertManager.intervalLength];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_timerLabel setText:timerText];
+        [_intervalLabel setText:intervalText];
+    });
     if (_updating) {
         [self performSelector:@selector(_updateLabels) withObject:nil afterDelay:UPDATE_INTERVAL];
     }
