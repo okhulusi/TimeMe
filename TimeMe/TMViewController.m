@@ -67,7 +67,8 @@
         [_timerView beginUpdating];
     } else {
         [alertManager stopAlerts];
-        
+        _showingPicker = NO;
+        [_tableView reloadData];
         buttonTitle = @"Start";
         titleColor = [UIColor greenColor];
         
@@ -140,6 +141,12 @@
                                            CGRectGetWidth(self.view.frame), buttonHeight)];
     [_timerToggleButton addTarget:self action:@selector(_toggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_timerToggleButton];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    _showingPicker = NO;
+    [super viewWillAppear:animated];
+    [_tableView reloadData];
 }
 
 #pragma mark - UITableView
@@ -283,10 +290,18 @@ static CGFloat __headerHeight = 50;
 #pragma mark - TMAlertManager
 
 - (void)alertManager:(TMAlertManager *)alertManager didFireAlert:(NSNumber *)alert {
-
+    [_timerView setHighlighted:YES];
+    double delayInSeconds = .3;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [_timerView setHighlighted:NO];
+    });
 }
 
 - (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert {
+    _showingPicker = NO;
+    [_tableView reloadData];
+    
     NSString *buttonTitle = @"Start";
     UIColor *titleColor = [UIColor greenColor];
     [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];

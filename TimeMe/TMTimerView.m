@@ -36,6 +36,7 @@
         [_timerLabel setTextAlignment:NSTextAlignmentCenter];
         [_timerLabel setFont:[styleManager.font fontWithSize:70]];
         [_timerLabel setTextColor:styleManager.textColor];
+        [_timerLabel setHighlightedTextColor:styleManager.highlightTextColor];
         [_timerLabel setText:@"00:00:00"];
         [_timerLabel sizeToFit];
         [_timerLabel setFrame:CGRectMake(0, frame.size.height/2 - _timerLabel.frame.size.height,
@@ -46,6 +47,7 @@
         _intervalLabel = [[UILabel alloc] initWithFrame:labelFrame];
         [_intervalLabel setTextAlignment:NSTextAlignmentCenter];
         [_intervalLabel setTextColor:styleManager.textColor];
+        [_intervalLabel setHighlightedTextColor:styleManager.highlightTextColor];
         [_intervalLabel setFont:[styleManager.font fontWithSize:60]];
         [_intervalLabel setText:@"00:00:00"];
         [self addSubview:_intervalLabel];
@@ -69,7 +71,11 @@
 }
 
 - (void)setHighlighted:(BOOL)highlighted {
-
+    TMStyleManager *styleManager = [TMStyleManager getInstance];
+    UIColor *backgroundColor = highlighted ? styleManager.highlightBackgroundColor : styleManager.backgroundColor;
+    [self setBackgroundColor:backgroundColor];
+    [_timerLabel setHighlighted:highlighted];
+    [_intervalLabel setHighlighted:highlighted];
 }
 
 - (void)beginUpdating {
