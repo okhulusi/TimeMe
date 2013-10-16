@@ -113,7 +113,6 @@ static TMAlertManager *__instance = nil;
         [_currentAlerts removeObjectAtIndex:0];
         NSTimeInterval nextInterval = [_currentAlerts count] ? [[_currentAlerts firstObject] doubleValue] : _timerLength;
         _intervalLength = nextInterval - oldInterval;
-        //set up the new delay
     } else {
         //we're done
         _generatingAlerts = NO;
@@ -125,12 +124,49 @@ static TMAlertManager *__instance = nil;
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
 
-- (void)reloadTimeValues {
-    //check if we have any expired timers
+static NSString *kTimerLengthKey = @"timerlength";
+static NSString *kCurrentAlertsKey = @"currentalerts";
+static NSString *kStartTimeKey = @"starttime";
+- (void)saveValues {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setDouble:_timerLength forKey:kTimerLengthKey];
+    [defaults setObject:_currentAlerts forKey:kCurrentAlertsKey];
+    [defaults setDouble:_timerStart forKey:kStartTimeKey];
+    [defaults synchronize];
 }
 
-- (void)saveValues {
-    //write them back
+- (void)reloadTimeValues {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    _timerLength = [defaults doubleForKey:kTimerLengthKey];
+    _timerStart = [defaults doubleForKey:kStartTimeKey];
+    
+    NSTimeInterval now = [[NSDate date] timeIntervalSinceReferenceDate];
+    if (now > (_timerStart + _timerLength)) { //if the entire timer has expired
+        _timerLength = 0;
+        _timerStart = 0;
+        _intervalLength = 0;
+        _intervalStart = 0;
+    } else {
+        _currentAlerts = [[defaults objectForKey:kCurrentAlertsKey] mutableCopy];
+        NSTimeInterval elapsedTime = now - _timerStart;
+        while ([_currentAlerts count] && (elapsedTime > [[_currentAlerts firstObject] doubleValue])) {     //check if we have any expired timers
+            if ([_currentAlerts count] == 1) {
+                _intervalStart = [[_currentAlerts firstObject] doubleValue] + _timerStart;
+                _intervalLength = _timerLength - [[_currentAlerts firstObject] doubleValue];
+            }
+            [_currentAlerts removeObjectAtIndex:0];
+        }
+        if ([_currentAlerts count]) {
+            _intervalStart = _timerStart + [[_currentAlerts firstObject] doubleValue];
+            if ([_currentAlerts count] > 1) {
+                _intervalLength = [[_currentAlerts objectAtIndex:1] doubleValue] - [[_currentAlerts firstObject] doubleValue];
+            } else {
+                _intervalLength = _timerLength - [[_currentAlerts firstObject] doubleValue];
+            }
+        }
+    }
 }
+
+
 
 @end
