@@ -98,12 +98,14 @@ static TMAlertManager *__instance = nil;
         [notification setFireDate:alertDate];
         [notification setAlertBody:[NSString stringForTimeInterval:[alertInterval doubleValue] style:TMTimeIntervalStringDigital]];
         [notification setUserInfo:@{kTMAlertKey:alertInterval}];
+        [notification setSoundName:UILocalNotificationDefaultSoundName];
         [[UIApplication sharedApplication] scheduleLocalNotification:notification];
     }
     UILocalNotification *finalNotification = [[UILocalNotification alloc] init];
     NSDate *finalDate = [NSDate dateWithTimeInterval:_timerLength sinceDate:now];
     [finalNotification setFireDate:finalDate];
     [finalNotification setAlertBody:@"00:00"];
+    [finalNotification setSoundName:UILocalNotificationDefaultSoundName];
     [[UIApplication sharedApplication] scheduleLocalNotification:finalNotification];
 }
 

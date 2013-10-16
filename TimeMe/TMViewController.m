@@ -20,6 +20,8 @@
 
 #import "NSString+TMTimeIntervalString.h"
 
+#import <AudioToolbox/AudioToolbox.h>
+
 @interface TMViewController () {
     UITableView *_tableView;
     TMTimerView *_timerView;
@@ -290,6 +292,7 @@ static CGFloat __headerHeight = 50;
 #pragma mark - TMAlertManager
 
 - (void)alertManager:(TMAlertManager *)alertManager didFireAlert:(NSNumber *)alert {
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     [_timerView setHighlighted:YES];
     double delayInSeconds = .3;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -299,6 +302,7 @@ static CGFloat __headerHeight = 50;
 }
 
 - (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert {
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     _showingPicker = NO;
     [_tableView reloadData];
     
