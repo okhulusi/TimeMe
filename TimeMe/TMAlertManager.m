@@ -158,20 +158,11 @@ static NSString *kStartTimeKey = @"starttime";
         _currentAlerts = [[defaults objectForKey:kCurrentAlertsKey] mutableCopy];
         NSTimeInterval elapsedTime = now - _timerStart;
         while ([_currentAlerts count] && (elapsedTime > [[_currentAlerts firstObject] doubleValue])) {     //check if we have any expired timers
-            if ([_currentAlerts count] == 1) {
-                _intervalStart = [[_currentAlerts firstObject] doubleValue] + _timerStart;
-                _intervalLength = _timerLength - [[_currentAlerts firstObject] doubleValue];
-            }
             [_currentAlerts removeObjectAtIndex:0];
         }
-        if ([_currentAlerts count]) {
-            _intervalStart = _timerStart + [[_currentAlerts firstObject] doubleValue];
-            if ([_currentAlerts count] > 1) {
-                _intervalLength = [[_currentAlerts objectAtIndex:1] doubleValue] - [[_currentAlerts firstObject] doubleValue];
-            } else {
-                _intervalLength = _timerLength - [[_currentAlerts firstObject] doubleValue];
-            }
-        }
+        _intervalStart = [[_currentAlerts firstObject] doubleValue] + _timerStart;
+        NSTimeInterval nextAlert = [_currentAlerts count] > 1 ? [[_currentAlerts objectAtIndex:1] doubleValue] : 0;
+        _intervalLength = _timerLength - ([[_currentAlerts firstObject] doubleValue] - nextAlert);
     }
     _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
 }
