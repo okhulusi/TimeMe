@@ -157,12 +157,12 @@ static NSString *kStartTimeKey = @"starttime";
         _generatingAlerts = YES;
         _currentAlerts = [[defaults objectForKey:kCurrentAlertsKey] mutableCopy];
         NSTimeInterval elapsedTime = now - _timerStart;
-        while ([_currentAlerts count] && (elapsedTime > [[_currentAlerts firstObject] doubleValue])) {     //check if we have any expired timers
+        _intervalStart = _timerStart;
+        while ([_currentAlerts count] && (elapsedTime > [[_currentAlerts firstObject] doubleValue])) {     //check ifwe have any expired timers
+            _intervalStart += [[_currentAlerts firstObject] doubleValue];
             [_currentAlerts removeObjectAtIndex:0];
         }
-        _intervalStart = [[_currentAlerts firstObject] doubleValue] + _timerStart;
-        NSTimeInterval nextAlert = [_currentAlerts count] > 1 ? [[_currentAlerts objectAtIndex:1] doubleValue] : _timerLength;
-        _intervalLength = nextAlert - [[_currentAlerts firstObject] doubleValue];
+        _intervalLength = _timerLength - [[_currentAlerts firstObject] doubleValue];
     }
     _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
 }
