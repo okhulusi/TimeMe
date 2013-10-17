@@ -105,6 +105,7 @@ static TMAlertManager *__instance = nil;
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc]initWithKey:@"self" ascending:YES];
     [_currentAlerts sortUsingDescriptors:@[sortDescriptor]];
     _intervalLength = [[_currentAlerts firstObject] doubleValue];
+    [self saveValues];
 }
 
 - (void)didFireAlert:(NSNumber *)alert {
