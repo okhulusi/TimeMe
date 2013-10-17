@@ -9,6 +9,7 @@
 #import "TMTimerView.h"
 #import "TMStyleManager.h"
 #import "TMAlertManager.h"
+#import "NSString+TMTimeIntervalString.h"
 
 #define UPDATE_INTERVAL .05
 
@@ -20,7 +21,6 @@
 }
 
 - (void)_updateLabels;
-- (NSString *)_stringForElapsedTime:(NSTimeInterval)elapsedTime forLength:(NSTimeInterval)length;
 @end
 
 @implementation TMTimerView
@@ -55,21 +55,6 @@
     return self;
 }
 
-- (NSString *)_stringForElapsedTime:(NSTimeInterval)elapsedTime forLength:(NSTimeInterval)length {
-    NSTimeInterval countdownTime = length - elapsedTime;
-    
-    NSCalendar *calender = [NSCalendar currentCalendar];
-    NSDate *startDate = [[NSDate alloc] init];
-    NSDate *endDate = [[NSDate alloc] initWithTimeInterval:countdownTime sinceDate:startDate];
-    
-    
-    unsigned int conversionFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
-    
-    NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
-    NSString *intervalString = [NSString stringWithFormat:@"%02ld:%02ld:%02ld",(long)[components hour],(long)[components minute],(long)[components second]];
-    return intervalString;
-}
-
 - (void)setHighlighted:(BOOL)highlighted {
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     UIColor *backgroundColor = highlighted ? styleManager.highlightBackgroundColor : styleManager.backgroundColor;
@@ -84,15 +69,21 @@
 }
 
 - (void)_updateLabels {
-    TMAlertManager *alertManager = [TMAlertManager getInstance];
     NSTimeInterval now = [[NSDate date] timeIntervalSinceReferenceDate];
+    
+    TMAlertManager *alertManager = [TMAlertManager getInstance];
     NSTimeInterval elapsedTimer = now - alertManager.timerStart;
-    NSString *timerText = [self _stringForElapsedTime:elapsedTimer forLength:alertManager.timerLength];
-    NSTimeInterval elapsedInterval = now - alertManager.intervalStart;
-    if (elapsedInterval < 0 || !alertManager.intervalLength) {
-        elapsedInterval = 0;
+    NSTimeInterval timerLeft = alertManager.timerLength - elapsedTimer;
+    NSString *timerText = [NSString stringForTimeInterval:timerLeft style:TMTimeIntervalStringDigital];
+    
+    
+    NSTimeInterval elapsedInterval = now - (alertManager.intervalStart);
+    NSTimeInterval intervalLeft = alertManager.intervalLength - elapsedInterval;
+    if (intervalLeft < 0) {
+        intervalLeft = 0;
     }
-    NSString *intervalText = [self _stringForElapsedTime:elapsedInterval forLength:alertManager.intervalLength];
+    NSString *intervalText = [NSString stringForTimeInterval:intervalLeft style:TMTimeIntervalStringDigital];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         [_timerLabel setText:timerText];
         [_intervalLabel setText:intervalText];
