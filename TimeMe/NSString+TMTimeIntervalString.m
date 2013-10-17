@@ -18,9 +18,8 @@
     unsigned int conversionFlags = NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit;
     
     NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
-    NSString *intervalString = nil;
+    NSString *intervalString = @"";
     if (style == TMTimeIntervalStringWords) {
-        intervalString = @"";
         if([components hour]){
             intervalString = [NSString stringWithFormat:@"%ld hour",(long)[components hour]];
             if ([components hour] != 1) {
@@ -50,7 +49,13 @@
             intervalString = [intervalString stringByAppendingString:secondString];
         }
     } else if (style == TMTimeIntervalStringDigital) {
-        intervalString = [NSString stringWithFormat:@"%02ld:%02ld:%02ld",(long)[components hour],(long)[components minute],(long)[components second]];
+        if ([components hour]) {
+            intervalString = [intervalString stringByAppendingFormat:@"%02ld:",(long)[components hour]];
+        }
+        if ([components minute] || [intervalString length]) {
+            intervalString = [intervalString stringByAppendingFormat:@"%02ld",(long)[components minute]];
+        }
+        intervalString = [intervalString stringByAppendingFormat:@":%02ld",(long)[components second]];
     }
     return intervalString;
 }
