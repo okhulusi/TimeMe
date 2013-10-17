@@ -146,6 +146,16 @@
     [self.view addSubview:_timerToggleButton];
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [_selectedAlerts removeAllObjects];
+    TMAlertManager *alertManager = [TMAlertManager getInstance];
+    NSArray *availableAlerts = alertManager.alertIntervals;
+    for (NSNumber *alertInterval in availableAlerts) {
+        [_selectedAlerts setObject:@YES forKey:alertInterval];
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     TMAlertManager *alertManager = [TMAlertManager getInstance];
