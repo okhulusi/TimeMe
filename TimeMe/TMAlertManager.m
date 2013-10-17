@@ -146,7 +146,7 @@ static NSString *kStartTimeKey = @"starttime";
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     _timerLength = [defaults doubleForKey:kTimerLengthKey];
     _timerStart = [defaults doubleForKey:kStartTimeKey];
-    
+    _generatingAlerts = NO;
     NSTimeInterval now = [[NSDate date] timeIntervalSinceReferenceDate];
     if (now > (_timerStart + _timerLength)) { //if the entire timer has expired
         _timerLength = 0;
@@ -154,6 +154,7 @@ static NSString *kStartTimeKey = @"starttime";
         _intervalLength = 0;
         _intervalStart = 0;
     } else {
+        _generatingAlerts = YES;
         _currentAlerts = [[defaults objectForKey:kCurrentAlertsKey] mutableCopy];
         NSTimeInterval elapsedTime = now - _timerStart;
         while ([_currentAlerts count] && (elapsedTime > [[_currentAlerts firstObject] doubleValue])) {     //check if we have any expired timers
@@ -172,6 +173,7 @@ static NSString *kStartTimeKey = @"starttime";
             }
         }
     }
+    _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
 }
 
 
