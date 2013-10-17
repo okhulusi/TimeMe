@@ -35,6 +35,8 @@
 - (void)_toggleButtonPressed;
 - (void)_fadeInView:(UIView *)inView outView:(UIView *)outView;
 - (NSArray *)_selectedAlerts;
+
+- (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated;
 @end
 
 @implementation TMViewController
@@ -51,42 +53,41 @@
 }
 
 - (void)_toggleButtonPressed {
-    NSString *buttonTitle = nil;
-    UIColor *titleColor = nil;
-    UIView *inView = nil;
-    UIView *outView = nil;
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     if (!alertManager.generatingAlerts) {
         NSArray *selectedAlerts = [self _selectedAlerts];
         [alertManager startAlerts:selectedAlerts];
-        
-        buttonTitle = @"Stop";
-        titleColor = [UIColor redColor];
-        
-        inView = _timerView;
-        outView = _tableView;
-        
-        [_timerView beginUpdating];
     } else {
         [alertManager stopAlerts];
-        _showingPicker = NO;
+    }
+    [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:YES];
+}
+
+- (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
+    NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
+    UIColor *titleColor = generatingAlerts ? [UIColor redColor] : [UIColor greenColor];
+    UIView *inView = generatingAlerts ? _timerView : _tableView;
+    UIView *outView =generatingAlerts ? _tableView : _timerView;
+    
+    if (generatingAlerts) {
+        [_timerView beginUpdating];
+    } else {
         [_tableView reloadData];
-        buttonTitle = @"Start";
-        titleColor = [UIColor greenColor];
-        
-        inView = _tableView;
-        outView = _timerView;
-        
         [_timerView endUpdating];
     }
+    
     if (buttonTitle) {
         [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
     }
     if (titleColor) {
         [_timerToggleButton setTitleColor:titleColor forState:UIControlStateNormal];
     }
-    if (inView && outView) {
+    
+    if (animated) {
         [self _fadeInView:inView outView:outView];
+    } else {
+        [self.view addSubview:inView];
+        [outView removeFromSuperview];
     }
 }
 
@@ -146,9 +147,9 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    _showingPicker = NO;
     [super viewWillAppear:animated];
-    [_tableView reloadData];
+    TMAlertManager *alertManager = [TMAlertManager getInstance];
+    [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
 }
 
 #pragma mark - UITableView
@@ -306,12 +307,7 @@ static CGFloat __headerHeight = 50;
     _showingPicker = NO;
     [_tableView reloadData];
     
-    NSString *buttonTitle = @"Start";
-    UIColor *titleColor = [UIColor greenColor];
-    [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
-    [_timerToggleButton setTitleColor:titleColor forState:UIControlStateNormal];
-    [self _fadeInView:_tableView outView:_timerView];
-    [_timerView endUpdating];
+    [self _configureForGeneratingAlerts:NO animated:YES];
 }
 
 @end
