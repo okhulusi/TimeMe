@@ -89,6 +89,9 @@
     NSTimeInterval elapsedTimer = now - alertManager.timerStart;
     NSString *timerText = [self _stringForElapsedTime:elapsedTimer forLength:alertManager.timerLength];
     NSTimeInterval elapsedInterval = now - alertManager.intervalStart;
+    if (elapsedInterval < 0 || !alertManager.intervalLength) {
+        elapsedInterval = 0;
+    }
     NSString *intervalText = [self _stringForElapsedTime:elapsedInterval forLength:alertManager.intervalLength];
     dispatch_async(dispatch_get_main_queue(), ^{
         [_timerLabel setText:timerText];

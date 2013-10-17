@@ -161,8 +161,8 @@ static NSString *kStartTimeKey = @"starttime";
             [_currentAlerts removeObjectAtIndex:0];
         }
         _intervalStart = [[_currentAlerts firstObject] doubleValue] + _timerStart;
-        NSTimeInterval nextAlert = [_currentAlerts count] > 1 ? [[_currentAlerts objectAtIndex:1] doubleValue] : 0;
-        _intervalLength = _timerLength - ([[_currentAlerts firstObject] doubleValue] - nextAlert);
+        NSTimeInterval nextAlert = [_currentAlerts count] > 1 ? [[_currentAlerts objectAtIndex:1] doubleValue] : _timerLength;
+        _intervalLength = nextAlert - [[_currentAlerts firstObject] doubleValue];
     }
     _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
 }
