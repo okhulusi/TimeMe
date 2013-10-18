@@ -74,6 +74,9 @@
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     NSTimeInterval elapsedTimer = now - alertManager.timerStart;
     NSTimeInterval timerLeft = alertManager.timerLength - elapsedTimer;
+    if (timerLeft < 0) {
+        timerLeft = 0;
+    }
     NSString *timerText = [NSString stringForTimeInterval:timerLeft style:TMTimeIntervalStringDigital];
     
     
