@@ -35,6 +35,7 @@
 - (void)_toggleButtonPressed;
 - (void)_fadeInView:(UIView *)inView outView:(UIView *)outView;
 - (NSArray *)_selectedAlerts;
+- (void)_setUpViews;
 
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated;
 @end
@@ -48,8 +49,17 @@
         _selectedAlerts = [[NSMutableDictionary alloc] init];
         TMAlertManager *alertManager = [TMAlertManager getInstance];
         [alertManager setDelegate:self];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(_setUpViews)
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)_toggleButtonPressed {
@@ -61,6 +71,11 @@
         [alertManager stopAlerts];
     }
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:YES];
+}
+
+- (void)_setUpViews {
+    TMAlertManager *alertManager = [TMAlertManager getInstance];
+    [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
 }
 
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
@@ -86,6 +101,7 @@
     if (animated) {
         [self _fadeInView:inView outView:outView];
     } else {
+        [inView setAlpha:1];
         [self.view addSubview:inView];
         [outView removeFromSuperview];
     }
