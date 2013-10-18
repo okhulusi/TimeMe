@@ -200,7 +200,8 @@ static CGFloat __headerHeight = 50;
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(padding, padding,
                                                                    CGRectGetWidth(self.view.frame)-(2*padding), __headerHeight - (2*padding))];
         TMStyleManager *styleManager = [TMStyleManager getInstance];
-        [label setText:@"Alert me at"];
+        [label setText:@"Alert me at:"];
+        label.textAlignment = NSTextAlignmentCenter;
         [label setBackgroundColor:styleManager.backgroundColor];
         [label setTextColor:styleManager.textColor];
         [label setFont:[styleManager.font fontWithSize:20]];
