@@ -32,7 +32,7 @@
     [[UINavigationBar appearance] setTitleTextAttributes:
      [NSDictionary dictionaryWithObjectsAndKeys:
       styleManager.navigationBarTitleColor, NSForegroundColorAttributeName,
-      styleManager.font, NSFontAttributeName, nil]];
+      [styleManager.font fontWithSize:25], NSFontAttributeName, nil]];
     
     return YES;
 }

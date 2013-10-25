@@ -44,7 +44,7 @@
 
 - (id)init {
     if (self = [super init]) {
-        [self setTitle:@"TimeMe"];
+        [self setTitle:@"Bzz"];
         
         _showingPicker = NO;
         _selectedAlerts = [[NSMutableDictionary alloc] init];
