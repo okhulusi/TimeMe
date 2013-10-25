@@ -80,7 +80,7 @@
 
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
     NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
-    UIColor *titleColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x31/256. green:0x47/256. blue:0x02/256. alpha:1];
+    UIColor *titleColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x31/256. green:0xA9/256. blue:0x02/256. alpha:1];
     UIView *inView = generatingAlerts ? _timerView : _tableView;
     UIView *outView =generatingAlerts ? _tableView : _timerView;
     
