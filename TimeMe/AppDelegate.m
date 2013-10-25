@@ -29,10 +29,10 @@
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     [navigationController.navigationBar setBarTintColor:styleManager.navigationBarTintColor];
     
-    [[UINavigationBar appearance] setTitleTextAttributes:
-     [NSDictionary dictionaryWithObjectsAndKeys:
-      styleManager.navigationBarTitleColor, NSForegroundColorAttributeName,
-      [styleManager.font fontWithSize:25], NSFontAttributeName, nil]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:
+                                                           styleManager.navigationBarTitleColor,
+                                                           NSFontAttributeName:
+                                                           [styleManager.font fontWithSize:25] }];
     
     return YES;
 }

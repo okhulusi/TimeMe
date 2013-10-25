@@ -20,6 +20,7 @@
         [self.textLabel setTextColor:styleManager.textColor];
         [self.textLabel setHighlightedTextColor:styleManager.highlightDetailTextColor];
         
+        
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
         
         UIImageView *checkView = [[UIImageView alloc] initWithImage:styleManager.uncheckedImage highlightedImage:styleManager.checkedImage];
@@ -30,7 +31,7 @@
 }
 
 - (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
-    NSString *intervalString = [NSString stringForTimeInterval:timeInterval style:TMTimeIntervalStringDigital];
+    NSString *intervalString = [NSString stringWithFormat:@" %@",[NSString stringForTimeInterval:timeInterval style:TMTimeIntervalStringDigital]];
     [self.textLabel setText:intervalString];
 }
 

@@ -81,7 +81,7 @@
 
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
     NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
-    UIColor *titleColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x31/256. green:0xA9/256. blue:0x02/256. alpha:1];
+    UIColor *titleColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x31/256. green:.6 blue:0x02/256. alpha:1];
     UIView *inView = generatingAlerts ? _timerView : _tableView;
     UIView *outView =generatingAlerts ? _tableView : _timerView;
     
@@ -152,7 +152,7 @@
     _timerView = [[TMTimerView alloc] initWithFrame:tableFrame];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_timerToggleButton setBackgroundColor:[UIColor colorWithRed:0xE9/256. green:0xE5/256. blue:0x8E/256. alpha:1]];
+    [_timerToggleButton setBackgroundColor:[UIColor colorWithRed:0xE9/256. green:0xE5/256. blue:0x8E/256. alpha:.9]];
     [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
     [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
     [_timerToggleButton setFrame:CGRectMake(0, CGRectGetMaxY(tableFrame),
@@ -195,18 +195,20 @@ static CGFloat __headerHeight = 50;
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *headerView = nil;
     if (section == 1 && [[TMAlertManager getInstance].alertIntervals count]) {
-        CGFloat padding = 10;
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(padding, padding,
-                                                                   CGRectGetWidth(self.view.frame)-(2*padding), __headerHeight - (2*padding))];
         TMStyleManager *styleManager = [TMStyleManager getInstance];
+        UIColor *headerColor = [styleManager.backgroundColor colorWithAlphaComponent:.95];
+        CGFloat padding = 10;
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(padding + 5, padding,
+                                                                   CGRectGetWidth(self.view.frame)-(2*padding), __headerHeight - (2*padding))];
+
         [label setText:@"Bzz me at:"];
         label.textAlignment = NSTextAlignmentLeft;
-        [label setBackgroundColor:styleManager.backgroundColor];
+        [label setBackgroundColor:[UIColor clearColor]];
         [label setTextColor:styleManager.textColor];
-        [label setFont:[styleManager.font fontWithSize:20]];
+        [label setFont:[styleManager.font fontWithSize:19]];
         headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0,
                                                               CGRectGetWidth(self.view.frame), __headerHeight)];
-        [headerView setBackgroundColor:styleManager.backgroundColor];
+        [headerView setBackgroundColor: headerColor];
         [headerView addSubview:label];
     }
     return headerView;
@@ -237,11 +239,8 @@ static CGFloat __headerHeight = 50;
                 cell = [[TMTimeLabelCell alloc] initWithReuseIdentifier:kTimerPickerTitleCellID];
             }
             
-            TMStyleManager *styleManager = [TMStyleManager getInstance];
             NSString *titleText = @"Duration";
             [cell.textLabel setText:titleText];
-            [cell.textLabel setFont:[UIFont fontWithName:styleManager.font.fontName size:15]];
-            [cell.detailTextLabel setFont:[UIFont fontWithName:styleManager.font.fontName size:15]];
         } else { //display a pickerview for this one
             static NSString *kPickerViewCellID = @"pickerviewcellid";
             cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];

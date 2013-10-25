@@ -9,22 +9,20 @@
 #import "TMTableViewCell.h"
 #import "TMStyleManager.h"
 
+
 @implementation TMTableViewCell
 
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier {
     self = [self initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
-    if (self) {
-         TMStyleManager *styleManager = [TMStyleManager getInstance];
-        [self.textLabel setFont:styleManager.font];
-        [self.detailTextLabel setFont:styleManager.font];
-    }
     return self;
 }
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-    
+        TMStyleManager *styleManager = [TMStyleManager getInstance];
+        [self.textLabel setFont:[styleManager.font fontWithSize:20]];
+        [self.detailTextLabel setFont:[styleManager.font fontWithSize:18]];
     }
     return self;
 }
