@@ -40,7 +40,7 @@ static TMStyleManager *__instance = nil;
         _navigationBarTintColor = [UIColor colorWithRed:0xE9/256. green:0xE5/256. blue:0x8E/256. alpha:1];
         _navigationBarTitleColor = _backgroundColor;
         
-        _font = [UIFont systemFontOfSize:20];
+        _font = [UIFont fontWithName:@"ChalkboardSE-Bold" size:20];
         
         _checkedImage = [self _generateCheckedImage];
         _uncheckedImage = [self _generateUncheckedImage];

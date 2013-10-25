@@ -45,6 +45,7 @@
 - (id)init {
     if (self = [super init]) {
         [self setTitle:@"TimeMe"];
+        
         _showingPicker = NO;
         _selectedAlerts = [[NSMutableDictionary alloc] init];
         TMAlertManager *alertManager = [TMAlertManager getInstance];
@@ -136,8 +137,6 @@
     
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     [self.view setBackgroundColor:styleManager.backgroundColor];
-    [self.navigationController.navigationBar setBarTintColor:styleManager.navigationBarTintColor];
-    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : styleManager.navigationBarTitleColor}];
     
     CGFloat buttonHeight = 60;
     CGRect tableFrame = self.view.frame;
@@ -200,7 +199,7 @@ static CGFloat __headerHeight = 50;
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(padding, padding,
                                                                    CGRectGetWidth(self.view.frame)-(2*padding), __headerHeight - (2*padding))];
         TMStyleManager *styleManager = [TMStyleManager getInstance];
-        [label setText:@"Alert me at:"];
+        [label setText:@"Buzz me at:"];
         label.textAlignment = NSTextAlignmentCenter;
         [label setBackgroundColor:styleManager.backgroundColor];
         [label setTextColor:styleManager.textColor];
@@ -237,8 +236,12 @@ static CGFloat __headerHeight = 50;
             if (!cell) {
                 cell = [[TMTimeLabelCell alloc] initWithReuseIdentifier:kTimerPickerTitleCellID];
             }
-            NSString *titleText = @"Timer Length";
+            
+            TMStyleManager *styleManager = [TMStyleManager getInstance];
+            NSString *titleText = @"Duration";
             [cell.textLabel setText:titleText];
+            [cell.textLabel setFont:[UIFont fontWithName:styleManager.font.fontName size:15]];
+            [cell.detailTextLabel setFont:[UIFont fontWithName:styleManager.font.fontName size:15]];
         } else { //display a pickerview for this one
             static NSString *kPickerViewCellID = @"pickerviewcellid";
             cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];

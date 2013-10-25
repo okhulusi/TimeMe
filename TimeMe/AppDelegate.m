@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "TMViewController.h"
 #import "TMAlertManager.h"
+#import "TMStyleManager.h"
 
 @implementation AppDelegate
 
@@ -24,6 +25,14 @@
     [self.window setRootViewController:navigationController];
     
     [self.window makeKeyAndVisible];
+    
+    TMStyleManager *styleManager = [TMStyleManager getInstance];
+    [navigationController.navigationBar setBarTintColor:styleManager.navigationBarTintColor];
+    
+    [[UINavigationBar appearance] setTitleTextAttributes:
+     [NSDictionary dictionaryWithObjectsAndKeys:
+      styleManager.navigationBarTitleColor, NSForegroundColorAttributeName,
+      styleManager.font, NSFontAttributeName, nil]];
     
     return YES;
 }
