@@ -17,7 +17,7 @@
     if (self) {
         TMStyleManager *styleManager = [TMStyleManager getInstance];
         [self setBackgroundColor:styleManager.backgroundColor];
-        [self.textLabel setTextColor:styleManager.detailTextColor];
+        [self.textLabel setTextColor:styleManager.textColor];
         [self.textLabel setHighlightedTextColor:styleManager.highlightDetailTextColor];
         
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
