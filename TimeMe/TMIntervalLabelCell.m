@@ -22,7 +22,7 @@
         
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
         
-        UIImageView *checkView = [[UIImageView alloc] initWithImage:styleManager.checkImage];
+        UIImageView *checkView = [[UIImageView alloc] initWithImage:styleManager.uncheckedImage highlightedImage:styleManager.checkedImage];
         self.accessoryView = checkView;
         
     }
@@ -35,7 +35,8 @@
 }
 
 - (void)setChecked:(BOOL)checked animated:(BOOL)animated {
-    [self.accessoryView setHidden:!checked];
+    UIImageView *accessoryView = (UIImageView *)self.accessoryView;
+    [accessoryView setHighlighted:checked];
 }
 
 @end

@@ -26,5 +26,6 @@
 
 @property (readonly) UIFont *font;
 
-@property (readonly) UIImage *checkImage;
+@property (readonly) UIImage *checkedImage;
+@property (readonly) UIImage *uncheckedImage;
 @end

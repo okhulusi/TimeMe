@@ -44,7 +44,7 @@
 
 - (id)init {
     if (self = [super init]) {
-        [self setTitle:@"TimeMe"];
+        [self setTitle:@"Bzz"];
         
         _showingPicker = NO;
         _selectedAlerts = [[NSMutableDictionary alloc] init];
@@ -167,7 +167,7 @@
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     NSArray *availableAlerts = alertManager.alertIntervals;
     for (NSNumber *alertInterval in availableAlerts) {
-        [_selectedAlerts setObject:@YES forKey:alertInterval];
+        [_selectedAlerts setObject:@NO forKey:alertInterval];
     }
 }
 
@@ -312,7 +312,7 @@ static CGFloat __headerHeight = 50;
     [_selectedAlerts removeAllObjects];
     NSArray *availableAlerts = alertManager.alertIntervals;
     for (NSNumber *alertInterval in availableAlerts) {
-        [_selectedAlerts setObject:@YES forKey:alertInterval];
+        [_selectedAlerts setObject:@NO forKey:alertInterval];
     }
     
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];            

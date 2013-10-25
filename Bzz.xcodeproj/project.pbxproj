@@ -43,22 +43,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		AA2F1DDB17ECD84D001AB1D6 /* TimeMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA2F1DDB17ECD84D001AB1D6 /* Bzz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bzz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA2F1DDE17ECD84D001AB1D6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AA2F1DE017ECD84D001AB1D6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		AA2F1DE217ECD84D001AB1D6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		AA2F1DE617ECD84D001AB1D6 /* TimeMe-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TimeMe-Info.plist"; sourceTree = "<group>"; };
+		AA2F1DE617ECD84D001AB1D6 /* Bzz-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Bzz-Info.plist"; sourceTree = "<group>"; };
 		AA2F1DE817ECD84D001AB1D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AA2F1DEA17ECD84D001AB1D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		AA2F1DEC17ECD84D001AB1D6 /* TimeMe-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TimeMe-Prefix.pch"; sourceTree = "<group>"; };
+		AA2F1DEC17ECD84D001AB1D6 /* Bzz-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bzz-Prefix.pch"; sourceTree = "<group>"; };
 		AA2F1DED17ECD84D001AB1D6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AA2F1DEE17ECD84D001AB1D6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		AA2F1DF317ECD84D001AB1D6 /* TMViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TMViewController.h; sourceTree = "<group>"; };
 		AA2F1DF417ECD84D001AB1D6 /* TMViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TMViewController.m; sourceTree = "<group>"; };
 		AA2F1DF617ECD84D001AB1D6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		AA2F1DFC17ECD84D001AB1D6 /* TimeMeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeMeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA2F1DFC17ECD84D001AB1D6 /* BzzTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BzzTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA2F1DFD17ECD84D001AB1D6 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		AA2F1E0517ECD84D001AB1D6 /* TimeMeTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TimeMeTests-Info.plist"; sourceTree = "<group>"; };
+		AA2F1E0517ECD84D001AB1D6 /* BzzTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BzzTests-Info.plist"; sourceTree = "<group>"; };
 		AA2F1E0717ECD84D001AB1D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AA2F1E0917ECD84D001AB1D6 /* TimeMeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeMeTests.m; sourceTree = "<group>"; };
 		D3377F8017FF71F400993815 /* TMTimePickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimePickerCell.h; sourceTree = "<group>"; };
@@ -120,8 +120,8 @@
 		AA2F1DDC17ECD84D001AB1D6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AA2F1DDB17ECD84D001AB1D6 /* TimeMe.app */,
-				AA2F1DFC17ECD84D001AB1D6 /* TimeMeTests.xctest */,
+				AA2F1DDB17ECD84D001AB1D6 /* Bzz.app */,
+				AA2F1DFC17ECD84D001AB1D6 /* BzzTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -160,10 +160,10 @@
 		AA2F1DE517ECD84D001AB1D6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				AA2F1DE617ECD84D001AB1D6 /* TimeMe-Info.plist */,
+				AA2F1DE617ECD84D001AB1D6 /* Bzz-Info.plist */,
 				AA2F1DE717ECD84D001AB1D6 /* InfoPlist.strings */,
 				AA2F1DEA17ECD84D001AB1D6 /* main.m */,
-				AA2F1DEC17ECD84D001AB1D6 /* TimeMe-Prefix.pch */,
+				AA2F1DEC17ECD84D001AB1D6 /* Bzz-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -180,7 +180,7 @@
 		AA2F1E0417ECD84D001AB1D6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				AA2F1E0517ECD84D001AB1D6 /* TimeMeTests-Info.plist */,
+				AA2F1E0517ECD84D001AB1D6 /* BzzTests-Info.plist */,
 				AA2F1E0617ECD84D001AB1D6 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -225,9 +225,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		AA2F1DDA17ECD84D001AB1D6 /* TimeMe */ = {
+		AA2F1DDA17ECD84D001AB1D6 /* Bzz */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AA2F1E0D17ECD84D001AB1D6 /* Build configuration list for PBXNativeTarget "TimeMe" */;
+			buildConfigurationList = AA2F1E0D17ECD84D001AB1D6 /* Build configuration list for PBXNativeTarget "Bzz" */;
 			buildPhases = (
 				AA2F1DD717ECD84D001AB1D6 /* Sources */,
 				AA2F1DD817ECD84D001AB1D6 /* Frameworks */,
@@ -237,14 +237,14 @@
 			);
 			dependencies = (
 			);
-			name = TimeMe;
+			name = Bzz;
 			productName = TimeMe;
-			productReference = AA2F1DDB17ECD84D001AB1D6 /* TimeMe.app */;
+			productReference = AA2F1DDB17ECD84D001AB1D6 /* Bzz.app */;
 			productType = "com.apple.product-type.application";
 		};
-		AA2F1DFB17ECD84D001AB1D6 /* TimeMeTests */ = {
+		AA2F1DFB17ECD84D001AB1D6 /* BzzTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AA2F1E1017ECD84D001AB1D6 /* Build configuration list for PBXNativeTarget "TimeMeTests" */;
+			buildConfigurationList = AA2F1E1017ECD84D001AB1D6 /* Build configuration list for PBXNativeTarget "BzzTests" */;
 			buildPhases = (
 				AA2F1DF817ECD84D001AB1D6 /* Sources */,
 				AA2F1DF917ECD84D001AB1D6 /* Frameworks */,
@@ -255,9 +255,9 @@
 			dependencies = (
 				AA2F1E0217ECD84D001AB1D6 /* PBXTargetDependency */,
 			);
-			name = TimeMeTests;
+			name = BzzTests;
 			productName = TimeMeTests;
-			productReference = AA2F1DFC17ECD84D001AB1D6 /* TimeMeTests.xctest */;
+			productReference = AA2F1DFC17ECD84D001AB1D6 /* BzzTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -274,7 +274,7 @@
 					};
 				};
 			};
-			buildConfigurationList = AA2F1DD617ECD84D001AB1D6 /* Build configuration list for PBXProject "TimeMe" */;
+			buildConfigurationList = AA2F1DD617ECD84D001AB1D6 /* Build configuration list for PBXProject "Bzz" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -287,8 +287,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AA2F1DDA17ECD84D001AB1D6 /* TimeMe */,
-				AA2F1DFB17ECD84D001AB1D6 /* TimeMeTests */,
+				AA2F1DDA17ECD84D001AB1D6 /* Bzz */,
+				AA2F1DFB17ECD84D001AB1D6 /* BzzTests */,
 			);
 		};
 /* End PBXProject section */
@@ -346,7 +346,7 @@
 /* Begin PBXTargetDependency section */
 		AA2F1E0217ECD84D001AB1D6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = AA2F1DDA17ECD84D001AB1D6 /* TimeMe */;
+			target = AA2F1DDA17ECD84D001AB1D6 /* Bzz */;
 			targetProxy = AA2F1E0117ECD84D001AB1D6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -449,9 +449,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TimeMe/TimeMe-Prefix.pch";
-				INFOPLIST_FILE = "TimeMe/TimeMe-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "TimeMe/Bzz-Prefix.pch";
+				INFOPLIST_FILE = "TimeMe/Bzz-Info.plist";
+				PRODUCT_NAME = Bzz;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -463,9 +463,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "TimeMe/TimeMe-Prefix.pch";
-				INFOPLIST_FILE = "TimeMe/TimeMe-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PREFIX_HEADER = "TimeMe/Bzz-Prefix.pch";
+				INFOPLIST_FILE = "TimeMe/Bzz-Info.plist";
+				PRODUCT_NAME = Bzz;
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -487,8 +487,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "TimeMeTests/TimeMeTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "TimeMeTests/BzzTests-Info.plist";
+				PRODUCT_NAME = BzzTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -506,8 +506,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TimeMe/TimeMe-Prefix.pch";
-				INFOPLIST_FILE = "TimeMeTests/TimeMeTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "TimeMeTests/BzzTests-Info.plist";
+				PRODUCT_NAME = BzzTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -516,7 +516,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		AA2F1DD617ECD84D001AB1D6 /* Build configuration list for PBXProject "TimeMe" */ = {
+		AA2F1DD617ECD84D001AB1D6 /* Build configuration list for PBXProject "Bzz" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AA2F1E0B17ECD84D001AB1D6 /* Debug */,
@@ -525,7 +525,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AA2F1E0D17ECD84D001AB1D6 /* Build configuration list for PBXNativeTarget "TimeMe" */ = {
+		AA2F1E0D17ECD84D001AB1D6 /* Build configuration list for PBXNativeTarget "Bzz" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AA2F1E0E17ECD84D001AB1D6 /* Debug */,
@@ -534,7 +534,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AA2F1E1017ECD84D001AB1D6 /* Build configuration list for PBXNativeTarget "TimeMeTests" */ = {
+		AA2F1E1017ECD84D001AB1D6 /* Build configuration list for PBXNativeTarget "BzzTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AA2F1E1117ECD84D001AB1D6 /* Debug */,
