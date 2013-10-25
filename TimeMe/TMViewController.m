@@ -81,7 +81,7 @@
 
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
     NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
-    UIColor *titleColor = generatingAlerts ? [UIColor redColor] : [UIColor greenColor];
+    UIColor *titleColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x31/256. green:0xA9/256. blue:0x02/256. alpha:1];
     UIView *inView = generatingAlerts ? _timerView : _tableView;
     UIView *outView =generatingAlerts ? _tableView : _timerView;
     
@@ -138,7 +138,7 @@
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     [self.view setBackgroundColor:styleManager.backgroundColor];
     
-    CGFloat buttonHeight = 75;
+    CGFloat buttonHeight = 60;
     CGRect tableFrame = self.view.frame;
     tableFrame.size.height -= buttonHeight;
     
@@ -152,8 +152,8 @@
     _timerView = [[TMTimerView alloc] initWithFrame:tableFrame];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_timerToggleButton setBackgroundColor:[UIColor colorWithRed:0xE9/256. green:0xE5/256. blue:0x8E/256. alpha:1]];
     [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
-    [_timerToggleButton setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
     [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
     [_timerToggleButton setFrame:CGRectMake(0, CGRectGetMaxY(tableFrame),
                                            CGRectGetWidth(self.view.frame), buttonHeight)];
