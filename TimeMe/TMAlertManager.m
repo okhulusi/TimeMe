@@ -130,6 +130,7 @@ static TMAlertManager *__instance = nil;
 - (void)stopAlerts {
     _generatingAlerts = NO;
     _timerLength = 0;
+    _intervalLength = 0;
     _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
     [_currentAlerts removeAllObjects];
     //we deliberately exclude _timerStart reset so if we reload, and we're not running, we're not going to try to reload erroneous values
