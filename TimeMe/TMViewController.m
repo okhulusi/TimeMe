@@ -23,7 +23,6 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 @interface TMViewController () {
-    UITableView *_tableView;
     TMTimerView *_timerView;
     
     UIButton *_timerToggleButton;
@@ -82,13 +81,13 @@
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
     NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
     UIColor *titleColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x31/256. green:.6 blue:0x02/256. alpha:1];
-    UIView *inView = generatingAlerts ? _timerView : _tableView;
-    UIView *outView =generatingAlerts ? _tableView : _timerView;
+    UIView *inView = generatingAlerts ? _timerView : self.tableView;
+    UIView *outView =generatingAlerts ? self.tableView : _timerView;
     
     if (generatingAlerts) {
         [_timerView beginUpdating];
     } else {
-        [_tableView reloadData];
+        [self.tableView reloadData];
         [_timerView endUpdating];
     }
     
@@ -134,20 +133,12 @@
 
 - (void)loadView {
     [super loadView];
-    
+
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     [self.view setBackgroundColor:styleManager.backgroundColor];
     
+    CGRect tableFrame = self.tableView.frame;
     CGFloat buttonHeight = 60;
-    CGRect tableFrame = self.view.frame;
-    tableFrame.size.height -= buttonHeight;
-    
-    _tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
-    [_tableView setBackgroundColor:styleManager.backgroundColor];
-    [_tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    [_tableView setDataSource:self];
-    [_tableView setDelegate:self];
-    [self.view addSubview:_tableView];
     
     _timerView = [[TMTimerView alloc] initWithFrame:tableFrame];
     
@@ -159,6 +150,9 @@
                                            CGRectGetWidth(self.view.frame), buttonHeight)];
     [_timerToggleButton addTarget:self action:@selector(_toggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_timerToggleButton];
+    
+    TMAlertManager *alertManager = [TMAlertManager getInstance];
+    [alertManager setTimerLength:6000];
 }
 
 - (void)viewDidLoad {
@@ -179,14 +173,10 @@
 
 #pragma mark - UITableView
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
-}
-
-static CGFloat __headerHeight = 50;
+static CGFloat __headerHeight = 44;
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     CGFloat height = 0;
-    if (section == 1 && [[TMAlertManager getInstance].alertIntervals count]) {
+    if ([[TMAlertManager getInstance].alertIntervals count]) {
         height = __headerHeight;
     }
     return height;
@@ -194,7 +184,7 @@ static CGFloat __headerHeight = 50;
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *headerView = nil;
-    if (section == 1 && [[TMAlertManager getInstance].alertIntervals count]) {
+    if ([[TMAlertManager getInstance].alertIntervals count]) {
         TMStyleManager *styleManager = [TMStyleManager getInstance];
         UIColor *headerColor = [styleManager.backgroundColor colorWithAlphaComponent:.95];
         CGFloat padding = 10;
@@ -215,93 +205,46 @@ static CGFloat __headerHeight = 50;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger rowCount;
-    if (section == 0) {
-        rowCount = 1;
-        if (_showingPicker) {
-            rowCount++;
-        }
-    } else {
-        rowCount = [[TMAlertManager getInstance].alertIntervals count];
-    }
+    NSInteger rowCount = [[TMAlertManager getInstance].alertIntervals count];
     return rowCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath { // should be lightweight
     TMTableViewCell *cell = nil;
     TMAlertManager *alertManager = [TMAlertManager getInstance];
-    NSTimeInterval timeInterval = alertManager.timerLength;
-    if (indexPath.section == 0) {
-        if (indexPath.row == 0) { //we display info on the timer, not the timer picker itself
-            static NSString *kTimerPickerTitleCellID = @"timercelltitlepickerid";
-            cell = [tableView dequeueReusableCellWithIdentifier:kTimerPickerTitleCellID];
-            if (!cell) {
-                cell = [[TMTimeLabelCell alloc] initWithReuseIdentifier:kTimerPickerTitleCellID];
-            }
-            
-            NSString *titleText = @"Duration";
-            [cell.textLabel setText:titleText];
-        } else { //display a pickerview for this one
-            static NSString *kPickerViewCellID = @"pickerviewcellid";
-            cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];
-            if (!cell) {
-                cell = [[TMTimePickerCell alloc] initWithReuseIdentifier:kPickerViewCellID];
-                ((TMTimePickerCell *)cell).delegate = self;
-
-            }
-        }
-    } else {
-        static NSString *kAlertIntervalCellID = @"alertintervalcellid";
-        cell = [tableView dequeueReusableCellWithIdentifier:kAlertIntervalCellID];
-        if (!cell) {
-            cell = [[TMIntervalLabelCell alloc] initWithReuseIdentifier:kAlertIntervalCellID];
-        }
-        NSNumber *alertInterval = [alertManager.alertIntervals objectAtIndex:indexPath.row];
-        BOOL isChecked = [[_selectedAlerts objectForKey:alertInterval] boolValue];
-        timeInterval = [alertInterval doubleValue];
-        [(TMIntervalLabelCell *)cell setChecked:isChecked animated:NO];
+    static NSString *kAlertIntervalCellID = @"alertintervalcellid";
+    cell = [tableView dequeueReusableCellWithIdentifier:kAlertIntervalCellID];
+    if (!cell) {
+        cell = [[TMIntervalLabelCell alloc] initWithReuseIdentifier:kAlertIntervalCellID];
     }
+    NSNumber *alertInterval = [alertManager.alertIntervals objectAtIndex:indexPath.row];
+    BOOL isChecked = [[_selectedAlerts objectForKey:alertInterval] boolValue];
+    NSTimeInterval timeInterval = [alertInterval doubleValue];
+    [(TMIntervalLabelCell *)cell setChecked:isChecked animated:NO];
     [cell configureForTimeInterval:timeInterval];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 0 && indexPath.row == 0) {
-        NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:0];
-        if (!_showingPicker) { //if we're not showing a picker show one
-            _showingPicker = YES;
-            [tableView insertRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        } else {
-            _showingPicker = NO;
-            [_tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-
-        }
-    } else if (indexPath.section == 1){
-        TMAlertManager *alertManager = [TMAlertManager getInstance];
-        NSNumber *alertInterval = [alertManager.alertIntervals objectAtIndex:indexPath.row];
-        BOOL checked = ![[_selectedAlerts objectForKey:alertInterval] boolValue];
-        [_selectedAlerts setObject:[NSNumber numberWithBool:checked] forKey:alertInterval];
-        TMIntervalLabelCell *cell = (TMIntervalLabelCell *)[tableView cellForRowAtIndexPath:indexPath];
-        [cell setChecked:checked animated:YES];
-    }
+    TMAlertManager *alertManager = [TMAlertManager getInstance];
+    NSNumber *alertInterval = [alertManager.alertIntervals objectAtIndex:indexPath.row];
+    BOOL checked = ![[_selectedAlerts objectForKey:alertInterval] boolValue];
+    [_selectedAlerts setObject:[NSNumber numberWithBool:checked] forKey:alertInterval];
+    TMIntervalLabelCell *cell = (TMIntervalLabelCell *)[tableView cellForRowAtIndexPath:indexPath];
+    [cell setChecked:checked animated:YES];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat height = 44;
-    if (indexPath.section == 0) {
-        height = 75;
-        if (indexPath.row == 1) { //its a picker row
-            height = 160;
-        }
-    }
     return height;
 }
+
 
 #pragma mark - TMTimePicker
 
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
-    TMTableViewCell *cell = (TMTableViewCell *)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    TMTableViewCell *cell = (TMTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     
     [cell configureForTimeInterval:timeInterval];
     
@@ -314,7 +257,7 @@ static CGFloat __headerHeight = 50;
         [_selectedAlerts setObject:@NO forKey:alertInterval];
     }
     
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];            
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];
     
     return timeInterval;
 }
@@ -334,7 +277,7 @@ static CGFloat __headerHeight = 50;
 - (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert {
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     _showingPicker = NO;
-    [_tableView reloadData];
+    [self.tableView reloadData];
     
     [self _configureForGeneratingAlerts:NO animated:YES];
 }

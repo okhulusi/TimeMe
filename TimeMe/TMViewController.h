@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TMHeaderViewController.h"
 #import "TMTimePickerCell.h"
 #import "TMAlertManager.h"
 
-@interface TMViewController : UIViewController<UITableViewDelegate,UITableViewDataSource, TMTimePickerDelegate, TMAlertDelegate>
+@interface TMViewController : TMHeaderViewController<TMTimePickerDelegate, TMAlertDelegate>
 @end
