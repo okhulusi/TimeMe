@@ -1,40 +1,35 @@
 //
-//  TMTimePickerCell.m
-//  TimeMe
+//  TMTimePickerView.m
+//  Bzz
 //
-//  Created by Clark Barry on 10/4/13.
+//  Created by Clark Barry on 10/28/13.
 //  Copyright (c) 2013 KCBODK. All rights reserved.
 //
 
-#import "TMTimePickerCell.h"
+#import "TMTimePickerView.h"
 #import "TMStyleManager.h"
 
-@interface TMTimePickerCell () {
-    BOOL _labelPosistionedForComponent[2];
+@interface TMTimePickerView () {
     CGFloat _componentWidth;
+    BOOL _labelPositionedForComponent[2];
 }
-- (NSTimeInterval)_timeInterval;
-- (void)_configureForTimeInterval:(NSTimeInterval)timeInterval animated:(BOOL)animated;
-- (void)_addLabelForComponent:(NSInteger)compontent;
+
 @end
 
+@implementation TMTimePickerView
 
-@implementation TMTimePickerCell
-
-- (id)initWithReuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
     if (self) {
         _componentWidth = 60;
         
         TMStyleManager *styleManger = [TMStyleManager getInstance];
         [self setBackgroundColor:styleManger.backgroundColor];
-        _pickerView = [[UIPickerView alloc] initWithFrame:self.contentView.frame];
+        _pickerView = [[UIPickerView alloc] initWithFrame:self.bounds];
         [_pickerView setBackgroundColor:styleManger.backgroundColor];
         [_pickerView setDelegate:self];
         [_pickerView setDataSource:self];
-        [self.contentView addSubview:_pickerView];
-        
-        [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
     return self;
 }
@@ -89,9 +84,9 @@
 #pragma mark - UIPickerView
 
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view {
-    if (component < 2 && !_labelPosistionedForComponent[component]) {
+    if (component < 2 && !_labelPositionedForComponent[component]) {
         [self _addLabelForComponent:component];
-        _labelPosistionedForComponent[component] = YES;
+        _labelPositionedForComponent[component] = YES;
     }
     
     UILabel *rowLabel = (UILabel *)view;
@@ -156,5 +151,4 @@
 {
     return _componentWidth;
 }
-
 @end

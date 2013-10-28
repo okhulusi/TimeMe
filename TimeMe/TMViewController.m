@@ -8,10 +8,11 @@
 
 #import "TMViewController.h"
 
+#import "TMTimePickerView.h"
+
 #import "TMTableViewCell.h"
 #import "TMTimeLabelCell.h"
 #import "TMIntervalLabelCell.h"
-#import "TMTimePickerCell.h"
 #import "TMTimerView.h"
 
 #import "TMAlertManager.h"
@@ -24,6 +25,7 @@
 
 @interface TMViewController () {
     TMTimerView *_timerView;
+    UITableView *_tableView;
     
     UIButton *_timerToggleButton;
     BOOL _showingPicker;
@@ -81,13 +83,13 @@
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
     NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
     UIColor *titleColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x31/256. green:.6 blue:0x02/256. alpha:1];
-    UIView *inView = generatingAlerts ? _timerView : self.tableView;
-    UIView *outView =generatingAlerts ? self.tableView : _timerView;
+    UIView *inView = generatingAlerts ? _timerView : _tableView;
+    UIView *outView =generatingAlerts ? _tableView : _timerView;
     
     if (generatingAlerts) {
         [_timerView beginUpdating];
     } else {
-        [self.tableView reloadData];
+        [_tableView reloadData];
         [_timerView endUpdating];
     }
     
@@ -137,8 +139,50 @@
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     [self.view setBackgroundColor:styleManager.backgroundColor];
     
-    CGRect tableFrame = self.tableView.frame;
+    [self.navigationController.navigationBar setTranslucent:NO];
+    [self.navigationController setEdgesForExtendedLayout:UIRectEdgeNone];
+
+    CGFloat headerHeight = 60;
+    CGRect headerFrame = CGRectMake(0, 0,
+                                    CGRectGetWidth(self.view.frame), headerHeight);
+    UIButton *durationButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [durationButton setFrame:headerFrame];
+    
+    UIView *topView = [[UIView alloc] initWithFrame:headerFrame];
+    UILabel *durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, 0, 0)];
+    [durationLabel setText:@"Duration"];
+    [durationLabel setBackgroundColor:styleManager.backgroundColor];
+    [durationLabel setTextColor:styleManager.textColor];
+    [durationLabel setFont:styleManager.font];
+    [durationLabel sizeToFit];
+    CGPoint center = durationLabel.center;
+    center.y = durationButton.center.y;
+    [durationLabel setCenter:center];
+    
+    
+    [durationButton addSubview:durationLabel];
+    
+    [topView setBackgroundColor:[UIColor redColor]];
+    [self.view addSubview:durationButton];
+    
     CGFloat buttonHeight = 60;
+    CGRect tableFrame = self.view.frame;
+    tableFrame.origin.y = headerHeight;
+    tableFrame.size.height -= buttonHeight;
+    tableFrame.size.height -= headerHeight;
+    tableFrame.size.height -= 64;
+    
+
+    TMTimePickerView *timePicker = [[TMTimePickerView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 2*headerHeight)];
+    [timePicker setDelegate:self];
+    
+    _tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
+    [_tableView setBackgroundColor:[UIColor clearColor]];
+    [_tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [_tableView setDataSource:self];
+    [_tableView setDelegate:self];
+    [_tableView setTableHeaderView:timePicker];
+    [self.view addSubview:_tableView];
     
     _timerView = [[TMTimerView alloc] initWithFrame:tableFrame];
     
@@ -169,6 +213,14 @@
     [super viewWillAppear:animated];
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (!decelerate) {
+        if (scrollView.contentOffset.y < 120.) {
+            [scrollView setContentOffset:CGPointMake(0, 120) animated:YES];
+        }
+    }
 }
 
 #pragma mark - UITableView
@@ -243,10 +295,7 @@ static CGFloat __headerHeight = 44;
 
 #pragma mark - TMTimePicker
 
-- (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
-    TMTableViewCell *cell = (TMTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    
-    [cell configureForTimeInterval:timeInterval];
+- (NSTimeInterval)timePickerCell:(TMTimePickerView *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
     
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     [alertManager setTimerLength:timeInterval];
@@ -257,7 +306,7 @@ static CGFloat __headerHeight = 44;
         [_selectedAlerts setObject:@NO forKey:alertInterval];
     }
     
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];
     
     return timeInterval;
 }
@@ -277,7 +326,7 @@ static CGFloat __headerHeight = 44;
 - (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert {
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     _showingPicker = NO;
-    [self.tableView reloadData];
+    [_tableView reloadData];
     
     [self _configureForGeneratingAlerts:NO animated:YES];
 }

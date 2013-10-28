@@ -1,21 +1,21 @@
 //
-//  TMTimePickerCell.h
-//  TimeMe
+//  TMTimePickerView.h
+//  Bzz
 //
-//  Created by Clark Barry on 10/4/13.
+//  Created by Clark Barry on 10/28/13.
 //  Copyright (c) 2013 KCBODK. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "TMTableViewCell.h"
-@class TMTimePickerCell;
+
+@class TMTimePickerView;
 
 @protocol TMTimePickerDelegate <NSObject>
 //returns the timeinterval that the picker should set itself to, return the time interval sent to keep the changes
-- (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval;
+- (NSTimeInterval)timePickerCell:(TMTimePickerView *)timePickerView didSetTimeInterval:(NSTimeInterval)timeInterval;
 @end
 
-@interface TMTimePickerCell : TMTableViewCell<UIPickerViewDelegate,UIPickerViewDataSource>
+@interface TMTimePickerView : UIView<UIPickerViewDelegate,UIPickerViewDataSource>
 
 @property (weak) id<TMTimePickerDelegate>delegate;
 @property (readonly) UIPickerView *pickerView;
