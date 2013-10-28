@@ -28,8 +28,7 @@
     UITableView *_tableView;
     
     UIButton *_timerToggleButton;
-    BOOL _showingPicker;
-    
+    BOOL _isDecelerating;
     NSMutableDictionary *_selectedAlerts;
 }
 
@@ -47,7 +46,6 @@
     if (self = [super init]) {
         [self setTitle:@"Bzz"];
         
-        _showingPicker = NO;
         _selectedAlerts = [[NSMutableDictionary alloc] init];
         TMAlertManager *alertManager = [TMAlertManager getInstance];
         [alertManager setDelegate:self];
@@ -217,8 +215,29 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     if (!decelerate) {
-        if (scrollView.contentOffset.y < 120.) {
-            [scrollView setContentOffset:CGPointMake(0, 120) animated:YES];
+        CGFloat yOffset = scrollView.contentOffset.y;
+        if (yOffset < 120.) {
+            if (yOffset > 30.) {
+                [scrollView setContentOffset:CGPointMake(0, 120.) animated:YES];
+            } else {
+                [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+            }
+        }
+    } else {
+        _isDecelerating = YES;
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if (_isDecelerating) {
+        _isDecelerating = NO;
+        CGFloat yOffset = scrollView.contentOffset.y;
+        if (yOffset < 120.) {
+            if (yOffset > 30.) {
+                [scrollView setContentOffset:CGPointMake(0, 120.) animated:YES];
+            } else {
+                [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+            }
         }
     }
 }
@@ -306,7 +325,7 @@ static CGFloat __headerHeight = 44;
         [_selectedAlerts setObject:@NO forKey:alertInterval];
     }
     
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation: UITableViewRowAnimationAutomatic];
     
     return timeInterval;
 }
@@ -325,7 +344,6 @@ static CGFloat __headerHeight = 44;
 
 - (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert {
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-    _showingPicker = NO;
     [_tableView reloadData];
     
     [self _configureForGeneratingAlerts:NO animated:YES];

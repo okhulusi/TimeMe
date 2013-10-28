@@ -26,10 +26,14 @@
         
         TMStyleManager *styleManger = [TMStyleManager getInstance];
         [self setBackgroundColor:styleManger.backgroundColor];
-        _pickerView = [[UIPickerView alloc] initWithFrame:self.bounds];
-        [_pickerView setBackgroundColor:styleManger.backgroundColor];
+        _pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, -20,
+                                                                     CGRectGetWidth(frame), CGRectGetHeight(frame)/4.)];
         [_pickerView setDelegate:self];
         [_pickerView setDataSource:self];
+        
+        [self addSubview:_pickerView];
+        
+        [self setClipsToBounds:YES];
     }
     return self;
 }
@@ -128,7 +132,7 @@
 }
 
 - (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component {
-    return 70;
+    return CGRectGetHeight(self.frame)/2.;
 }
 
 //Tell the picker how many rows are available for a given component
