@@ -23,21 +23,12 @@
 
 #import <AudioToolbox/AudioToolbox.h>
 
-enum {
-    TMSrollDirectionNone = 0,
-    TMScrollDirectionUp = 1,
-    TMScrollDirectionDown = 2,
-} typedef TMScrollDirection;
+
 
 @interface TMViewController () {
     TMTimerView *_timerView;
-    UITableView *_tableView;
     
     UIButton *_timerToggleButton;
-    
-    BOOL _isDecelerating;
-    TMScrollDirection _scrollDirection;
-    CGPoint _lastPoint;
     
     NSMutableDictionary *_selectedAlerts;
 }
@@ -59,7 +50,7 @@ enum {
         _selectedAlerts = [[NSMutableDictionary alloc] init];
         TMAlertManager *alertManager = [TMAlertManager getInstance];
         [alertManager setDelegate:self];
-        _scrollDirection = TMSrollDirectionNone;
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(_setUpViews)
                                                      name:UIApplicationDidBecomeActiveNotification
@@ -91,13 +82,13 @@ enum {
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
     NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
     UIColor *titleColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x31/256. green:.6 blue:0x02/256. alpha:1];
-    UIView *inView = generatingAlerts ? _timerView : _tableView;
-    UIView *outView =generatingAlerts ? _tableView : _timerView;
+    UIView *inView = generatingAlerts ? _timerView : self.tableView;
+    UIView *outView =generatingAlerts ? self.tableView : _timerView;
     
     if (generatingAlerts) {
         [_timerView beginUpdating];
     } else {
-        [_tableView reloadData];
+        [self.tableView reloadData];
         [_timerView endUpdating];
     }
     
@@ -184,13 +175,11 @@ enum {
     TMTimePickerView *timePicker = [[TMTimePickerView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 2*headerHeight)];
     [timePicker setDelegate:self];
     
-    _tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
-    [_tableView setBackgroundColor:[UIColor clearColor]];
-    [_tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    [_tableView setDataSource:self];
-    [_tableView setDelegate:self];
-    [_tableView setTableHeaderView:timePicker];
-    [self.view addSubview:_tableView];
+    [self.tableView setFrame:tableFrame];
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [self setHeaderView:timePicker];
+
     
     _timerView = [[TMTimerView alloc] initWithFrame:tableFrame];
     
@@ -223,49 +212,6 @@ enum {
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (scrollView.contentOffset.y < 120.) {
-        if (scrollView.contentOffset.y > _lastPoint.y) {
-            _scrollDirection = TMScrollDirectionUp;
-        } else {
-            _scrollDirection = TMScrollDirectionDown;
-        }
-        _lastPoint = scrollView.contentOffset;
-    }
-
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if (!decelerate && scrollView.contentOffset.y < 120.) {
-        CGPoint scrollTarget;
-        switch (_scrollDirection) {
-            case TMScrollDirectionUp:
-                scrollTarget = CGPointMake(0, 120);
-                break;
-            case TMScrollDirectionDown:
-                scrollTarget = CGPointMake(0, 0);
-                break;
-            default:
-                break;
-        }
-        [scrollView setContentOffset:scrollTarget animated:YES];
-    } else {
-        _isDecelerating = YES;
-    }
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if (_isDecelerating && scrollView.contentOffset.y < 120.) {
-        CGPoint scrollTarget;
-        if (scrollView.contentOffset.y < 60.) {
-            scrollTarget = CGPointMake(0, 0);
-        } else {
-            scrollTarget = CGPointMake(0, 120);
-        }
-        [scrollView setContentOffset:scrollTarget animated:YES];
-    }
-    _isDecelerating = NO;
-}
 
 #pragma mark - UITableView
 
@@ -350,7 +296,7 @@ static CGFloat __headerHeight = 44;
         [_selectedAlerts setObject:@NO forKey:alertInterval];
     }
     
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation: UITableViewRowAnimationAutomatic];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation: UITableViewRowAnimationAutomatic];
     
     return timeInterval;
 }
@@ -369,7 +315,7 @@ static CGFloat __headerHeight = 44;
 
 - (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert {
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-    [_tableView reloadData];
+    [self.tableView reloadData];
     
     [self _configureForGeneratingAlerts:NO animated:YES];
 }

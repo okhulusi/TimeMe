@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TMSnappingHeaderViewController : UIViewController
+@interface TMSnappingHeaderViewController : UIViewController<UITableViewDelegate, UITableViewDataSource>
+
+@property (readonly) UITableView *tableView;
+@property (nonatomic) UIView *headerView;
 
 @end

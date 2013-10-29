@@ -8,31 +8,104 @@
 
 #import "TMSnappingHeaderViewController.h"
 
-@interface TMSnappingHeaderViewController ()
+enum {
+    TMSrollDirectionNone = 0,
+    TMScrollDirectionUp = 1,
+    TMScrollDirectionDown = 2,
+} typedef TMScrollDirection;
+
+@interface TMSnappingHeaderViewController () {
+    BOOL _isDecelerating;
+    TMScrollDirection _scrollDirection;
+    CGPoint _lastPoint;
+}
 
 @end
 
 @implementation TMSnappingHeaderViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (instancetype)init {
+    self = [super init];
     if (self) {
-        // Custom initialization
+        _scrollDirection = TMSrollDirectionNone;
     }
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
+- (void)setHeaderView:(UIView *)headerView {
+    _headerView = headerView;
+    [_tableView setTableHeaderView:headerView];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - UIViewController
+
+- (void)loadView {
+    [super loadView];
+    _tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
+    [_tableView setDataSource:self];
+    [_tableView setDelegate:self];
+    [_tableView setTableHeaderView:_headerView];
+    [self.view addSubview:_tableView];
+}
+
+
+#pragma mark - UIScrollView
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView.contentOffset.y < _headerView.frame.size.height) {
+        if (scrollView.contentOffset.y > _lastPoint.y) {
+            _scrollDirection = TMScrollDirectionUp;
+        } else {
+            _scrollDirection = TMScrollDirectionDown;
+        }
+        _lastPoint = scrollView.contentOffset;
+    }
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    CGFloat headerHeight = _headerView.frame.size.height;
+    if (!decelerate && scrollView.contentOffset.y < headerHeight) {
+        CGPoint scrollTarget;
+        switch (_scrollDirection) {
+            case TMScrollDirectionUp:
+                scrollTarget = CGPointMake(0, headerHeight);
+                break;
+            case TMScrollDirectionDown:
+                scrollTarget = CGPointMake(0, 0);
+                break;
+            default:
+                break;
+        }
+        [scrollView setContentOffset:scrollTarget animated:YES];
+    } else {
+        _isDecelerating = YES;
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    CGFloat headerHeight = _headerView.frame.size.height;
+    if (_isDecelerating && scrollView.contentOffset.y < headerHeight) {
+        CGPoint scrollTarget;
+        if (scrollView.contentOffset.y < (headerHeight/2.)) {
+            scrollTarget = CGPointMake(0, 0);
+        } else {
+            scrollTarget = CGPointMake(0, headerHeight);
+        }
+        [scrollView setContentOffset:scrollTarget animated:YES];
+    }
+    _isDecelerating = NO;
+}
+
+
+#pragma mark - UITableView
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return nil;
 }
 
 @end
