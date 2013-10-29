@@ -23,12 +23,22 @@
 
 #import <AudioToolbox/AudioToolbox.h>
 
+enum {
+    TMSrollDirectionNone = 0,
+    TMScrollDirectionUp = 1,
+    TMScrollDirectionDown = 2,
+} typedef TMScrollDirection;
+
 @interface TMViewController () {
     TMTimerView *_timerView;
     UITableView *_tableView;
     
     UIButton *_timerToggleButton;
+    
     BOOL _isDecelerating;
+    TMScrollDirection _scrollDirection;
+    CGPoint _lastPoint;
+    
     NSMutableDictionary *_selectedAlerts;
 }
 
@@ -49,7 +59,7 @@
         _selectedAlerts = [[NSMutableDictionary alloc] init];
         TMAlertManager *alertManager = [TMAlertManager getInstance];
         [alertManager setDelegate:self];
-        
+        _scrollDirection = TMSrollDirectionNone;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(_setUpViews)
                                                      name:UIApplicationDidBecomeActiveNotification
@@ -213,33 +223,50 @@
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if (!decelerate) {
-        CGFloat yOffset = scrollView.contentOffset.y;
-        if (yOffset < 120.) {
-            if (yOffset > 30.) {
-                [scrollView setContentOffset:CGPointMake(0, 120.) animated:YES];
-            } else {
-                [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
-            }
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView.contentOffset.y < 120.) {
+        if (scrollView.contentOffset.y > _lastPoint.y) {
+            _scrollDirection = TMScrollDirectionUp;
+        } else {
+            _scrollDirection = TMScrollDirectionDown;
         }
+        _lastPoint = scrollView.contentOffset;
+    }
+
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if (!decelerate && scrollView.contentOffset.y < 120.) {
+        CGPoint scrollTarget;
+        switch (_scrollDirection) {
+            case TMScrollDirectionUp:
+                scrollTarget = CGPointMake(0, 120);
+                break;
+            case TMScrollDirectionDown:
+                scrollTarget = CGPointMake(0, 0);
+                break;
+            default:
+                break;
+        }
+        [scrollView setContentOffset:scrollTarget animated:YES];
     } else {
         _isDecelerating = YES;
     }
 }
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if (_isDecelerating) {
-        _isDecelerating = NO;
-        CGFloat yOffset = scrollView.contentOffset.y;
-        if (yOffset < 120.) {
-            if (yOffset > 30.) {
-                [scrollView setContentOffset:CGPointMake(0, 120.) animated:YES];
-            } else {
-                [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
-            }
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    CGFloat yOffset = scrollView.contentOffset.y;
+    if (yOffset < 120. && yOffset > 0) {
+        if (yOffset > 30.) {
+            [scrollView setContentOffset:CGPointMake(0, 120.) animated:YES];
+        } else {
+            [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
         }
     }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+
 }
 
 #pragma mark - UITableView
