@@ -254,19 +254,17 @@ enum {
     }
 }
 
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-    CGFloat yOffset = scrollView.contentOffset.y;
-    if (yOffset < 120. && yOffset > 0) {
-        if (yOffset > 30.) {
-            [scrollView setContentOffset:CGPointMake(0, 120.) animated:YES];
-        } else {
-            [scrollView setContentOffset:CGPointMake(0, 0) animated:YES];
-        }
-    }
-}
-
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-
+    if (_isDecelerating && scrollView.contentOffset.y < 120.) {
+        CGPoint scrollTarget;
+        if (scrollView.contentOffset.y < 60.) {
+            scrollTarget = CGPointMake(0, 0);
+        } else {
+            scrollTarget = CGPointMake(0, 120);
+        }
+        [scrollView setContentOffset:scrollTarget animated:YES];
+    }
+    _isDecelerating = NO;
 }
 
 #pragma mark - UITableView
