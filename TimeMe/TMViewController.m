@@ -141,7 +141,7 @@
     [self.navigationController.navigationBar setTranslucent:NO];
     [self.navigationController setEdgesForExtendedLayout:UIRectEdgeNone];
 
-    CGFloat headerHeight = 48;
+    CGFloat headerHeight = 60;
     CGRect headerFrame = CGRectMake(0, 0,
                                     CGRectGetWidth(self.view.frame), headerHeight);
     UIButton *durationButton = [UIButton buttonWithType:UIButtonTypeCustom];

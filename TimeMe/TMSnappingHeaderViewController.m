@@ -70,19 +70,36 @@ enum {
 #pragma mark - UIScrollView
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    NSLog(@"willEndDraggin");
     CGPoint target = [scrollView restingPointForVelocity:velocity];
+    NSLog(@"target = %@",NSStringFromCGPoint(target));
     CGFloat headerHeight = CGRectGetHeight(_headerView.frame);
     if (target.y < headerHeight) {
-        if (target.y < headerHeight/2.) {
-            targetContentOffset->x = 0;
-            targetContentOffset->y = 0;
-        } else {
+        if (_scrollDirection == TMScrollDirectionUp) {
+            NSLog(@"Targetting hidden");
             targetContentOffset->x = 0;
             targetContentOffset->y = headerHeight;
+        } else {
+            NSLog(@"Targetting show");
+            targetContentOffset->x = 0;
+            targetContentOffset->y = 0;
         }
     }
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat headerHeight = CGRectGetHeight(_headerView.frame);
+    if (scrollView.isDragging) {
+        if (scrollView.contentOffset.y < headerHeight) {
+            if (scrollView.contentOffset.y > _lastPoint.y) {
+                _scrollDirection = TMScrollDirectionUp;
+            } else {
+                _scrollDirection = TMScrollDirectionDown;
+            }
+            _lastPoint = scrollView.contentOffset;
+        }
+    }
+}
 
 #pragma mark - UITableView
 
