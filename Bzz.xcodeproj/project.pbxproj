@@ -22,6 +22,7 @@
 		AA2F1E0A17ECD84D001AB1D6 /* TimeMeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1E0917ECD84D001AB1D6 /* TimeMeTests.m */; };
 		D30A41CB181F01040092EFE6 /* TMTimePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D30A41CA181F01040092EFE6 /* TMTimePickerView.m */; };
 		D3335BBA18206AA000E4845A /* TMSnappingHeaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3335BB918206AA000E4845A /* TMSnappingHeaderViewController.m */; };
+		D3335BBD1823157600E4845A /* UIScrollView+TMTargetScoll.m in Sources */ = {isa = PBXBuildFile; fileRef = D3335BBC1823157600E4845A /* UIScrollView+TMTargetScoll.m */; };
 		D38DE83F1805F22000771267 /* TMStyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE83E1805F22000771267 /* TMStyleManager.m */; };
 		D38DE8421805FC4300771267 /* TMTimeLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE8411805FC4300771267 /* TMTimeLabelCell.m */; };
 		D38DE84518071F6A00771267 /* TMTimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE84418071F6A00771267 /* TMTimerView.m */; };
@@ -66,6 +67,8 @@
 		D30A41CA181F01040092EFE6 /* TMTimePickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimePickerView.m; sourceTree = "<group>"; };
 		D3335BB818206AA000E4845A /* TMSnappingHeaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMSnappingHeaderViewController.h; sourceTree = "<group>"; };
 		D3335BB918206AA000E4845A /* TMSnappingHeaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMSnappingHeaderViewController.m; sourceTree = "<group>"; };
+		D3335BBB1823157600E4845A /* UIScrollView+TMTargetScoll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TMTargetScoll.h"; sourceTree = "<group>"; };
+		D3335BBC1823157600E4845A /* UIScrollView+TMTargetScoll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TMTargetScoll.m"; sourceTree = "<group>"; };
 		D38DE83D1805F22000771267 /* TMStyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMStyleManager.h; sourceTree = "<group>"; };
 		D38DE83E1805F22000771267 /* TMStyleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMStyleManager.m; sourceTree = "<group>"; };
 		D38DE8401805FC4300771267 /* TMTimeLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimeLabelCell.h; sourceTree = "<group>"; };
@@ -206,6 +209,8 @@
 		D38DE852180A30FB00771267 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				D3335BBB1823157600E4845A /* UIScrollView+TMTargetScoll.h */,
+				D3335BBC1823157600E4845A /* UIScrollView+TMTargetScoll.m */,
 				D38DE84C1809C5E900771267 /* NSString+TMTimeIntervalString.h */,
 				D38DE84D1809C5E900771267 /* NSString+TMTimeIntervalString.m */,
 				D38DE84F180A30B200771267 /* NSMutableArray+TMFrontLoading.h */,
@@ -324,6 +329,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D38DE8421805FC4300771267 /* TMTimeLabelCell.m in Sources */,
+				D3335BBD1823157600E4845A /* UIScrollView+TMTargetScoll.m in Sources */,
 				D30A41CB181F01040092EFE6 /* TMTimePickerView.m in Sources */,
 				AA2F1DF517ECD84D001AB1D6 /* TMViewController.m in Sources */,
 				D3BDE84C180A4398005D0AC3 /* TMIntervalLabelCell.m in Sources */,

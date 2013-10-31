@@ -7,6 +7,7 @@
 //
 
 #import "TMSnappingHeaderViewController.h"
+#import "UIScrollView+TMTargetScoll.h"
 
 enum {
     TMSrollDirectionNone = 0,
@@ -68,30 +69,17 @@ enum {
 
 #pragma mark - UIScrollView
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (scrollView.isDragging && !scrollView.isDecelerating) {
-        if (scrollView.contentOffset.y < _headerView.frame.size.height) {
-            if (scrollView.contentOffset.y > _lastPoint.y) {
-                _scrollDirection = TMScrollDirectionUp;
-            } else {
-                _scrollDirection = TMScrollDirectionDown;
-            }
-            _lastPoint = scrollView.contentOffset;
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    CGPoint target = [scrollView restingPointForVelocity:velocity];
+    CGFloat headerHeight = CGRectGetHeight(_headerView.frame);
+    if (target.y < headerHeight) {
+        if (target.y < headerHeight/2.) {
+            targetContentOffset->x = 0;
+            targetContentOffset->y = 0;
+        } else {
+            targetContentOffset->x = 0;
+            targetContentOffset->y = headerHeight;
         }
-    }
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    CGFloat headerHeight = _headerView.frame.size.height;
-    if ( (!decelerate && scrollView.contentOffset.y < headerHeight) || scrollView.contentSize.height < CGRectGetHeight(_tableView.frame)) {
-        [self _snapHeader];
-    }
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    CGFloat headerHeight = _headerView.frame.size.height;
-    if (scrollView.contentOffset.y < headerHeight || scrollView.contentSize.height < CGRectGetHeight(_tableView.frame)) {
-        [self _snapHeader];
     }
 }
 

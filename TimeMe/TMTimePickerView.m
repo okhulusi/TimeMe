@@ -26,7 +26,7 @@
         
         TMStyleManager *styleManger = [TMStyleManager getInstance];
         [self setBackgroundColor:styleManger.backgroundColor];
-        _pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, -20,
+        _pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(0, -CGRectGetHeight(frame)/3.,
                                                                      CGRectGetWidth(frame), CGRectGetHeight(frame)/4.)];
         [_pickerView setDelegate:self];
         [_pickerView setDataSource:self];
