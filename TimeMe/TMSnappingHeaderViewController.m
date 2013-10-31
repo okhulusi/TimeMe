@@ -15,10 +15,11 @@ enum {
 } typedef TMScrollDirection;
 
 @interface TMSnappingHeaderViewController () {
-    BOOL _isDecelerating;
     TMScrollDirection _scrollDirection;
     CGPoint _lastPoint;
 }
+
+- (void)_snapHeader;
 
 @end
 
@@ -37,6 +38,22 @@ enum {
     [_tableView setTableHeaderView:headerView];
 }
 
+- (void)_snapHeader {
+    CGFloat headerHeight = CGRectGetHeight(_headerView.frame);
+    CGPoint scrollTarget;
+    switch (_scrollDirection) {
+        case TMScrollDirectionUp:
+            scrollTarget = CGPointMake(0, headerHeight);
+            break;
+        case TMScrollDirectionDown:
+            scrollTarget = CGPointMake(0, 0);
+            break;
+        default:
+            break;
+    }
+    [_tableView setContentOffset:scrollTarget animated:YES];
+}
+
 #pragma mark - UIViewController
 
 - (void)loadView {
@@ -52,49 +69,30 @@ enum {
 #pragma mark - UIScrollView
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (scrollView.contentOffset.y < _headerView.frame.size.height) {
-        if (scrollView.contentOffset.y > _lastPoint.y) {
-            _scrollDirection = TMScrollDirectionUp;
-        } else {
-            _scrollDirection = TMScrollDirectionDown;
+    if (scrollView.isDragging && !scrollView.isDecelerating) {
+        if (scrollView.contentOffset.y < _headerView.frame.size.height) {
+            if (scrollView.contentOffset.y > _lastPoint.y) {
+                _scrollDirection = TMScrollDirectionUp;
+            } else {
+                _scrollDirection = TMScrollDirectionDown;
+            }
+            _lastPoint = scrollView.contentOffset;
         }
-        _lastPoint = scrollView.contentOffset;
     }
-    
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     CGFloat headerHeight = _headerView.frame.size.height;
-    if (!decelerate && scrollView.contentOffset.y < headerHeight) {
-        CGPoint scrollTarget;
-        switch (_scrollDirection) {
-            case TMScrollDirectionUp:
-                scrollTarget = CGPointMake(0, headerHeight);
-                break;
-            case TMScrollDirectionDown:
-                scrollTarget = CGPointMake(0, 0);
-                break;
-            default:
-                break;
-        }
-        [scrollView setContentOffset:scrollTarget animated:YES];
-    } else {
-        _isDecelerating = YES;
+    if ( (!decelerate && scrollView.contentOffset.y < headerHeight) || scrollView.contentSize.height < CGRectGetHeight(_tableView.frame)) {
+        [self _snapHeader];
     }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     CGFloat headerHeight = _headerView.frame.size.height;
-    if (_isDecelerating && scrollView.contentOffset.y < headerHeight) {
-        CGPoint scrollTarget;
-        if (scrollView.contentOffset.y < (headerHeight/2.)) {
-            scrollTarget = CGPointMake(0, 0);
-        } else {
-            scrollTarget = CGPointMake(0, headerHeight);
-        }
-        [scrollView setContentOffset:scrollTarget animated:YES];
+    if (scrollView.contentOffset.y < headerHeight || scrollView.contentSize.height < CGRectGetHeight(_tableView.frame)) {
+        [self _snapHeader];
     }
-    _isDecelerating = NO;
 }
 
 
