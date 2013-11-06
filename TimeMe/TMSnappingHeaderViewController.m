@@ -17,6 +17,7 @@ enum {
 
 @interface TMSnappingHeaderViewController () {
     TMScrollDirection _scrollDirection;
+    CGPoint _firstPoint;
     CGPoint _lastPoint;
 }
 
@@ -35,8 +36,10 @@ enum {
 }
 
 - (void)setHeaderView:(UIView *)headerView {
+    [_headerView removeFromSuperview];
     _headerView = headerView;
-    [_tableView setTableHeaderView:headerView];
+    CGRect headerRect = {0, -CGRectGetHeight(headerView.frame),headerView.frame.size};
+    [_headerView setFrame:headerRect];
 }
 
 - (void)_snapHeader {
@@ -62,42 +65,28 @@ enum {
     _tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
     [_tableView setDataSource:self];
     [_tableView setDelegate:self];
-    [_tableView setTableHeaderView:_headerView];
     [self.view addSubview:_tableView];
 }
 
 
 #pragma mark - UIScrollView
 
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-    NSLog(@"willEndDraggin");
-    CGPoint target = [scrollView restingPointForVelocity:velocity];
-    NSLog(@"target = %@",NSStringFromCGPoint(target));
-    CGFloat headerHeight = CGRectGetHeight(_headerView.frame);
-    if (target.y < headerHeight) {
-        if (_scrollDirection == TMScrollDirectionUp) {
-            NSLog(@"Targetting hidden");
-            targetContentOffset->x = 0;
-            targetContentOffset->y = headerHeight;
-        } else {
-            NSLog(@"Targetting show");
-            targetContentOffset->x = 0;
-            targetContentOffset->y = 0;
-        }
-    }
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    _firstPoint = scrollView.contentOffset;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat headerHeight = CGRectGetHeight(_headerView.frame);
     if (scrollView.isDragging) {
-        if (scrollView.contentOffset.y < headerHeight) {
-            if (scrollView.contentOffset.y > _lastPoint.y) {
-                _scrollDirection = TMScrollDirectionUp;
-            } else {
-                _scrollDirection = TMScrollDirectionDown;
-            }
-            _lastPoint = scrollView.contentOffset;
+        CGFloat headerHeight = CGRectGetHeight(_headerView.frame);
+        CGFloat translation = scrollView.contentOffset.y - _firstPoint.y;
+        CGRect headerRect =  { 0, -headerHeight + translation, _headerView.frame.size};
+        if (translation > 0) {
+            headerRect.origin.y = MIN(-headerHeight, headerRect.origin.y);
+        } else {
+            headerRect.origin.y = MAX(0, headerRect.origin.y);
         }
+        NSLog(@"%@",NSStringFromCGRect(headerRect));
+        [_headerView setFrame:headerRect];
     }
 }
 
