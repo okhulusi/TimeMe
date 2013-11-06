@@ -203,7 +203,7 @@ static CGFloat __headerHeight = 50;
 
         [label setText:@"Bzz me at:"];
         label.textAlignment = NSTextAlignmentLeft;
-        [label setBackgroundColor:[UIColor clearColor]];
+        [label setBackgroundColor:styleManager.backgroundColor];
         [label setTextColor:styleManager.textColor];
         [label setFont:[styleManager.font fontWithSize:19]];
         headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0,
@@ -273,6 +273,8 @@ static CGFloat __headerHeight = 50;
             _showingPicker = YES;
             [tableView insertRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         } else {
+            UITableViewCell *cell = [_tableView cellForRowAtIndexPath:pickerPath];
+            [cell.superview sendSubviewToBack:cell];
             _showingPicker = NO;
             [_tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 

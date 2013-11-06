@@ -75,7 +75,7 @@
         labelFrame.origin.x += 6;
     }
     UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
-    [label setBackgroundColor:[UIColor clearColor]];
+
     
     [label setText:@":"];
     [label setTextAlignment:NSTextAlignmentCenter];
@@ -83,6 +83,7 @@
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     [label setTextColor:styleManager.textColor];
     [label setFont:[styleManager.font fontWithSize:35]];
+    [label setBackgroundColor:styleManager.backgroundColor];
     [self.pickerView addSubview:label];
 }
 
