@@ -113,7 +113,7 @@ static TMAlertManager *__instance = nil;
         _intervalStart = [[NSDate date] timeIntervalSinceReferenceDate];
         NSTimeInterval oldInterval = [[_currentAlerts firstObject] doubleValue];
         [_currentAlerts removeObjectAtIndex:0];
-        NSTimeInterval nextInterval = [_currentAlerts count] ? [[_currentAlerts firstObject] doubleValue] : _timerLength;
+        NSTimeInterval nextInterval = [_currentAlerts count] ? [[_currentAlerts firstObject] doubleValue] : 0;
         _intervalLength = nextInterval - oldInterval;
         if ([self.delegate respondsToSelector:@selector(alertManager:didFireAlert:)]) {
             [self.delegate alertManager:self didFireAlert:alert];
@@ -154,18 +154,14 @@ static NSString *kGeneratingAlertsKey = @"generatingalerts";
     _timerLength = [defaults doubleForKey:kTimerLengthKey];
     _timerStart = [defaults doubleForKey:kStartTimeKey];
     NSTimeInterval now = [[NSDate date] timeIntervalSinceReferenceDate];
-    if (now > (_timerStart + _timerLength) || !_generatingAlerts) { //if the entire timer has expired
-        _timerLength = 0;
-        _timerStart = 0;
-        _intervalLength = 0;
-        _intervalStart = 0;
-    } else {
-        _generatingAlerts = YES;
+    if (now > (_timerStart + _timerLength) && _generatingAlerts) { //if the entire timer has expired
+        _generatingAlerts = NO;
+    } else if (!_generatingAlerts){
         _currentAlerts = [[defaults objectForKey:kCurrentAlertsKey] mutableCopy];
         if ([_currentAlerts count]) {
             NSTimeInterval elapsedTime = now - _timerStart;
             _intervalStart = _timerStart;
-            while ([_currentAlerts count] && (elapsedTime > [[_currentAlerts firstObject] doubleValue])) {     //check ifwe have any expired timers
+            while ([_currentAlerts count] && (elapsedTime > [[_currentAlerts firstObject] doubleValue])) {     //check if we have any expired timers
                 _intervalStart += [[_currentAlerts firstObject] doubleValue];
                 [_currentAlerts removeObjectAtIndex:0];
             }
