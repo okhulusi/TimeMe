@@ -37,6 +37,8 @@
 - (NSArray *)_selectedAlerts;
 - (void)_setUpViews;
 
+- (void)_showTimePicker:(BOOL)show;
+
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated;
 @end
 
@@ -128,6 +130,19 @@
         }
     }
     return selectedAlerts;
+}
+
+- (void)_showTimePicker:(BOOL)show {
+    NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:0];
+    if (show && !_showingPicker) {
+        _showingPicker = YES;
+        [_tableView insertRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    } else if (!show && _showingPicker) {
+        UITableViewCell *cell = [_tableView cellForRowAtIndexPath:pickerPath];
+        [cell.superview sendSubviewToBack:cell];
+        _showingPicker = NO;
+        [_tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
 }
 
 #pragma mark - UIViewController
@@ -268,17 +283,7 @@ static CGFloat __headerHeight = 50;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 0 && indexPath.row == 0) {
-        NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:0];
-        if (!_showingPicker) { //if we're not showing a picker show one
-            _showingPicker = YES;
-            [tableView insertRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        } else {
-            UITableViewCell *cell = [_tableView cellForRowAtIndexPath:pickerPath];
-            [cell.superview sendSubviewToBack:cell];
-            _showingPicker = NO;
-            [_tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-
-        }
+        [self _showTimePicker:!_showingPicker];
     } else if (indexPath.section == 1){
         TMAlertManager *alertManager = [TMAlertManager getInstance];
         NSNumber *alertInterval = [alertManager.alertIntervals objectAtIndex:indexPath.row];
