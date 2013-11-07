@@ -129,11 +129,8 @@ static TMAlertManager *__instance = nil;
 
 - (void)stopAlerts {
     _generatingAlerts = NO;
-    _timerLength = 0;
-    _intervalLength = 0;
     _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
     [_currentAlerts removeAllObjects];
-    //we deliberately exclude _timerStart reset so if we reload, and we're not running, we're not going to try to reload erroneous values
     [self saveValues];
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
@@ -141,8 +138,10 @@ static TMAlertManager *__instance = nil;
 static NSString *kTimerLengthKey = @"timerlength";
 static NSString *kCurrentAlertsKey = @"currentalerts";
 static NSString *kStartTimeKey = @"starttime";
+static NSString *kGeneratingAlertsKey = @"generatingalerts";
 - (void)saveValues {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setBool:_generatingAlerts forKey:kGeneratingAlertsKey];
     [defaults setDouble:_timerLength forKey:kTimerLengthKey];
     [defaults setObject:_currentAlerts forKey:kCurrentAlertsKey];
     [defaults setDouble:_timerStart forKey:kStartTimeKey];
@@ -151,11 +150,11 @@ static NSString *kStartTimeKey = @"starttime";
 
 - (void)reloadTimeValues {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    _generatingAlerts = [defaults boolForKey:kGeneratingAlertsKey];
     _timerLength = [defaults doubleForKey:kTimerLengthKey];
     _timerStart = [defaults doubleForKey:kStartTimeKey];
-    _generatingAlerts = NO;
     NSTimeInterval now = [[NSDate date] timeIntervalSinceReferenceDate];
-    if (now > (_timerStart + _timerLength)) { //if the entire timer has expired
+    if (now > (_timerStart + _timerLength) || !_generatingAlerts) { //if the entire timer has expired
         _timerLength = 0;
         _timerStart = 0;
         _intervalLength = 0;
@@ -163,13 +162,15 @@ static NSString *kStartTimeKey = @"starttime";
     } else {
         _generatingAlerts = YES;
         _currentAlerts = [[defaults objectForKey:kCurrentAlertsKey] mutableCopy];
-        NSTimeInterval elapsedTime = now - _timerStart;
-        _intervalStart = _timerStart;
-        while ([_currentAlerts count] && (elapsedTime > [[_currentAlerts firstObject] doubleValue])) {     //check ifwe have any expired timers
-            _intervalStart += [[_currentAlerts firstObject] doubleValue];
-            [_currentAlerts removeObjectAtIndex:0];
+        if ([_currentAlerts count]) {
+            NSTimeInterval elapsedTime = now - _timerStart;
+            _intervalStart = _timerStart;
+            while ([_currentAlerts count] && (elapsedTime > [[_currentAlerts firstObject] doubleValue])) {     //check ifwe have any expired timers
+                _intervalStart += [[_currentAlerts firstObject] doubleValue];
+                [_currentAlerts removeObjectAtIndex:0];
+            }
+            _intervalLength = _timerLength - [[_currentAlerts firstObject] doubleValue];
         }
-        _intervalLength = _timerLength - [[_currentAlerts firstObject] doubleValue];
     }
     _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
 }
