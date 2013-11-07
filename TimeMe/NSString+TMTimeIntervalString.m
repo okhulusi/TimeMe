@@ -21,14 +21,14 @@
     NSString *intervalString = @"";
     if (style == TMTimeIntervalStringWords) {
         if([components hour]){
-            intervalString = [NSString stringWithFormat:@"%ld hour",(long)[components hour]];
+            intervalString = [NSString stringWithFormat:@"%ld hr",(long)[components hour]];
             if ([components hour] != 1) {
                 intervalString = [intervalString stringByAppendingString:@"s"];
             }
         }
         
         if([components minute]){
-            NSString *minuteString = [NSString stringWithFormat:@"%ld minute",(long)[components minute]];
+            NSString *minuteString = [NSString stringWithFormat:@"%ld min",(long)[components minute]];
             if ([components minute] != 1) {
                 minuteString = [minuteString stringByAppendingString:@"s"];
             }
@@ -38,12 +38,12 @@
             intervalString = [intervalString stringByAppendingString:minuteString];
         }
         
-        NSString *secondString = [NSString stringWithFormat:@"%ld second",(long)[components second]];
+        NSString *secondString = [NSString stringWithFormat:@"%ld sec",(long)[components second]];
         if ([components second] != 1) {
             secondString = [secondString stringByAppendingString:@"s"];
         }
         if ([intervalString length] && [components second]) {
-            intervalString = [intervalString stringByAppendingString:@", and "];
+            intervalString = [intervalString stringByAppendingString:@", "];
         }
         if ([components second] || ![intervalString length]) {
             intervalString = [intervalString stringByAppendingString:secondString];

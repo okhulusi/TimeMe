@@ -22,6 +22,7 @@
         [self.textLabel setHighlightedTextColor:styleManager.highlightTextColor];
         [self.detailTextLabel setTextColor:styleManager.detailTextColor];
         [self.detailTextLabel setHighlightedTextColor:styleManager.highlightTextColor];
+        [self.detailTextLabel setNumberOfLines:0];
     }
     return self;
 }
@@ -37,6 +38,18 @@
 - (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
     NSString *intervalString = [NSString stringForTimeInterval:timeInterval style:TMTimeIntervalStringWords];
     [self.detailTextLabel setText:intervalString];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    CGPoint cellCenter = self.contentView.center;
+    CGPoint labelCenter = self.textLabel.center;
+    labelCenter.y = cellCenter.y;
+    [self.textLabel setCenter:labelCenter];
+    
+    labelCenter.x = self.detailTextLabel.center.x;
+    [self.detailTextLabel setCenter:labelCenter];
 }
 
 @end
