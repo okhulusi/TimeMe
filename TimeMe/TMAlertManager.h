@@ -19,6 +19,8 @@ extern const NSString *kTMAlertKey;
 
 @interface TMAlertManager : NSObject
 
++ (NSArray *)alertIntervalsForTimerLength:(NSTimeInterval)timerLength;
+
 + (instancetype)getInstance;
 
 - (void)startAlerts:(NSArray *)alerts;
@@ -28,7 +30,6 @@ extern const NSString *kTMAlertKey;
 - (void)reloadTimeValues;
 - (void)saveValues;
 
-@property (readonly) NSArray *alertIntervals;
 
 @property (nonatomic) NSTimeInterval timerLength;
 @property (readonly) NSTimeInterval intervalLength;

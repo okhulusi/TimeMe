@@ -21,11 +21,32 @@ const NSString *kTMAlertKey = @"tmalertkey";
 @interface TMAlertManager () {
     NSMutableArray *_currentAlerts;
 }
-
-- (NSArray *)_alertIntervalsForCountdown:(NSTimeInterval)countdown;
 @end
 
 @implementation TMAlertManager
+
++ (NSArray *)alertIntervalsForTimerLength:(NSTimeInterval)timerLength {
+    static NSArray *__baseTimes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        __baseTimes = @[@TWO_MINUTES,@ONE_MINUTE, @THIRTY_SECONDS, @TEN_SECONDS];
+    });
+    NSMutableArray *alerts = [[NSMutableArray alloc] initWithCapacity:5];
+    
+    while (timerLength/2. > TWO_MINUTES) {
+        NSTimeInterval alertTime = (timerLength/2.);
+        alertTime = round(alertTime/15.0);
+        alertTime = alertTime * 15;
+        [alerts addObject:@(alertTime)];
+        timerLength = alertTime;
+    }
+    for (NSNumber *alertTime in __baseTimes) {
+        if ([alertTime doubleValue] < timerLength) {
+            [alerts addObject:alertTime];
+        }
+    }
+    return alerts;
+}
 
 static TMAlertManager *__instance = nil;
 + (instancetype)getInstance {
@@ -44,35 +65,6 @@ static TMAlertManager *__instance = nil;
         _currentAlerts = [[NSMutableArray alloc] init];
     }
     return self;
-}
-
-- (NSArray *)_alertIntervalsForCountdown:(NSTimeInterval)countdown {
-    static NSArray *__baseTimes;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        __baseTimes = @[@TWO_MINUTES,@ONE_MINUTE, @THIRTY_SECONDS, @TEN_SECONDS];
-    });
-    NSMutableArray *alerts = [[NSMutableArray alloc] initWithCapacity:5];
-    
-    while (countdown/2. > TWO_MINUTES) {
-        NSTimeInterval alertTime = (countdown/2.);
-        alertTime = round(alertTime/15.0);
-        alertTime = alertTime * 15;
-        [alerts addObject:@(alertTime)];
-        countdown = alertTime;
-    }
-    for (NSNumber *alertTime in __baseTimes) {
-        if ([alertTime doubleValue] < countdown) {
-            [alerts addObject:alertTime];
-        }
-    }
-    return alerts;
-}
-
-- (void)setTimerLength:(NSTimeInterval)timerLength {
-    NSAssert(!_generatingAlerts, @"Tried to change timerLength when running");
-    _timerLength = timerLength;
-    _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
 }
 
 - (void)startAlerts:(NSArray *)alerts {
@@ -129,7 +121,6 @@ static TMAlertManager *__instance = nil;
 
 - (void)stopAlerts {
     _generatingAlerts = NO;
-    _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
     [_currentAlerts removeAllObjects];
     [self saveValues];
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
@@ -168,7 +159,6 @@ static NSString *kGeneratingAlertsKey = @"generatingalerts";
             _intervalLength = _timerLength - [[_currentAlerts firstObject] doubleValue];
         }
     }
-    _alertIntervals = [self _alertIntervalsForCountdown:_timerLength];
 }
 
 
