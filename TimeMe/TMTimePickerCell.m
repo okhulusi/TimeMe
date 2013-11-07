@@ -28,7 +28,8 @@
         
         TMStyleManager *styleManger = [TMStyleManager getInstance];
         [self setBackgroundColor:styleManger.backgroundColor];
-        _pickerView = [[UIPickerView alloc] initWithFrame:self.contentView.frame];
+        CGRect pickerRect = {0, -CGRectGetHeight(self.contentView.frame)/2., self.contentView.frame.size};
+        _pickerView = [[UIPickerView alloc] initWithFrame:pickerRect];
         [_pickerView setBackgroundColor:styleManger.backgroundColor];
         [_pickerView setDelegate:self];
         [_pickerView setDataSource:self];
@@ -72,7 +73,9 @@
     CGFloat labelHeight = 30;
     CGRect labelFrame = CGRectMake((component+2)*_componentWidth + 2, (160 - labelHeight)/2., labelWidth, labelHeight);
     if (component == 0) {
-        labelFrame.origin.x += 6;
+        labelFrame.origin.x += 10;
+    } else {
+        labelFrame.origin.x += 4;
     }
     UILabel *label = [[UILabel alloc] initWithFrame:labelFrame];
 
@@ -133,10 +136,6 @@
     }
 }
 
-- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component {
-    return 70;
-}
-
 //Tell the picker how many rows are available for a given component
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
@@ -152,10 +151,18 @@
     return 3;
 }
 
+- (CGFloat)pickerView:(UIPickerView *)pickerView rowHeightForComponent:(NSInteger)component {
+    return CGRectGetHeight(pickerView.frame)/3.;
+}
+
 //Tell the picker the width of each row for a given component
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component
 {
-    return _componentWidth;
+    CGFloat componentWidth = _componentWidth;
+    if (component != 1) {
+        componentWidth = (CGRectGetWidth(pickerView.frame) - _componentWidth)/2.;
+    }
+    return componentWidth;
 }
 
 @end

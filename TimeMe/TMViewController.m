@@ -299,7 +299,7 @@ static CGFloat __headerHeight = 50;
     if (indexPath.section == 0) {
         height = 75;
         if (indexPath.row == 1) { //its a picker row
-            height = 160;
+            height = 120;
         }
     }
     return height;
