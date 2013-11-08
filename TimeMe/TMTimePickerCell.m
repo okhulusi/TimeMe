@@ -9,6 +9,10 @@
 #import "TMTimePickerCell.h"
 #import "TMStyleManager.h"
 
+#define NUM_ROWS 12000
+#define MAX_HOURS 6
+#define SECOND_RESOLUTION 15
+
 @interface TMTimePickerCell () {
     BOOL _labelPosistionedForComponent[2];
     CGFloat _componentWidth;
@@ -43,8 +47,16 @@
 - (NSTimeInterval)_timeInterval {
     NSTimeInterval timeInterval = 0;
     for (int i = 0; i < _pickerView.numberOfComponents; i++) {
-        NSInteger selectedRow = [_pickerView selectedRowInComponent:i];
-        NSTimeInterval timeIntervalForComponent = pow(60,(_pickerView.numberOfComponents - i - 1)) * selectedRow;
+        NSInteger rowValue = [_pickerView selectedRowInComponent:i];
+        if (i == 0) {
+            rowValue = rowValue % MAX_HOURS;
+        } else if (i == 2) {
+            NSInteger modValue = 60/SECOND_RESOLUTION;
+            rowValue = (rowValue % modValue) * SECOND_RESOLUTION;
+        } else {
+            rowValue = rowValue % 60;
+        }
+        NSTimeInterval timeIntervalForComponent = pow(60,(_pickerView.numberOfComponents - i - 1)) * rowValue;
         timeInterval += timeIntervalForComponent;
     }
     return timeInterval;
@@ -59,9 +71,9 @@
     
     NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
     
-    [_pickerView selectRow:[components hour] inComponent:0 animated:animated];
-    [_pickerView selectRow:[components minute] inComponent:1 animated:animated];
-    [_pickerView selectRow:[components second] inComponent:2 animated:animated];
+    [_pickerView selectRow:[components hour] + NUM_ROWS/2 inComponent:0 animated:animated];
+    [_pickerView selectRow:[components minute] + NUM_ROWS/2 inComponent:1 animated:animated];
+    [_pickerView selectRow:[components second] + NUM_ROWS/2 inComponent:2 animated:animated];
 }
 
 - (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
@@ -103,7 +115,16 @@
         [rowLabel setTextColor:styleManager.textColor];
         [rowLabel setFont:[styleManager.font fontWithSize:40]];
     }
-    NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02ld",(long)row] : [NSString stringWithFormat:@"%ld",(long)row];
+    NSInteger rowValue = 0;
+    if (component == 0) {
+        rowValue = row % MAX_HOURS;
+    } else if (component == 2) {
+        NSInteger modValue = 60/SECOND_RESOLUTION;
+        rowValue = (row % modValue) * SECOND_RESOLUTION;
+    } else {
+        rowValue = row % 60;
+    }
+    NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02ld",(long)rowValue] : [NSString stringWithFormat:@"%ld",(long)rowValue];
     [rowLabel setText:title];
     NSTextAlignment alignment;
     switch (component) {
@@ -137,11 +158,7 @@
 //Tell the picker how many rows are available for a given component
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    NSUInteger numRows = 60;
-    if (component == 0) { //60 is pretty unreasonable for an hour count
-        numRows = 4;
-    }
-    return numRows;
+    return NUM_ROWS;
 }
 
 //Tells picker how many components it will have

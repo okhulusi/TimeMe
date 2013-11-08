@@ -79,7 +79,7 @@
 
 - (void)_toggleButtonPressed {
     TMAlertManager *alertManager = [TMAlertManager getInstance];
-    if (!alertManager.generatingAlerts) {
+    if (!alertManager.generatingAlerts && alertManager.timerLength) {
         NSArray *selectedAlerts = [self _selectedAlerts];
         [alertManager startAlerts:selectedAlerts];
     } else {
@@ -343,9 +343,6 @@ static CGFloat __headerHeight = 50;
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
     TMTableViewCell *cell = (TMTableViewCell *)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     NSTimeInterval validTimeInterval = timeInterval;
-    if (timeInterval < 60.) {
-        validTimeInterval = 60;
-    }
     
     [cell configureForTimeInterval:validTimeInterval];
 
