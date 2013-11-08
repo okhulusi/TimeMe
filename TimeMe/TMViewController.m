@@ -102,6 +102,9 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
             NSNumber *numberKey = [formatter numberFromString:stringKey];
             NSNumber *valueForKey = [savedAlertIntervals objectForKey:stringKey];
             [_selectedAlerts setObject:valueForKey forKey:numberKey];
+            if ([valueForKey boolValue]) {
+                [_invisibleSelectedAlerts addObject:numberKey];
+            }
         }
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
         _sortedAlertIntervals = [[_selectedAlerts allKeys] sortedArrayUsingDescriptors:@[sortDescriptor]];
@@ -208,7 +211,7 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
     _timerView = [[TMTimerView alloc] initWithFrame:tableFrame];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_timerToggleButton setBackgroundColor:[UIColor colorWithRed:0xFF/256. green:255./256. blue:0xA0/256. alpha:.8]];
+    [_timerToggleButton setBackgroundColor:[UIColor colorWithRed:1 green:1 blue:.7 alpha:.7]];
     [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
     [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
     [_timerToggleButton setFrame:CGRectMake(0, CGRectGetMaxY(tableFrame),

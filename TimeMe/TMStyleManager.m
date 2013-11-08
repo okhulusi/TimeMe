@@ -37,7 +37,7 @@ static TMStyleManager *__instance = nil;
         
         _detailTextColor = [UIColor colorWithRed:0xFF/256. green:255./256. blue:0xA0/256. alpha:1];
         
-        _navigationBarTintColor = [UIColor colorWithRed:0xFF/256. green:255./256. blue:0xA0/256. alpha:1];
+        _navigationBarTintColor = [UIColor colorWithRed:1 green:1 blue:0xB5/256. alpha:1];
         _navigationBarTitleColor = _backgroundColor;
         
         _font = [UIFont fontWithName:@"Thonburi" size:20];
