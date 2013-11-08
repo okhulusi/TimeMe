@@ -342,14 +342,18 @@ static CGFloat __headerHeight = 50;
 
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
     TMTableViewCell *cell = (TMTableViewCell *)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    NSTimeInterval validTimeInterval = timeInterval;
+    if (timeInterval < 60.) {
+        validTimeInterval = 60;
+    }
     
-    [cell configureForTimeInterval:timeInterval];
+    [cell configureForTimeInterval:validTimeInterval];
 
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     
     NSArray *alertManagerAlertsForOldInterval = [TMAlertManager alertIntervalsForTimerLength:alertManager.timerLength];
     NSMutableSet *alertsToRemove = [[NSMutableSet alloc] initWithArray:alertManagerAlertsForOldInterval];
-    [alertManager setTimerLength:timeInterval];
+    [alertManager setTimerLength:validTimeInterval];
     NSArray *availableAlerts = [TMAlertManager alertIntervalsForTimerLength:alertManager.timerLength];
     
     NSSet *alertsToKeep = [[NSSet alloc] initWithArray:availableAlerts];
@@ -382,7 +386,7 @@ static CGFloat __headerHeight = 50;
     
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];            
     
-    return timeInterval;
+    return validTimeInterval;
 }
 
 #pragma mark - TMAlertManager
