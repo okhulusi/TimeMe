@@ -88,13 +88,38 @@
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:YES];
 }
 
+static NSString *kShowingPickerKey = @"showingpicker";
+static NSString *kSelectedAlertsKey = @"selectedalerts";
+
 - (void)_setUpViews {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    _showingPicker = [defaults boolForKey:kShowingPickerKey];
+    NSDictionary *savedAlertIntervals = [[defaults dictionaryForKey:kSelectedAlertsKey] mutableCopy];
+    if (savedAlertIntervals) {
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+        [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        for (NSString *stringKey in savedAlertIntervals) {
+            NSNumber *numberKey = [formatter numberFromString:stringKey];
+            NSNumber *valueForKey = [savedAlertIntervals objectForKey:stringKey];
+            [_selectedAlerts setObject:valueForKey forKey:numberKey];
+        }
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
+        _sortedAlertIntervals = [[_selectedAlerts allKeys] sortedArrayUsingDescriptors:@[sortDescriptor]];
+    }
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
 }
 
 - (void)_saveViewState {
-    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setBool:_showingPicker forKey:kShowingPickerKey];
+    NSMutableDictionary *saveableSelectedAlerts = [[NSMutableDictionary alloc] init];
+    for (NSNumber *alertInterval in _selectedAlerts) {
+        NSNumber *valueForKey = [_selectedAlerts objectForKey:alertInterval];
+        NSString *key = [alertInterval description];
+        [saveableSelectedAlerts setObject:valueForKey forKey:key];
+    }
+    [defaults setObject:saveableSelectedAlerts forKey:kSelectedAlertsKey];
 }
 
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
