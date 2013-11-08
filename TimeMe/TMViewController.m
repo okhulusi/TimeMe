@@ -208,7 +208,7 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
     _timerView = [[TMTimerView alloc] initWithFrame:tableFrame];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_timerToggleButton setBackgroundColor:[UIColor colorWithRed:0xE9/256. green:0xE5/256. blue:0x8E/256. alpha:.9]];
+    [_timerToggleButton setBackgroundColor:[UIColor colorWithRed:0xFF/256. green:255./256. blue:0xA0/256. alpha:.8]];
     [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
     [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
     [_timerToggleButton setFrame:CGRectMake(0, CGRectGetMaxY(tableFrame),

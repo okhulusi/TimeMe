@@ -29,15 +29,15 @@ static TMStyleManager *__instance = nil;
 - (id)init {
     self = [super init];
     if (self) {
-        _backgroundColor = [UIColor colorWithRed:0x4A/256. green:0x42/256. blue:0x51/256. alpha:1];
-        _highlightBackgroundColor = [UIColor colorWithRed:0x85/256. green:0x75/256. blue:0x75/256. alpha:1];
+        _backgroundColor = [UIColor colorWithRed:0x89/256. green:0x61/256. blue:0x9B/256. alpha:1];
+        _highlightBackgroundColor = [UIColor colorWithRed:0x4A/256. green:0x42/256. blue:0x51/256. alpha:.7];
         
-        _textColor = [UIColor colorWithWhite:.85 alpha:1];
-        _highlightTextColor = _backgroundColor;
+        _textColor = [UIColor colorWithWhite:1 alpha:1];
+        _highlightTextColor = [UIColor colorWithWhite:.9 alpha:1];
         
-        _detailTextColor = [UIColor colorWithRed:0xE9/256. green:0xE5/256. blue:0x8E/256. alpha:1];
+        _detailTextColor = [UIColor colorWithRed:0xFF/256. green:255./256. blue:0xA0/256. alpha:1];
         
-        _navigationBarTintColor = [UIColor colorWithRed:0xE9/256. green:0xE5/256. blue:0x8E/256. alpha:.7];
+        _navigationBarTintColor = [UIColor colorWithRed:0xFF/256. green:255./256. blue:0xA0/256. alpha:1];
         _navigationBarTitleColor = _backgroundColor;
         
         _font = [UIFont fontWithName:@"Thonburi" size:20];
@@ -58,7 +58,7 @@ static UIImage *__checkImage = nil;
             CGContextRef context = UIGraphicsGetCurrentContext();
             CGRect ellipseRect = CGRectMake(height/4, height/4, height/2, height/2);
             CGRect fillRect = CGRectInset(ellipseRect, 1, 1);
-            CGContextSetFillColorWithColor(context, _detailTextColor.CGColor);
+            CGContextSetFillColorWithColor(context, _navigationBarTintColor.CGColor);
             CGContextFillEllipseInRect(context, fillRect);
             CGContextFillPath(context);
             __checkImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -76,7 +76,7 @@ static UIImage *__uncheckedImage = nil;
             CGFloat height = 44;
             UIGraphicsBeginImageContextWithOptions(CGSizeMake(height, height), NO, 0);
             CGContextRef context = UIGraphicsGetCurrentContext();
-            CGContextSetLineWidth(context, 2);
+            CGContextSetLineWidth(context, 1);
             CGContextSetStrokeColorWithColor(context, _highlightBackgroundColor.CGColor);
             CGRect ellipseRect = CGRectMake(height/4, height/4, height/2, height/2);
             CGRect fillRect = CGRectInset(ellipseRect, 4, 4);
