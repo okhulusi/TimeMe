@@ -73,7 +73,7 @@
     
     [_pickerView selectRow:[components hour] + NUM_ROWS/2 inComponent:0 animated:animated];
     [_pickerView selectRow:[components minute] + NUM_ROWS/2 inComponent:1 animated:animated];
-    [_pickerView selectRow:[components second] + NUM_ROWS/2 inComponent:2 animated:animated];
+    [_pickerView selectRow:[components second]/SECOND_RESOLUTION + NUM_ROWS/2 inComponent:2 animated:animated];
 }
 
 - (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
