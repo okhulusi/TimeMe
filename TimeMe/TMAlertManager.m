@@ -146,8 +146,8 @@ static NSString *kGeneratingAlertsKey = @"generatingalerts";
     NSTimeInterval now = [[NSDate date] timeIntervalSinceReferenceDate];
     if (now > (_timerStart + _timerLength) && _generatingAlerts) { //if the entire timer has expired
         _generatingAlerts = NO;
-    } else if (!_generatingAlerts){
-        _currentAlerts = [[defaults objectForKey:kCurrentAlertsKey] mutableCopy];
+    } else if (_generatingAlerts){
+        [_currentAlerts addObjectsFromArray:[defaults objectForKey:kCurrentAlertsKey]];
         if ([_currentAlerts count]) {
             NSTimeInterval elapsedTime = now - _timerStart;
             _intervalStart = _timerStart;

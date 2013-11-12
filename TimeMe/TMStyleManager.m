@@ -29,16 +29,18 @@ static TMStyleManager *__instance = nil;
 - (id)init {
     self = [super init];
     if (self) {
-        _backgroundColor = [UIColor colorWithRed:0x89/256. green:0x61/256. blue:0x9B/256. alpha:1];
+        _backgroundColor = [UIColor colorWithRed:0x0D/256. green:0xCD/256. blue:0xFD/256. alpha:1];
         _highlightBackgroundColor = [UIColor colorWithRed:0x4A/256. green:0x42/256. blue:0x51/256. alpha:.7];
         
-        _textColor = [UIColor colorWithWhite:1 alpha:1];
+        _textColor = [UIColor whiteColor];
         _highlightTextColor = [UIColor colorWithWhite:.9 alpha:1];
         
         _detailTextColor = [UIColor colorWithRed:0xFF/256. green:255./256. blue:0xA0/256. alpha:1];
         
-        _navigationBarTintColor = [UIColor colorWithRed:1 green:1 blue:0xB5/256. alpha:1];
+        _navigationBarTintColor = [UIColor colorWithRed:0xFF/256. green:0xFF/256. blue:0x90/256. alpha:1];
         _navigationBarTitleColor = _backgroundColor;
+        
+        _buttonColor = _detailTextColor;
         
         _font = [UIFont fontWithName:@"Thonburi" size:20];
         

@@ -24,6 +24,8 @@
 @property (readonly) UIColor *navigationBarTintColor;
 @property (readonly) UIColor *navigationBarTitleColor;
 
+@property (readonly) UIColor *buttonColor;
+
 @property (readonly) UIFont *font;
 
 @property (readonly) UIImage *checkedImage;

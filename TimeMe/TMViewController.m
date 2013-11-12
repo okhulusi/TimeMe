@@ -108,8 +108,18 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
         }
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
         _sortedAlertIntervals = [[_selectedAlerts allKeys] sortedArrayUsingDescriptors:@[sortDescriptor]];
+    } else {
+        TMAlertManager *alertManager = [TMAlertManager getInstance];
+        NSArray *availableAlerts = [TMAlertManager alertIntervalsForTimerLength:alertManager.timerLength];
+        for (NSNumber *alertInterval in availableAlerts) {
+            [_selectedAlerts setObject:@NO forKey:alertInterval];
+        }
+        
     }
     TMAlertManager *alertManager = [TMAlertManager getInstance];
+    if (!alertManager.generatingAlerts && !alertManager.timerLength) {
+        _showingPicker = YES;
+    }
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
 }
 
@@ -211,7 +221,7 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
     _timerView = [[TMTimerView alloc] initWithFrame:tableFrame];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_timerToggleButton setBackgroundColor:[UIColor colorWithRed:1 green:1 blue:.7 alpha:.7]];
+    [_timerToggleButton setBackgroundColor:styleManager.buttonColor];
     [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
     [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
     [_timerToggleButton setFrame:CGRectMake(0, CGRectGetMaxY(tableFrame),
