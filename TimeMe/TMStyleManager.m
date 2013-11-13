@@ -29,18 +29,19 @@ static TMStyleManager *__instance = nil;
 - (id)init {
     self = [super init];
     if (self) {
-        _backgroundColor = [UIColor colorWithRed:0x0D/256. green:0xCD/256. blue:0xFD/256. alpha:1];
-        _highlightBackgroundColor = [UIColor colorWithRed:0x4A/256. green:0x42/256. blue:0x51/256. alpha:.7];
+        _backgroundColor = [UIColor colorWithRed:0x66/256. green:0xC2/256. blue:0xE0/256. alpha:1];
+        _highlightBackgroundColor = [UIColor colorWithRed:0x01/256. green:0x56/256. blue:0x66/256. alpha:.7];
         
         _textColor = [UIColor whiteColor];
         _highlightTextColor = [UIColor colorWithWhite:.9 alpha:1];
         
-        _detailTextColor = [UIColor colorWithRed:0xFF/256. green:255./256. blue:0xA0/256. alpha:1];
+        _detailTextColor = [UIColor colorWithRed:0xFF/256. green:0xFF/256. blue:0xAF/256. alpha:1];
+        _highlightDetailTextColor = [UIColor colorWithWhite:.9 alpha:1];
         
-        _navigationBarTintColor = [UIColor colorWithRed:0xFF/256. green:0xFF/256. blue:0x90/256. alpha:1];
+        _navigationBarTintColor = [UIColor whiteColor];
         _navigationBarTitleColor = _backgroundColor;
         
-        _buttonColor = _detailTextColor;
+        _buttonColor = [UIColor colorWithRed:0xF6/256. green:0xFA/256. blue:0x91/256. alpha:.9];
         
         _font = [UIFont fontWithName:@"Thonburi" size:20];
         
@@ -60,7 +61,7 @@ static UIImage *__checkImage = nil;
             CGContextRef context = UIGraphicsGetCurrentContext();
             CGRect ellipseRect = CGRectMake(height/4, height/4, height/2, height/2);
             CGRect fillRect = CGRectInset(ellipseRect, 1, 1);
-            CGContextSetFillColorWithColor(context, _navigationBarTintColor.CGColor);
+            CGContextSetFillColorWithColor(context, _detailTextColor.CGColor);
             CGContextFillEllipseInRect(context, fillRect);
             CGContextFillPath(context);
             __checkImage = UIGraphicsGetImageFromCurrentImageContext();

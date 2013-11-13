@@ -137,7 +137,7 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
 
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
     NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
-    UIColor *buttonColor = generatingAlerts ? [UIColor redColor] : [UIColor greenColor];
+    UIColor *buttonColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x1F/256. green:0xFF/256. blue:0x52/256. alpha:.7];
     UIView *inView = generatingAlerts ? _timerView : _tableView;
     UIView *outView =generatingAlerts ? _tableView : _timerView;
     
