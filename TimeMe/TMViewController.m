@@ -19,7 +19,7 @@
 #import "TMStyleManager.h"
 
 #import "NSString+TMTimeIntervalString.h"
-
+#import "TMAddIntervalViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 
 @interface TMViewController () {
@@ -35,6 +35,7 @@
 }
 
 - (void)_toggleButtonPressed;
+- (void)_addButtonPressed;
 - (void)_fadeInView:(UIView *)inView outView:(UIView *)outView;
 - (NSArray *)_selectedAlerts;
 
@@ -199,6 +200,13 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
     }
 }
 
+- (void)_addButtonPressed {
+    TMAddIntervalViewController *addVC = [[TMAddIntervalViewController alloc] init];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addVC];
+    [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+
+}
+
 #pragma mark - UIViewController
 
 - (void)loadView {
@@ -243,7 +251,7 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
     return 2;
 }
 
-static CGFloat __headerHeight = 50;
+static CGFloat __headerHeight = 60;
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     CGFloat height = 0;
     if (section == 1 && [_sortedAlertIntervals count]) {
@@ -270,6 +278,15 @@ static CGFloat __headerHeight = 50;
                                                               CGRectGetWidth(self.view.frame), __headerHeight)];
         [headerView setBackgroundColor: headerColor];
         [headerView addSubview:label];
+        
+        UIButton *addButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [addButton setTitle:@"+" forState:UIControlStateNormal];
+        [addButton.titleLabel setFont:[styleManager.font fontWithSize:30]];
+        [addButton setTitleColor:styleManager.textColor forState:UIControlStateNormal];
+        [addButton setBackgroundColor:styleManager.backgroundColor];
+        [addButton setFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 70, 0, 70, __headerHeight)];
+        [addButton addTarget:self action:@selector(_addButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        [headerView addSubview:addButton];
     }
     return headerView;
 }
