@@ -137,7 +137,7 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
 
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
     NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
-    UIColor *titleColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x31/256. green:.6 blue:0x02/256. alpha:1];
+    UIColor *buttonColor = generatingAlerts ? [UIColor redColor] : [UIColor greenColor];
     UIView *inView = generatingAlerts ? _timerView : _tableView;
     UIView *outView =generatingAlerts ? _tableView : _timerView;
     
@@ -151,8 +151,8 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
     if (buttonTitle) {
         [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
     }
-    if (titleColor) {
-        [_timerToggleButton setTitleColor:titleColor forState:UIControlStateNormal];
+    if (buttonColor) {
+        [_timerToggleButton setBackgroundColor:buttonColor];
     }
     
     if (animated) {
@@ -221,7 +221,7 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
     _timerView = [[TMTimerView alloc] initWithFrame:tableFrame];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_timerToggleButton setBackgroundColor:styleManager.buttonColor];
+    [_timerToggleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
     [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
     [_timerToggleButton setFrame:CGRectMake(0, CGRectGetMaxY(tableFrame),
