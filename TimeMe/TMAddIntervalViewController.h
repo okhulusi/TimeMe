@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TMTimePickerCell.h"
+
 @class TMAddIntervalViewController;
 @protocol TMAddIntervalDelegate <NSObject>
 - (void)addIntervalController:(TMAddIntervalViewController *)addIntervalController didSelectInterval:(NSTimeInterval)timeInterval;
@@ -14,6 +16,8 @@
 
 @end
 
-@interface TMAddIntervalViewController : UITableViewController
+@interface TMAddIntervalViewController : UITableViewController<TMTimePickerDelegate>
 @property (weak)id<TMAddIntervalDelegate> delegate;
+
+- (void)configureForTimeInterval:(NSTimeInterval)timeInterval;
 @end
