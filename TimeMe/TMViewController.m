@@ -337,7 +337,6 @@ static CGFloat __headerHeight = 60;
             if (!cell) {
                 cell = [[TMTimePickerCell alloc] initWithReuseIdentifier:kPickerViewCellID];
                 ((TMTimePickerCell *)cell).delegate = self;
-
             }
         }
     } else {
