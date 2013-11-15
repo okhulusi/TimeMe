@@ -202,9 +202,22 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
 
 - (void)_addButtonPressed {
     TMAddIntervalViewController *addVC = [[TMAddIntervalViewController alloc] init];
+    addVC.delegate = self;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addVC];
     [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+    
 
+}
+
+#pragma mark - TMAddInterval
+
+- (void)addIntervalController:(TMAddIntervalViewController *)addIntervalController didSelectInterval:(NSTimeInterval)timeInterval {
+    //add stuff
+    [addIntervalController.parentViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)addIntervalControllerDidCancel:(TMAddIntervalViewController *)addIntervalController {
+    [addIntervalController.parentViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - UIViewController
@@ -264,7 +277,7 @@ static CGFloat __headerHeight = 60;
     UIView *headerView = nil;
     if (section == 1 && [_sortedAlertIntervals count]) {
         TMStyleManager *styleManager = [TMStyleManager getInstance];
-        UIColor *headerColor = [styleManager.backgroundColor colorWithAlphaComponent:.95];
+        UIColor *headerColor = [styleManager.backgroundColor colorWithAlphaComponent:1];
         CGFloat padding = 10;
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(padding + 5, padding,
                                                                    CGRectGetWidth(self.view.frame)-(2*padding), __headerHeight - (2*padding))];

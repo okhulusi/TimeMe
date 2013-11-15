@@ -27,7 +27,7 @@
     [self.window makeKeyAndVisible];
     
     TMStyleManager *styleManager = [TMStyleManager getInstance];
-    [navigationController.navigationBar setBarTintColor:styleManager.navigationBarTintColor];
+    [[UINavigationBar appearance] setBarTintColor:styleManager.navigationBarTintColor];
     
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:
                                                            styleManager.navigationBarTitleColor,

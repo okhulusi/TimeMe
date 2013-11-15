@@ -16,7 +16,7 @@
 
 @end
 
-@interface TMAddIntervalViewController : UITableViewController<TMTimePickerDelegate>
+@interface TMAddIntervalViewController : UIViewController<TMTimePickerDelegate,UITableViewDataSource,UITableViewDelegate>
 @property (weak)id<TMAddIntervalDelegate> delegate;
 
 - (void)configureForTimeInterval:(NSTimeInterval)timeInterval;
