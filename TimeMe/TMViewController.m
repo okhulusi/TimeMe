@@ -202,6 +202,7 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
 
 - (void)_addButtonPressed {
     TMAddIntervalViewController *addVC = [[TMAddIntervalViewController alloc] init];
+    [addVC configureForTimeInterval:[TMAlertManager getInstance].timerLength];
     addVC.delegate = self;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addVC];
     [self.navigationController presentViewController:navigationController animated:YES completion:nil];

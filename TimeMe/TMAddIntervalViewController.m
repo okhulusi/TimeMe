@@ -10,7 +10,7 @@
 #import "TMStyleManager.h"
 
 #import "TMTimeLabelCell.h"
-#import "TMTimePickerCell.h"
+#import "TMMaxPickerCell.h"
 
 @interface TMAddIntervalViewController () {
     NSTimeInterval _maxTimeInterval;
@@ -76,9 +76,10 @@
         static NSString *kTimePickerCellID = @"addintervaltimepickercellid";
         cell = [tableView dequeueReusableCellWithIdentifier:kTimePickerCellID];
         if (!cell) {
-            cell = [[TMTimePickerCell alloc] initWithReuseIdentifier:kTimePickerCellID];
+            cell = [[TMMaxPickerCell alloc] initWithReuseIdentifier:kTimePickerCellID];
             ((TMTimePickerCell *)cell).delegate = self;
         }
+        [(TMMaxPickerCell *)cell setMaxTimeInterval:_maxTimeInterval];
     }
     [cell configureForTimeInterval:_selectedTimeInterval];
     return cell;

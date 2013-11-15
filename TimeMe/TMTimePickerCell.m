@@ -7,11 +7,10 @@
 //
 
 #import "TMTimePickerCell.h"
+#import "TMTimePickerCell_Private.h"
 #import "TMStyleManager.h"
 
 #define NUM_ROWS 12000
-#define MAX_HOURS 6
-#define SECOND_RESOLUTION 15
 
 @interface TMTimePickerCell () {
     BOOL _labelPosistionedForComponent[2];
@@ -40,6 +39,10 @@
         [self.contentView addSubview:_pickerView];
         
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+        _maxHours = 6;
+        _maxMinutes = 60;
+        _rowCenter = NUM_ROWS/2;
+        _secondResolution = 15;
     }
     return self;
 }
@@ -49,12 +52,12 @@
     for (int i = 0; i < _pickerView.numberOfComponents; i++) {
         NSInteger rowValue = [_pickerView selectedRowInComponent:i];
         if (i == 0) {
-            rowValue = rowValue % MAX_HOURS;
+            rowValue = rowValue % _maxHours;
         } else if (i == 2) {
-            NSInteger modValue = 60/SECOND_RESOLUTION;
-            rowValue = (rowValue % modValue) * SECOND_RESOLUTION;
+            NSInteger modValue = 60/_secondResolution;
+            rowValue = (rowValue % modValue) * _secondResolution;
         } else {
-            rowValue = rowValue % 60;
+            rowValue = rowValue % _maxMinutes;
         }
         NSTimeInterval timeIntervalForComponent = pow(60,(_pickerView.numberOfComponents - i - 1)) * rowValue;
         timeInterval += timeIntervalForComponent;
@@ -71,9 +74,9 @@
     
     NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
     
-    [_pickerView selectRow:[components hour] + NUM_ROWS/2 inComponent:0 animated:animated];
-    [_pickerView selectRow:[components minute] + NUM_ROWS/2 inComponent:1 animated:animated];
-    [_pickerView selectRow:[components second]/SECOND_RESOLUTION + NUM_ROWS/2 inComponent:2 animated:animated];
+    [_pickerView selectRow:[components hour] + _rowCenter inComponent:0 animated:animated];
+    [_pickerView selectRow:[components minute] + _rowCenter inComponent:1 animated:animated];
+    [_pickerView selectRow:[components second]/_secondResolution + _rowCenter inComponent:2 animated:animated];
 }
 
 - (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
@@ -117,12 +120,12 @@
     }
     NSInteger rowValue = 0;
     if (component == 0) {
-        rowValue = row % MAX_HOURS;
+        rowValue = row % _maxHours;
     } else if (component == 2) {
-        NSInteger modValue = 60/SECOND_RESOLUTION;
-        rowValue = (row % modValue) * SECOND_RESOLUTION;
+        NSInteger modValue = 60/_secondResolution;
+        rowValue = (row % modValue) * _secondResolution;
     } else {
-        rowValue = row % 60;
+        rowValue = row % _maxMinutes;
     }
     NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02ld",(long)rowValue] : [NSString stringWithFormat:@"%ld",(long)rowValue];
     [rowLabel setText:title];

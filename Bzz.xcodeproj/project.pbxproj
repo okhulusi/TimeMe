@@ -20,6 +20,7 @@
 		AA2F1E0017ECD84D001AB1D6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA2F1DE217ECD84D001AB1D6 /* UIKit.framework */; };
 		AA2F1E0817ECD84D001AB1D6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA2F1E0617ECD84D001AB1D6 /* InfoPlist.strings */; };
 		AA2F1E0A17ECD84D001AB1D6 /* TimeMeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1E0917ECD84D001AB1D6 /* TimeMeTests.m */; };
+		D335DE1E1836E007008F9530 /* TMMaxPickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D335DE1D1836E007008F9530 /* TMMaxPickerCell.m */; };
 		D3377F8217FF71F400993815 /* TMTimePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D3377F8117FF71F400993815 /* TMTimePickerCell.m */; };
 		D38DE83F1805F22000771267 /* TMStyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE83E1805F22000771267 /* TMStyleManager.m */; };
 		D38DE8421805FC4300771267 /* TMTimeLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE8411805FC4300771267 /* TMTimeLabelCell.m */; };
@@ -61,6 +62,9 @@
 		AA2F1E0517ECD84D001AB1D6 /* BzzTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BzzTests-Info.plist"; sourceTree = "<group>"; };
 		AA2F1E0717ECD84D001AB1D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AA2F1E0917ECD84D001AB1D6 /* TimeMeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TimeMeTests.m; sourceTree = "<group>"; };
+		D335DE1C1836E007008F9530 /* TMMaxPickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMMaxPickerCell.h; sourceTree = "<group>"; };
+		D335DE1D1836E007008F9530 /* TMMaxPickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMMaxPickerCell.m; sourceTree = "<group>"; };
+		D335DE1F1836E0A7008F9530 /* TMTimePickerCell_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TMTimePickerCell_Private.h; sourceTree = "<group>"; };
 		D3377F8017FF71F400993815 /* TMTimePickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimePickerCell.h; sourceTree = "<group>"; };
 		D3377F8117FF71F400993815 /* TMTimePickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimePickerCell.m; sourceTree = "<group>"; };
 		D38DE83D1805F22000771267 /* TMStyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMStyleManager.h; sourceTree = "<group>"; };
@@ -215,7 +219,10 @@
 				D3BDE84A180A4398005D0AC3 /* TMIntervalLabelCell.h */,
 				D3BDE84B180A4398005D0AC3 /* TMIntervalLabelCell.m */,
 				D3377F8017FF71F400993815 /* TMTimePickerCell.h */,
+				D335DE1F1836E0A7008F9530 /* TMTimePickerCell_Private.h */,
 				D3377F8117FF71F400993815 /* TMTimePickerCell.m */,
+				D335DE1C1836E007008F9530 /* TMMaxPickerCell.h */,
+				D335DE1D1836E007008F9530 /* TMMaxPickerCell.m */,
 				D38DE8401805FC4300771267 /* TMTimeLabelCell.h */,
 				D38DE8411805FC4300771267 /* TMTimeLabelCell.m */,
 			);
@@ -323,6 +330,7 @@
 				D38E5E7E1834463C0059071A /* TMAddIntervalViewController.m in Sources */,
 				D3BDE84C180A4398005D0AC3 /* TMIntervalLabelCell.m in Sources */,
 				D38DE84B1809BFA400771267 /* TMAlertManager.m in Sources */,
+				D335DE1E1836E007008F9530 /* TMMaxPickerCell.m in Sources */,
 				D3BDE84F180A45B1005D0AC3 /* TMTableViewCell.m in Sources */,
 				AA2F1DEF17ECD84D001AB1D6 /* AppDelegate.m in Sources */,
 				D38DE84E1809C5E900771267 /* NSString+TMTimeIntervalString.m in Sources */,
