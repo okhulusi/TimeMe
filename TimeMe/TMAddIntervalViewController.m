@@ -46,6 +46,8 @@
 
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
     _selectedTimeInterval = timeInterval;
+    TMTableViewCell *cell = (TMTableViewCell *)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    [cell configureForTimeInterval:_selectedTimeInterval];
     return _selectedTimeInterval;
 }
 
@@ -68,6 +70,7 @@
             cell = [[TMTimeLabelCell alloc] initWithReuseIdentifier:kTimerPickerTitleCellID];
         }
         NSString *titleText = @"Bzz time";
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         [cell.textLabel setText:titleText];
     } else if (indexPath.section == 1) {
         static NSString *kTimePickerCellID = @"addintervaltimepickercellid";
