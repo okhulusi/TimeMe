@@ -74,9 +74,19 @@
     
     NSDateComponents *components = [calender components:conversionFlags fromDate:startDate toDate:endDate options:0];
     
-    [_pickerView selectRow:[components hour] + _rowCenter inComponent:0 animated:animated];
-    [_pickerView selectRow:[components minute] + _rowCenter inComponent:1 animated:animated];
-    [_pickerView selectRow:[components second]/_secondResolution + _rowCenter inComponent:2 animated:animated];
+    NSInteger hourRow = [components hour] + _rowCenter;
+    NSInteger minuteRow = [components minute] + _rowCenter;
+    NSInteger secondRow = [components second]/_secondResolution + _rowCenter;
+    if (animated) {
+        NSInteger diff = 0;
+        if (abs(hourRow - [_pickerView selectedRowInComponent:0]) > _maxHours) {
+            diff = hourRow - [_pickerView selectedRowInComponent:0];
+            hourRow += diff;
+        }
+    }
+    [_pickerView selectRow:hourRow inComponent:0 animated:animated];
+    [_pickerView selectRow:minuteRow inComponent:1 animated:animated];
+    [_pickerView selectRow:secondRow inComponent:2 animated:animated];
 }
 
 - (void)configureForTimeInterval:(NSTimeInterval)timeInterval {

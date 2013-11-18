@@ -45,7 +45,11 @@
 #pragma mark - TMTimePickerDelegate 
 
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
-    _selectedTimeInterval = timeInterval;
+    if (timeInterval > _maxTimeInterval) {
+        _selectedTimeInterval = _maxTimeInterval;
+    } else {
+        _selectedTimeInterval = timeInterval;
+    }
     TMTableViewCell *cell = (TMTableViewCell *)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     [cell configureForTimeInterval:_selectedTimeInterval];
     return _selectedTimeInterval;

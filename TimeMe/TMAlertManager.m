@@ -147,6 +147,7 @@ static NSString *kGeneratingAlertsKey = @"generatingalerts";
     if (now > (_timerStart + _timerLength) && _generatingAlerts) { //if the entire timer has expired
         _generatingAlerts = NO;
     } else if (_generatingAlerts){
+        [_currentAlerts removeAllObjects];
         [_currentAlerts addObjectsFromArray:[defaults objectForKey:kCurrentAlertsKey]];
         if ([_currentAlerts count]) {
             NSTimeInterval elapsedTime = now - _timerStart;
@@ -155,7 +156,11 @@ static NSString *kGeneratingAlertsKey = @"generatingalerts";
                 _intervalStart += [[_currentAlerts firstObject] doubleValue];
                 [_currentAlerts removeObjectAtIndex:0];
             }
-            _intervalLength = _timerLength - [[_currentAlerts firstObject] doubleValue];
+            if (![_currentAlerts count]) {
+                _intervalLength = 0;
+            } else {
+                _intervalLength = _timerLength - [[_currentAlerts firstObject] doubleValue];
+            }
         }
     }
 }
