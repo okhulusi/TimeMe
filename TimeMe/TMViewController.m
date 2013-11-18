@@ -81,12 +81,9 @@
 - (void)_toggleButtonPressed {
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     if (!alertManager.generatingAlerts && alertManager.timerLength) {
-        NSString *title = [NSString stringForTimeInterval:alertManager.timerLength style:TMTimeIntervalStringDigital];
-        [self setTitle:title];
         NSArray *selectedAlerts = [self _selectedAlerts];
         [alertManager startAlerts:selectedAlerts];
     } else {
-        [self setTitle:@"Bzz"];
         [alertManager stopAlerts];
     }
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:YES];
@@ -143,7 +140,14 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
     NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
     UIColor *buttonColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x1F/256. green:0xFF/256. blue:0x52/256. alpha:.7];
     UIView *inView = generatingAlerts ? _timerView : _tableView;
-    UIView *outView =generatingAlerts ? _tableView : _timerView;
+    UIView *outView = generatingAlerts ? _tableView : _timerView;
+    
+    NSString *title = @"Bzz";
+    if (generatingAlerts) {
+        TMAlertManager *alertManager = [TMAlertManager getInstance];
+        title = [NSString stringForTimeInterval:alertManager.timerLength style:TMTimeIntervalStringDigital];
+    }
+    [self setTitle:title];
     
     if (generatingAlerts) {
         [_timerView beginUpdating];
