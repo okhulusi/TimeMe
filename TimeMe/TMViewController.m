@@ -81,9 +81,12 @@
 - (void)_toggleButtonPressed {
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     if (!alertManager.generatingAlerts && alertManager.timerLength) {
+        NSString *title = [NSString stringForTimeInterval:alertManager.timerLength style:TMTimeIntervalStringDigital];
+        [self setTitle:title];
         NSArray *selectedAlerts = [self _selectedAlerts];
         [alertManager startAlerts:selectedAlerts];
     } else {
+        [self setTitle:@"Bzz"];
         [alertManager stopAlerts];
     }
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:YES];
