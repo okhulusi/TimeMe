@@ -52,7 +52,7 @@
     for (int i = 0; i < _pickerView.numberOfComponents; i++) {
         NSInteger rowValue = [_pickerView selectedRowInComponent:i];
         if (i == 0) {
-            rowValue = rowValue % _maxHours;
+            rowValue = _maxHours ? rowValue % _maxHours : 0;
         } else if (i == 2) {
             NSInteger modValue = 60/_secondResolution;
             rowValue = (rowValue % modValue) * _secondResolution;
@@ -120,7 +120,7 @@
     }
     NSInteger rowValue = 0;
     if (component == 0) {
-        rowValue = row % _maxHours;
+        rowValue = _maxHours ? row % _maxHours : 0;
     } else if (component == 2) {
         NSInteger modValue = 60/_secondResolution;
         rowValue = (row % modValue) * _secondResolution;

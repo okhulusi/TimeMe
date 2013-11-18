@@ -15,18 +15,14 @@
     _maxTimeInterval = maxTimeInterval;
     self.maxHours = floor(maxTimeInterval/3600);
     if (self.maxHours == 0) {
-        self.maxMinutes =  (maxTimeInterval-self.maxHours*60)/60;
+        if (maxTimeInterval == 60) {
+            self.maxMinutes = 0;
+        } else {
+            self.maxMinutes = (maxTimeInterval-self.maxHours*60)/60;
+        }
     } else {
         self.maxMinutes = 60;
     }
-}
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    NSInteger numRows = [super pickerView:pickerView numberOfRowsInComponent:component];
-    if (component == 0 && !self.maxHours) {
-        numRows = 1;
-    }
-    return numRows;
 }
 
 @end
