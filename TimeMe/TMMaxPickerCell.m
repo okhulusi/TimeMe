@@ -15,10 +15,13 @@
     _maxTimeInterval = maxTimeInterval;
     self.maxHours = floor(maxTimeInterval/3600);
     if (self.maxHours == 0) {
-        if (maxTimeInterval == 60) {
+        if (maxTimeInterval <= 60) {
             self.maxMinutes = 0;
         } else {
             self.maxMinutes = (maxTimeInterval-self.maxHours*60)/60;
+            if (_maxTimeInterval > self.maxMinutes*60) {
+                self.maxMinutes += 1;
+            }
         }
     } else {
         self.maxMinutes = 60;

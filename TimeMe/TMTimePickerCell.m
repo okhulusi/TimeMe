@@ -57,7 +57,7 @@
             NSInteger modValue = 60/_secondResolution;
             rowValue = (rowValue % modValue) * _secondResolution;
         } else {
-            rowValue = rowValue % _maxMinutes;
+            rowValue = _maxMinutes ? rowValue % _maxMinutes : 0;
         }
         NSTimeInterval timeIntervalForComponent = pow(60,(_pickerView.numberOfComponents - i - 1)) * rowValue;
         timeInterval += timeIntervalForComponent;
@@ -125,7 +125,7 @@
         NSInteger modValue = 60/_secondResolution;
         rowValue = (row % modValue) * _secondResolution;
     } else {
-        rowValue = row % _maxMinutes;
+        rowValue = _maxMinutes ? row % _maxMinutes : 0;
     }
     NSString *title = (component != 0) ? [NSString stringWithFormat:@"%02ld",(long)rowValue] : [NSString stringWithFormat:@"%ld",(long)rowValue];
     [rowLabel setText:title];
