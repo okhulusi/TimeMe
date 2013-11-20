@@ -201,15 +201,17 @@ static NSString *kHiddenAlertsKey = @"hiddenalerts";
 #pragma mark - TMAddInterval
 
 - (void)addIntervalController:(TMAddIntervalViewController *)addIntervalController didSelectInterval:(NSTimeInterval)timeInterval {
-    [_hiddenAlerts removeObject:@(timeInterval)];
-    if (![_addedAlerts containsObject:@(timeInterval)]) {
-        [_addedAlerts addObject:@(timeInterval)];
-        TMAlertManager *alertManager = [TMAlertManager getInstance];
-        if (timeInterval < alertManager.timerLength) {
-            [_selectedAlerts addObject:@(timeInterval)];
-            [_displayAlerts addObject:@(timeInterval)];
-            NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
-            [_displayAlerts sortUsingDescriptors:@[sortDescriptor]];
+    if (timeInterval) {
+        [_hiddenAlerts removeObject:@(timeInterval)];
+        if (![_addedAlerts containsObject:@(timeInterval)]) {
+            [_addedAlerts addObject:@(timeInterval)];
+            TMAlertManager *alertManager = [TMAlertManager getInstance];
+            if (timeInterval < alertManager.timerLength) {
+                [_selectedAlerts addObject:@(timeInterval)];
+                [_displayAlerts addObject:@(timeInterval)];
+                NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
+                [_displayAlerts sortUsingDescriptors:@[sortDescriptor]];
+            }
         }
     }
     [addIntervalController.parentViewController dismissViewControllerAnimated:YES completion:nil];
