@@ -10,6 +10,8 @@
 #import "TMStyleManager.h"
 
 #import "TMTimeLabelCell.h"
+
+#import "TMTimePickerCell_Private.h"
 #import "TMMaxPickerCell.h"
 
 @interface TMAddIntervalViewController () {
@@ -45,8 +47,9 @@
 #pragma mark - TMTimePickerDelegate 
 
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
-    if (timeInterval > _maxTimeInterval) {
-        _selectedTimeInterval = _maxTimeInterval;
+    if (timeInterval >= _maxTimeInterval) {
+        TMTimePickerCell *pickerCell = (TMTimePickerCell *)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
+        _selectedTimeInterval = _maxTimeInterval - pickerCell.secondResolution;
     } else {
         _selectedTimeInterval = timeInterval;
     }
