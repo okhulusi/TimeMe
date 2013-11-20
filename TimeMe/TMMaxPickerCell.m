@@ -11,6 +11,14 @@
 
 @implementation TMMaxPickerCell
 
+- (id)initWithReuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithReuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.secondResolution = 5;
+    }
+    return self;
+}
+
 - (void)setMaxTimeInterval:(NSTimeInterval)maxTimeInterval {
     _maxTimeInterval = maxTimeInterval;
     self.maxHours = floor(maxTimeInterval/3600);

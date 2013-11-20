@@ -102,12 +102,16 @@ static NSString *kHiddenAlertsKey = @"hiddenalerts";
     
     _showingPicker = [defaults boolForKey:kShowingPickerKey];
     NSArray *displayAlerts = [defaults objectForKey:kDisplayAlertsKey];
+    [_displayAlerts removeAllObjects];
     [_displayAlerts addObjectsFromArray:displayAlerts];
     NSArray *selectedAlerts = [defaults objectForKey:kSelectedAlertsKey];
+    [_selectedAlerts removeAllObjects];
     [_selectedAlerts addObjectsFromArray:selectedAlerts];
     NSArray *addedAlerts = [defaults objectForKey:kAddedAlertsKey];
+    [_addedAlerts removeAllObjects];
     [_addedAlerts addObjectsFromArray:addedAlerts];
     NSArray *hiddenAlerts = [defaults objectForKey:kHiddenAlertsKey];
+    [_hiddenAlerts removeAllObjects];
     [_hiddenAlerts addObjectsFromArray:hiddenAlerts];
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     if (!alertManager.generatingAlerts && !alertManager.timerLength) {
@@ -197,6 +201,7 @@ static NSString *kHiddenAlertsKey = @"hiddenalerts";
 #pragma mark - TMAddInterval
 
 - (void)addIntervalController:(TMAddIntervalViewController *)addIntervalController didSelectInterval:(NSTimeInterval)timeInterval {
+    [_hiddenAlerts removeObject:@(timeInterval)];
     if (![_addedAlerts containsObject:@(timeInterval)]) {
         [_addedAlerts addObject:@(timeInterval)];
         TMAlertManager *alertManager = [TMAlertManager getInstance];
@@ -260,7 +265,7 @@ static NSString *kHiddenAlertsKey = @"hiddenalerts";
 static CGFloat __headerHeight = 60;
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     CGFloat height = 0;
-    if (section == 1 && [_displayAlerts count]) {
+    if (section == 1) {
         height = __headerHeight;
     }
     return height;
@@ -268,7 +273,7 @@ static CGFloat __headerHeight = 60;
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *headerView = nil;
-    if (section == 1 && [_displayAlerts count]) {
+    if (section == 1) {
         TMStyleManager *styleManager = [TMStyleManager getInstance];
         UIColor *headerColor = [styleManager.backgroundColor colorWithAlphaComponent:1];
         CGFloat padding = 10;
@@ -374,6 +379,25 @@ static CGFloat __headerHeight = 60;
     return height;
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return indexPath.section == 1;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return indexPath.section == 1 ? UITableViewCellEditingStyleDelete : UITableViewCellEditingStyleNone;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete && indexPath.section == 1) {
+        NSNumber *alertInterval = [_displayAlerts objectAtIndex:indexPath.row];
+        [_addedAlerts removeObject:alertInterval];
+        [_displayAlerts removeObjectAtIndex:indexPath.row];
+        [_tableView beginUpdates];
+        [_tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [_tableView endUpdates];
+    }
+}
+
 #pragma mark - TMTimePicker
 
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
@@ -395,7 +419,9 @@ static CGFloat __headerHeight = 60;
     
     for (NSNumber *alertInterval in _addedAlerts) {
         if ([alertInterval doubleValue] < alertManager.timerLength) {
-            [_displayAlerts addObject:alertInterval];
+            if (![_displayAlerts containsObject:alertInterval]) {
+                [_displayAlerts addObject:alertInterval];
+            }
         }
     }
 
