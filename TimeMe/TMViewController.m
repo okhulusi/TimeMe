@@ -206,6 +206,7 @@ static NSString *kHiddenAlertsKey = @"hiddenalerts";
         [_addedAlerts addObject:@(timeInterval)];
         TMAlertManager *alertManager = [TMAlertManager getInstance];
         if (timeInterval < alertManager.timerLength) {
+            [_selectedAlerts addObject:@(timeInterval)];
             [_displayAlerts addObject:@(timeInterval)];
             NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
             [_displayAlerts sortUsingDescriptors:@[sortDescriptor]];
