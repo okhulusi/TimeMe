@@ -78,11 +78,16 @@
     NSInteger minuteRow = [components minute] + _rowCenter;
     NSInteger secondRow = [components second]/_secondResolution + _rowCenter;
     if (animated) {
-        NSInteger diff = 0;
-        if (abs(hourRow - [_pickerView selectedRowInComponent:0]) > _maxHours) {
-            diff = hourRow - [_pickerView selectedRowInComponent:0];
-            hourRow += diff;
-        }
+        hourRow = [_pickerView selectedRowInComponent:0];
+        NSInteger selectedHour =  _maxHours ? hourRow % _maxHours : 0;
+        hourRow = hourRow - (selectedHour - [components hour]);
+        minuteRow = [_pickerView selectedRowInComponent:1];
+        NSInteger selectedMinute = _maxMinutes ? minuteRow % _maxMinutes : 0;
+        minuteRow = minuteRow - (selectedMinute - [components minute]);
+        secondRow = [_pickerView selectedRowInComponent:2];
+        NSInteger modValue = 60/_secondResolution;
+        NSInteger selectedSecond = secondRow % modValue;
+        secondRow = secondRow - (selectedSecond - [components second]/_secondResolution);
     }
     [_pickerView selectRow:hourRow inComponent:0 animated:animated];
     [_pickerView selectRow:minuteRow inComponent:1 animated:animated];
