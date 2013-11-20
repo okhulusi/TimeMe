@@ -22,8 +22,9 @@
 		AA2F1E0A17ECD84D001AB1D6 /* TimeMeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F1E0917ECD84D001AB1D6 /* TimeMeTests.m */; };
 		D335DE1E1836E007008F9530 /* TMMaxPickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D335DE1D1836E007008F9530 /* TMMaxPickerCell.m */; };
 		D3377F8217FF71F400993815 /* TMTimePickerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D3377F8117FF71F400993815 /* TMTimePickerCell.m */; };
+		D36AE221183D72600075C8E9 /* TMTimerConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = D36AE220183D72600075C8E9 /* TMTimerConfiguration.m */; };
+		D36AE224183D7ABE0075C8E9 /* TMTimeLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D36AE223183D7ABE0075C8E9 /* TMTimeLabelCell.m */; };
 		D38DE83F1805F22000771267 /* TMStyleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE83E1805F22000771267 /* TMStyleManager.m */; };
-		D38DE8421805FC4300771267 /* TMTimeLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE8411805FC4300771267 /* TMTimeLabelCell.m */; };
 		D38DE84518071F6A00771267 /* TMTimerView.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE84418071F6A00771267 /* TMTimerView.m */; };
 		D38DE8471809184D00771267 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D38DE8461809184D00771267 /* AudioToolbox.framework */; };
 		D38DE84B1809BFA400771267 /* TMAlertManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D38DE84A1809BFA400771267 /* TMAlertManager.m */; };
@@ -67,10 +68,12 @@
 		D335DE1F1836E0A7008F9530 /* TMTimePickerCell_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TMTimePickerCell_Private.h; sourceTree = "<group>"; };
 		D3377F8017FF71F400993815 /* TMTimePickerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimePickerCell.h; sourceTree = "<group>"; };
 		D3377F8117FF71F400993815 /* TMTimePickerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimePickerCell.m; sourceTree = "<group>"; };
+		D36AE21F183D72600075C8E9 /* TMTimerConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimerConfiguration.h; sourceTree = "<group>"; };
+		D36AE220183D72600075C8E9 /* TMTimerConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimerConfiguration.m; sourceTree = "<group>"; };
+		D36AE222183D7ABE0075C8E9 /* TMTimeLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimeLabelCell.h; sourceTree = "<group>"; };
+		D36AE223183D7ABE0075C8E9 /* TMTimeLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimeLabelCell.m; sourceTree = "<group>"; };
 		D38DE83D1805F22000771267 /* TMStyleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMStyleManager.h; sourceTree = "<group>"; };
 		D38DE83E1805F22000771267 /* TMStyleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMStyleManager.m; sourceTree = "<group>"; };
-		D38DE8401805FC4300771267 /* TMTimeLabelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimeLabelCell.h; sourceTree = "<group>"; };
-		D38DE8411805FC4300771267 /* TMTimeLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimeLabelCell.m; sourceTree = "<group>"; };
 		D38DE84318071F6A00771267 /* TMTimerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTimerView.h; sourceTree = "<group>"; };
 		D38DE84418071F6A00771267 /* TMTimerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTimerView.m; sourceTree = "<group>"; };
 		D38DE8461809184D00771267 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -149,6 +152,8 @@
 				AA2F1DEE17ECD84D001AB1D6 /* AppDelegate.m */,
 				AA2F1DF317ECD84D001AB1D6 /* TMViewController.h */,
 				AA2F1DF417ECD84D001AB1D6 /* TMViewController.m */,
+				D36AE21F183D72600075C8E9 /* TMTimerConfiguration.h */,
+				D36AE220183D72600075C8E9 /* TMTimerConfiguration.m */,
 				D38E5E7C1834463C0059071A /* TMAddIntervalViewController.h */,
 				D38E5E7D1834463C0059071A /* TMAddIntervalViewController.m */,
 				D38DE83D1805F22000771267 /* TMStyleManager.h */,
@@ -214,6 +219,8 @@
 		D3BDE850180A45BB005D0AC3 /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
+				D36AE222183D7ABE0075C8E9 /* TMTimeLabelCell.h */,
+				D36AE223183D7ABE0075C8E9 /* TMTimeLabelCell.m */,
 				D3BDE84D180A45B1005D0AC3 /* TMTableViewCell.h */,
 				D3BDE84E180A45B1005D0AC3 /* TMTableViewCell.m */,
 				D3BDE84A180A4398005D0AC3 /* TMIntervalLabelCell.h */,
@@ -223,8 +230,6 @@
 				D3377F8117FF71F400993815 /* TMTimePickerCell.m */,
 				D335DE1C1836E007008F9530 /* TMMaxPickerCell.h */,
 				D335DE1D1836E007008F9530 /* TMMaxPickerCell.m */,
-				D38DE8401805FC4300771267 /* TMTimeLabelCell.h */,
-				D38DE8411805FC4300771267 /* TMTimeLabelCell.m */,
 			);
 			name = TableViewCells;
 			sourceTree = "<group>";
@@ -325,9 +330,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D38DE8421805FC4300771267 /* TMTimeLabelCell.m in Sources */,
+				D36AE224183D7ABE0075C8E9 /* TMTimeLabelCell.m in Sources */,
 				AA2F1DF517ECD84D001AB1D6 /* TMViewController.m in Sources */,
 				D38E5E7E1834463C0059071A /* TMAddIntervalViewController.m in Sources */,
+				D36AE221183D72600075C8E9 /* TMTimerConfiguration.m in Sources */,
 				D3BDE84C180A4398005D0AC3 /* TMIntervalLabelCell.m in Sources */,
 				D38DE84B1809BFA400771267 /* TMAlertManager.m in Sources */,
 				D335DE1E1836E007008F9530 /* TMMaxPickerCell.m in Sources */,

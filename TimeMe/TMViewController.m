@@ -7,32 +7,26 @@
 //
 
 #import "TMViewController.h"
-
+#import <AudioToolbox/AudioToolbox.h>
 #import "TMTableViewCell.h"
-#import "TMTimeLabelCell.h"
 #import "TMIntervalLabelCell.h"
 #import "TMTimePickerCell.h"
 #import "TMTimerView.h"
-
 #import "TMAlertManager.h"
-
 #import "TMStyleManager.h"
-
 #import "NSString+TMTimeIntervalString.h"
 #import "TMAddIntervalViewController.h"
-#import <AudioToolbox/AudioToolbox.h>
+#import "TMTimerConfiguration.h"
+
 
 @interface TMViewController () {
     UITableView *_tableView;
     TMTimerView *_timerView;
     
     UIButton *_timerToggleButton;
-    BOOL _showingPicker;
     
-    NSMutableArray *_displayAlerts;
-    NSMutableSet *_selectedAlerts;
-    NSMutableSet *_addedAlerts;
-    NSMutableSet *_hiddenAlerts;
+    NSMutableArray *_timerConfigurations;
+    NSInteger _configurationIndex;
 }
 
 - (void)_toggleButtonPressed;
@@ -41,7 +35,6 @@
 - (void)_setUpViews;
 - (void)_saveViewState;
 
-- (void)_showTimePicker:(BOOL)show;
 - (void)_fadeInView:(UIView *)inView outView:(UIView *)outView;
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated;
 
@@ -53,13 +46,8 @@
     if (self = [super init]) {
         [self setTitle:@"Bzz"];
         
-        _showingPicker = NO;
+        _timerConfigurations = [[NSMutableArray alloc] init];
         
-        _displayAlerts = [[NSMutableArray alloc] init];
-        _selectedAlerts = [[NSMutableSet alloc] init];
-        _addedAlerts = [[NSMutableSet alloc] init];
-        _hiddenAlerts = [[NSMutableSet alloc] init];
-
         TMAlertManager *alertManager = [TMAlertManager getInstance];
         [alertManager setDelegate:self];
         
@@ -82,8 +70,10 @@
 
 - (void)_toggleButtonPressed {
     TMAlertManager *alertManager = [TMAlertManager getInstance];
-    if (!alertManager.generatingAlerts && alertManager.timerLength) {
-        NSArray *selectedAlerts = [_selectedAlerts allObjects];
+    TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
+    if (!alertManager.generatingAlerts && timerConfiguration.selectedTimeInterval) {
+        [alertManager setTimerLength:timerConfiguration.selectedTimeInterval];
+        NSArray *selectedAlerts = [timerConfiguration.selectedAlerts allObjects];
         [alertManager startAlerts:selectedAlerts];
     } else {
         [alertManager stopAlerts];
@@ -91,42 +81,28 @@
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:YES];
 }
 
-static NSString *kShowingPickerKey = @"showingpicker";
-static NSString *kDisplayAlertsKey = @"displayalerts";
-static NSString *kSelectedAlertsKey = @"selectedalerts";
-static NSString *kAddedAlertsKey = @"addedalerts";
-static NSString *kHiddenAlertsKey = @"hiddenalerts";
+static NSString *kCurrentConfigurationIndexKey = @"currentconfigurationindex";
+static NSString *kTimerConfigurationsKey = @"timerconfigurations";
 
 - (void)_setUpViews {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    _showingPicker = [defaults boolForKey:kShowingPickerKey];
-    NSArray *displayAlerts = [defaults objectForKey:kDisplayAlertsKey];
-    [_displayAlerts removeAllObjects];
-    [_displayAlerts addObjectsFromArray:displayAlerts];
-    NSArray *selectedAlerts = [defaults objectForKey:kSelectedAlertsKey];
-    [_selectedAlerts removeAllObjects];
-    [_selectedAlerts addObjectsFromArray:selectedAlerts];
-    NSArray *addedAlerts = [defaults objectForKey:kAddedAlertsKey];
-    [_addedAlerts removeAllObjects];
-    [_addedAlerts addObjectsFromArray:addedAlerts];
-    NSArray *hiddenAlerts = [defaults objectForKey:kHiddenAlertsKey];
-    [_hiddenAlerts removeAllObjects];
-    [_hiddenAlerts addObjectsFromArray:hiddenAlerts];
-    TMAlertManager *alertManager = [TMAlertManager getInstance];
-    if (!alertManager.generatingAlerts && !alertManager.timerLength) {
-        _showingPicker = YES;
+    _configurationIndex = [defaults integerForKey:kCurrentConfigurationIndexKey];
+    NSData *configurationData = [defaults objectForKey:kTimerConfigurationsKey];
+    if (configurationData) {
+        NSArray *configurations = [NSKeyedUnarchiver unarchiveObjectWithData:configurationData];
+        [_timerConfigurations addObjectsFromArray:configurations];
+    } else {
+        TMTimerConfiguration *timerConfiguration = [[TMTimerConfiguration alloc] init];
+        [_timerConfigurations addObject:timerConfiguration];
     }
+    TMAlertManager *alertManager = [TMAlertManager getInstance];
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
 }
 
 - (void)_saveViewState {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setBool:_showingPicker forKey:kShowingPickerKey];
-    [defaults setObject:_displayAlerts forKey:kDisplayAlertsKey];
-    [defaults setObject:[_selectedAlerts allObjects] forKey:kSelectedAlertsKey];
-    [defaults setObject:[_addedAlerts allObjects] forKey:kAddedAlertsKey];
-    [defaults setObject:[_hiddenAlerts allObjects] forKey:kHiddenAlertsKey];
+    [defaults setInteger:_configurationIndex forKey:kCurrentConfigurationIndexKey];
+    [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_timerConfigurations] forKey:kTimerConfigurationsKey];
     [defaults synchronize];
 }
 
@@ -177,19 +153,6 @@ static NSString *kHiddenAlertsKey = @"hiddenalerts";
                      }];
 }
 
-- (void)_showTimePicker:(BOOL)show {
-    NSIndexPath *pickerPath = [NSIndexPath indexPathForRow:1 inSection:0];
-    if (show && !_showingPicker) {
-        _showingPicker = YES;
-        [_tableView insertRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    } else if (!show && _showingPicker) {
-        UITableViewCell *cell = [_tableView cellForRowAtIndexPath:pickerPath];
-        [cell.superview sendSubviewToBack:cell];
-        _showingPicker = NO;
-        [_tableView deleteRowsAtIndexPaths:@[pickerPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    }
-}
-
 - (void)_addButtonPressed {
     TMAddIntervalViewController *addVC = [[TMAddIntervalViewController alloc] init];
     [addVC configureForTimeInterval:[TMAlertManager getInstance].timerLength];
@@ -202,15 +165,16 @@ static NSString *kHiddenAlertsKey = @"hiddenalerts";
 
 - (void)addIntervalController:(TMAddIntervalViewController *)addIntervalController didSelectInterval:(NSTimeInterval)timeInterval {
     if (timeInterval) {
-        [_hiddenAlerts removeObject:@(timeInterval)];
-        if (![_addedAlerts containsObject:@(timeInterval)]) {
-            [_addedAlerts addObject:@(timeInterval)];
-            TMAlertManager *alertManager = [TMAlertManager getInstance];
-            if (timeInterval < alertManager.timerLength) {
-                [_selectedAlerts addObject:@(timeInterval)];
-                [_displayAlerts addObject:@(timeInterval)];
+        TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
+        NSNumber *interval = @(timeInterval);
+        [timerConfiguration.hiddenAlerts addObject:interval];
+        if (![timerConfiguration.addedAlerts containsObject:interval]) {
+            [timerConfiguration.addedAlerts addObject:interval];
+            if (timeInterval < timerConfiguration.selectedTimeInterval) {
+                [timerConfiguration.selectedAlerts addObject:interval];
+                [timerConfiguration.displayAlerts addObject:interval];
                 NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
-                [_displayAlerts sortUsingDescriptors:@[sortDescriptor]];
+                [timerConfiguration.displayAlerts sortUsingDescriptors:@[sortDescriptor]];
             }
         }
     }
@@ -258,6 +222,10 @@ static NSString *kHiddenAlertsKey = @"hiddenalerts";
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
 }
+
+#pragma mark - UIScrollView
+
+
 
 #pragma mark - UITableView
 
@@ -309,36 +277,23 @@ static CGFloat __headerHeight = 60;
     NSInteger rowCount;
     if (section == 0) {
         rowCount = 1;
-        if (_showingPicker) {
-            rowCount++;
-        }
     } else {
-        rowCount = [_displayAlerts count];
+        TMTimerConfiguration *timerConfiguration = [_timerConfigurations count] ? [_timerConfigurations objectAtIndex:_configurationIndex] : nil;
+        rowCount = [timerConfiguration.displayAlerts count];
     }
     return rowCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath { // should be lightweight
     TMTableViewCell *cell = nil;
-    TMAlertManager *alertManager = [TMAlertManager getInstance];
-    NSTimeInterval timeInterval = alertManager.timerLength;
+    TMTimerConfiguration *timerConfiguration = [_timerConfigurations count] ? [_timerConfigurations objectAtIndex:_configurationIndex] : nil;
+    NSTimeInterval timeInterval = timerConfiguration.selectedTimeInterval;
     if (indexPath.section == 0) {
-        if (indexPath.row == 0) { //we display info on the timer, not the timer picker itself
-            static NSString *kTimerPickerTitleCellID = @"timercelltitlepickerid";
-            cell = [tableView dequeueReusableCellWithIdentifier:kTimerPickerTitleCellID];
-            if (!cell) {
-                cell = [[TMTimeLabelCell alloc] initWithReuseIdentifier:kTimerPickerTitleCellID];
-            }
-            
-            NSString *titleText = @"Duration";
-            [cell.textLabel setText:titleText];
-        } else { //display a pickerview for this one
-            static NSString *kPickerViewCellID = @"pickerviewcellid";
-            cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];
-            if (!cell) {
-                cell = [[TMTimePickerCell alloc] initWithReuseIdentifier:kPickerViewCellID];
-                ((TMTimePickerCell *)cell).delegate = self;
-            }
+        static NSString *kPickerViewCellID = @"pickerviewcellid";
+        cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];
+        if (!cell) {
+            cell = [[TMTimePickerCell alloc] initWithReuseIdentifier:kPickerViewCellID];
+            ((TMTimePickerCell *)cell).delegate = self;
         }
     } else {
         static NSString *kAlertIntervalCellID = @"alertintervalcellid";
@@ -346,8 +301,8 @@ static CGFloat __headerHeight = 60;
         if (!cell) {
             cell = [[TMIntervalLabelCell alloc] initWithReuseIdentifier:kAlertIntervalCellID];
         }
-        NSNumber *alertInterval = [_displayAlerts objectAtIndex:indexPath.row];
-        BOOL isChecked = [_selectedAlerts containsObject:alertInterval];
+        NSNumber *alertInterval = [timerConfiguration.displayAlerts objectAtIndex:indexPath.row];
+        BOOL isChecked = [timerConfiguration.selectedAlerts containsObject:alertInterval];
         timeInterval = [alertInterval doubleValue];
         [(TMIntervalLabelCell *)cell setChecked:isChecked animated:NO];
     }
@@ -357,27 +312,25 @@ static CGFloat __headerHeight = 60;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section == 0 && indexPath.row == 0) {
-        [self _showTimePicker:!_showingPicker];
-    } else if (indexPath.section == 1){
-        NSNumber *alertInterval = [_displayAlerts objectAtIndex:indexPath.row];
-        if ([_selectedAlerts containsObject:alertInterval]) {
-            [_selectedAlerts removeObject:alertInterval];
+    if (indexPath.section == 1) {
+        TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
+        NSNumber *alertInterval = [timerConfiguration.displayAlerts objectAtIndex:indexPath.row];
+        NSMutableSet *selectedAlerts = timerConfiguration.selectedAlerts;
+        BOOL isSelected = [selectedAlerts containsObject:alertInterval];
+        if (isSelected) {
+            [selectedAlerts removeObject:alertInterval];
         } else {
-            [_selectedAlerts addObject:alertInterval];
+            [selectedAlerts addObject:alertInterval];
         }
         TMIntervalLabelCell *cell = (TMIntervalLabelCell *)[tableView cellForRowAtIndexPath:indexPath];
-        [cell setChecked:[_selectedAlerts containsObject:alertInterval] animated:YES];
+        [cell setChecked:!isSelected animated:YES];
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat height = 44;
     if (indexPath.section == 0) {
-        height = 75;
-        if (indexPath.row == 1) { //its a picker row
-            height = 120;
-        }
+        height = 120;
     }
     return height;
 }
@@ -392,10 +345,11 @@ static CGFloat __headerHeight = 60;
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete && indexPath.section == 1) {
-        NSNumber *alertInterval = [_displayAlerts objectAtIndex:indexPath.row];
-        [_addedAlerts removeObject:alertInterval];
-        [_selectedAlerts removeObject:alertInterval];
-        [_displayAlerts removeObjectAtIndex:indexPath.row];
+        TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
+        NSNumber *alertInterval = [timerConfiguration.displayAlerts objectAtIndex:indexPath.row];
+        [timerConfiguration.addedAlerts removeObject:alertInterval];
+        [timerConfiguration.selectedAlerts removeObject:alertInterval];
+        [timerConfiguration.displayAlerts removeObjectAtIndex:indexPath.row];
         [_tableView beginUpdates];
         [_tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         [_tableView endUpdates];
@@ -405,36 +359,33 @@ static CGFloat __headerHeight = 60;
 #pragma mark - TMTimePicker
 
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
-    TMTableViewCell *cell = (TMTableViewCell *)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    NSTimeInterval validTimeInterval = timeInterval;
+    //configure configuration selector
     
-    [cell configureForTimeInterval:validTimeInterval];
-
-    TMAlertManager *alertManager = [TMAlertManager getInstance];
-    [alertManager setTimerLength:validTimeInterval];
+    TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
+    [timerConfiguration setSelectedTimeInterval:timeInterval];
     
-    [_displayAlerts removeAllObjects];
-    NSArray *availableAlerts = [TMAlertManager alertIntervalsForTimerLength:alertManager.timerLength];
-    [_displayAlerts addObjectsFromArray:availableAlerts];
+    [timerConfiguration.displayAlerts removeAllObjects];
+    NSArray *availableAlerts = [TMAlertManager alertIntervalsForTimerLength:timeInterval];
+    [timerConfiguration.displayAlerts addObjectsFromArray:availableAlerts];
     
-    for (NSNumber *alertInterval in _hiddenAlerts) {
-        [_displayAlerts removeObject:alertInterval];
+    for (NSNumber *alertInterval in timerConfiguration.hiddenAlerts) {
+        [timerConfiguration.displayAlerts removeObject:alertInterval];
     }
     
-    for (NSNumber *alertInterval in _addedAlerts) {
-        if ([alertInterval doubleValue] < alertManager.timerLength) {
-            if (![_displayAlerts containsObject:alertInterval]) {
-                [_displayAlerts addObject:alertInterval];
+    for (NSNumber *alertInterval in timerConfiguration.addedAlerts) {
+        if ([alertInterval doubleValue] < timeInterval) {
+            if (![timerConfiguration.displayAlerts containsObject:alertInterval]) {
+                [timerConfiguration.displayAlerts addObject:alertInterval];
             }
         }
     }
 
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
-    [_displayAlerts sortUsingDescriptors:@[sortDescriptor]];
+    [timerConfiguration.displayAlerts sortUsingDescriptors:@[sortDescriptor]];
     
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];            
     
-    return validTimeInterval;
+    return timeInterval;
 }
 
 #pragma mark - TMAlertManager
@@ -451,7 +402,6 @@ static CGFloat __headerHeight = 60;
 
 - (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert {
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-    _showingPicker = NO;
     [_tableView reloadData];
     
     [self _configureForGeneratingAlerts:NO animated:YES];
