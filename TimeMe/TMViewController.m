@@ -29,9 +29,10 @@
     UIButton *_timerToggleButton;
     BOOL _showingPicker;
     
-    NSArray *_sortedAlertIntervals;
+    NSMutableArray *_sortedAlertIntervals;
     NSMutableDictionary *_selectedAlerts;
     NSMutableSet *_invisibleSelectedAlerts;
+    NSMutableSet *_addedIntervals;
 }
 
 - (void)_toggleButtonPressed;
@@ -58,6 +59,7 @@
         _sortedAlertIntervals = [[NSMutableArray alloc] init];
         _selectedAlerts = [[NSMutableDictionary alloc] init];
         _invisibleSelectedAlerts = [[NSMutableSet alloc] init];
+        _addedIntervals = [[NSMutableSet alloc] init];
         TMAlertManager *alertManager = [TMAlertManager getInstance];
         [alertManager setDelegate:self];
         
@@ -108,7 +110,7 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
             }
         }
         NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
-        _sortedAlertIntervals = [[_selectedAlerts allKeys] sortedArrayUsingDescriptors:@[sortDescriptor]];
+        _sortedAlertIntervals = [[[_selectedAlerts allKeys] sortedArrayUsingDescriptors:@[sortDescriptor]] mutableCopy];
     } else {
         TMAlertManager *alertManager = [TMAlertManager getInstance];
         NSArray *availableAlerts = [TMAlertManager alertIntervalsForTimerLength:alertManager.timerLength];
@@ -220,7 +222,12 @@ static NSString *kSelectedAlertsKey = @"selectedalerts";
 #pragma mark - TMAddInterval
 
 - (void)addIntervalController:(TMAddIntervalViewController *)addIntervalController didSelectInterval:(NSTimeInterval)timeInterval {
-    //add stuff
+    if (![_addedIntervals containsObject:@(timeInterval)]) {
+        [_addedIntervals addObject:@(timeInterval)];
+        [_sortedAlertIntervals addObject:@(timeInterval)];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
+        [_sortedAlertIntervals sortUsingDescriptors:@[sortDescriptor]];
+    }
     [addIntervalController.parentViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -420,15 +427,20 @@ static CGFloat __headerHeight = 60;
 
     for (NSNumber *alertInterval in availableAlerts) {
         if (![alertsForLatestTimeInterval objectForKey:alertInterval]) {
-            NSNumber *isChecked = @NO;
-            if ([_invisibleSelectedAlerts containsObject:alertInterval]) {
-                isChecked = @YES;
-            }
+            NSNumber *isChecked = @([_invisibleSelectedAlerts containsObject:alertInterval]);
             [alertsForLatestTimeInterval setObject:isChecked forKey:alertInterval];
         }
     }
+    
+    for (NSNumber *alertInterval in _addedIntervals) {
+        if ([alertInterval doubleValue] < alertManager.timerLength) {
+            NSNumber *isChecked = @([_invisibleSelectedAlerts containsObject:alertInterval]);
+            [alertsForLatestTimeInterval setObject:isChecked forKey:alertInterval];
+        }
+    }
+    
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
-    _sortedAlertIntervals = [[alertsForLatestTimeInterval allKeys] sortedArrayUsingDescriptors:@[sortDescriptor]];
+    _sortedAlertIntervals = [[[alertsForLatestTimeInterval allKeys] sortedArrayUsingDescriptors:@[sortDescriptor]] mutableCopy];
     _selectedAlerts = alertsForLatestTimeInterval;
     
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];            
