@@ -391,6 +391,7 @@ static CGFloat __headerHeight = 60;
     if (editingStyle == UITableViewCellEditingStyleDelete && indexPath.section == 1) {
         NSNumber *alertInterval = [_displayAlerts objectAtIndex:indexPath.row];
         [_addedAlerts removeObject:alertInterval];
+        [_selectedAlerts removeObject:alertInterval];
         [_displayAlerts removeObjectAtIndex:indexPath.row];
         [_tableView beginUpdates];
         [_tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
