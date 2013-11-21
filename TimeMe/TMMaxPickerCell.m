@@ -33,6 +33,9 @@
         }
     } else {
         self.maxMinutes = 60;
+        if (self.maxHours*3600 < _maxTimeInterval) {
+            self.maxHours += 1;
+        }
     }
 }
 

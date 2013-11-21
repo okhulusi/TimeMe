@@ -155,7 +155,8 @@ static NSString *kTimerConfigurationsKey = @"timerconfigurations";
 
 - (void)_addButtonPressed {
     TMAddIntervalViewController *addVC = [[TMAddIntervalViewController alloc] init];
-    [addVC configureForTimeInterval:[TMAlertManager getInstance].timerLength];
+    TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
+    [addVC configureForTimeInterval:timerConfiguration.selectedTimeInterval];
     addVC.delegate = self;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addVC];
     [self.navigationController presentViewController:navigationController animated:YES completion:nil];
