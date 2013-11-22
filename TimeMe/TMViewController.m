@@ -17,16 +17,15 @@
 #import "NSString+TMTimeIntervalString.h"
 #import "TMAddIntervalViewController.h"
 #import "TMTimerConfiguration.h"
+#import "TMConfigurationPickerView.h"
 
 
 @interface TMViewController () {
+    TMConfigurationPickerView *_configurationPicker;
     UITableView *_tableView;
     TMTimerView *_timerView;
     
     UIButton *_timerToggleButton;
-    
-    NSMutableArray *_timerConfigurations;
-    NSInteger _configurationIndex;
 }
 
 - (void)_toggleButtonPressed;
@@ -46,7 +45,8 @@
     if (self = [super init]) {
         [self setTitle:@"Bzz"];
         
-        _timerConfigurations = [[NSMutableArray alloc] init];
+        _configurationPicker = [[TMConfigurationPickerView alloc] init];
+        [_configurationPicker setDelegate:self];
         
         TMAlertManager *alertManager = [TMAlertManager getInstance];
         [alertManager setDelegate:self];
@@ -69,8 +69,8 @@
 }
 
 - (void)_toggleButtonPressed {
+    TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
     TMAlertManager *alertManager = [TMAlertManager getInstance];
-    TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
     if (!alertManager.generatingAlerts && timerConfiguration.selectedTimeInterval) {
         [alertManager setTimerLength:timerConfiguration.selectedTimeInterval];
         NSArray *selectedAlerts = [timerConfiguration.selectedAlerts allObjects];
@@ -81,19 +81,14 @@
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:YES];
 }
 
-static NSString *kCurrentConfigurationIndexKey = @"currentconfigurationindex";
-static NSString *kTimerConfigurationsKey = @"timerconfigurations";
+static NSString *kConfigurationPickerKey = @"configurationpickerkey";
 
 - (void)_setUpViews {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    _configurationIndex = [defaults integerForKey:kCurrentConfigurationIndexKey];
-    NSData *configurationData = [defaults objectForKey:kTimerConfigurationsKey];
-    if (configurationData) {
-        NSArray *configurations = [NSKeyedUnarchiver unarchiveObjectWithData:configurationData];
-        [_timerConfigurations addObjectsFromArray:configurations];
-    } else {
-        TMTimerConfiguration *timerConfiguration = [[TMTimerConfiguration alloc] init];
-        [_timerConfigurations addObject:timerConfiguration];
+    NSData *configurationPickerData = [defaults objectForKey:kConfigurationPickerKey];
+    if (configurationPickerData) {
+        _configurationPicker = [NSKeyedUnarchiver unarchiveObjectWithData:configurationPickerData];
+        [_configurationPicker setDelegate:self];
     }
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
@@ -101,8 +96,7 @@ static NSString *kTimerConfigurationsKey = @"timerconfigurations";
 
 - (void)_saveViewState {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setInteger:_configurationIndex forKey:kCurrentConfigurationIndexKey];
-    [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_timerConfigurations] forKey:kTimerConfigurationsKey];
+    [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_configurationPicker] forKey:kConfigurationPickerKey];
     [defaults synchronize];
 }
 
@@ -155,7 +149,7 @@ static NSString *kTimerConfigurationsKey = @"timerconfigurations";
 
 - (void)_addButtonPressed {
     TMAddIntervalViewController *addVC = [[TMAddIntervalViewController alloc] init];
-    TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
+    TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
     [addVC configureForTimeInterval:timerConfiguration.selectedTimeInterval];
     addVC.delegate = self;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addVC];
@@ -166,7 +160,7 @@ static NSString *kTimerConfigurationsKey = @"timerconfigurations";
 
 - (void)addIntervalController:(TMAddIntervalViewController *)addIntervalController didSelectInterval:(NSTimeInterval)timeInterval {
     if (timeInterval) {
-        TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
+        TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
         NSNumber *interval = @(timeInterval);
         [timerConfiguration.hiddenAlerts addObject:interval];
         if (![timerConfiguration.addedAlerts containsObject:interval]) {
@@ -194,9 +188,22 @@ static NSString *kTimerConfigurationsKey = @"timerconfigurations";
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     [self.view setBackgroundColor:styleManager.backgroundColor];
     
+    
+    CGRect pickerFrame = self.view.frame;
+    pickerFrame.origin.y = 64;
+    pickerFrame.size.height = 75;
+    
+    _configurationPicker = [[TMConfigurationPickerView alloc] initWithFrame:pickerFrame];
+    [self.view addSubview:_configurationPicker];
+    
     CGFloat buttonHeight = 60;
     CGRect tableFrame = self.view.frame;
+
     tableFrame.size.height -= buttonHeight;
+    tableFrame.size.height -= CGRectGetHeight(pickerFrame);
+    tableFrame.size.height -= 64;
+    tableFrame.origin.y += CGRectGetHeight(pickerFrame);
+    tableFrame.origin.y += 64;
     
     _tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
     [_tableView setBackgroundColor:styleManager.backgroundColor];
@@ -222,6 +229,11 @@ static NSString *kTimerConfigurationsKey = @"timerconfigurations";
     [super viewWillAppear:animated];
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [_configurationPicker setCurrentIndex:0];
 }
 
 #pragma mark - UIScrollView
@@ -279,7 +291,7 @@ static CGFloat __headerHeight = 60;
     if (section == 0) {
         rowCount = 1;
     } else {
-        TMTimerConfiguration *timerConfiguration = [_timerConfigurations count] ? [_timerConfigurations objectAtIndex:_configurationIndex] : nil;
+        TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
         rowCount = [timerConfiguration.displayAlerts count];
     }
     return rowCount;
@@ -287,7 +299,7 @@ static CGFloat __headerHeight = 60;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath { // should be lightweight
     TMTableViewCell *cell = nil;
-    TMTimerConfiguration *timerConfiguration = [_timerConfigurations count] ? [_timerConfigurations objectAtIndex:_configurationIndex] : nil;
+    TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
     NSTimeInterval timeInterval = timerConfiguration.selectedTimeInterval;
     if (indexPath.section == 0) {
         static NSString *kPickerViewCellID = @"pickerviewcellid";
@@ -314,7 +326,7 @@ static CGFloat __headerHeight = 60;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 1) {
-        TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
+        TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
         NSNumber *alertInterval = [timerConfiguration.displayAlerts objectAtIndex:indexPath.row];
         NSMutableSet *selectedAlerts = timerConfiguration.selectedAlerts;
         BOOL isSelected = [selectedAlerts containsObject:alertInterval];
@@ -346,7 +358,7 @@ static CGFloat __headerHeight = 60;
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete && indexPath.section == 1) {
-        TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
+        TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
         NSNumber *alertInterval = [timerConfiguration.displayAlerts objectAtIndex:indexPath.row];
         [timerConfiguration.addedAlerts removeObject:alertInterval];
         [timerConfiguration.selectedAlerts removeObject:alertInterval];
@@ -362,7 +374,7 @@ static CGFloat __headerHeight = 60;
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
     //configure configuration selector
     
-    TMTimerConfiguration *timerConfiguration = [_timerConfigurations objectAtIndex:_configurationIndex];
+    TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
     [timerConfiguration setSelectedTimeInterval:timeInterval];
     
     [timerConfiguration.displayAlerts removeAllObjects];
