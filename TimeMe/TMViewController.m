@@ -185,43 +185,156 @@ static NSString *kConfigurationPickerKey = @"configurationpickerkey";
 - (void)loadView {
     [super loadView];
     
+    [self setAutomaticallyAdjustsScrollViewInsets:NO];
+    
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     [self.view setBackgroundColor:styleManager.backgroundColor];
     
-    
     CGRect pickerFrame = self.view.frame;
-    pickerFrame.origin.y = 64;
     pickerFrame.size.height = 75;
     
     _configurationPicker = [[TMConfigurationPickerView alloc] initWithFrame:pickerFrame];
+    [_configurationPicker setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.view addSubview:_configurationPicker];
     
-    CGFloat buttonHeight = 60;
-    CGRect tableFrame = self.view.frame;
-
-    tableFrame.size.height -= buttonHeight;
-    tableFrame.size.height -= CGRectGetHeight(pickerFrame);
-    tableFrame.size.height -= 64;
-    tableFrame.origin.y += CGRectGetHeight(pickerFrame);
-    tableFrame.origin.y += 64;
-    
-    _tableView = [[UITableView alloc] initWithFrame:tableFrame style:UITableViewStylePlain];
-    [_tableView setBackgroundColor:styleManager.backgroundColor];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    [_tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [_tableView setBackgroundColor:[UIColor redColor]];
     [_tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [_tableView setDataSource:self];
     [_tableView setDelegate:self];
     [self.view addSubview:_tableView];
     
-    _timerView = [[TMTimerView alloc] initWithFrame:tableFrame];
+    _timerView = [[TMTimerView alloc] initWithFrame:CGRectZero];
+    [_timerView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [_timerView setAlpha:0];
+    [self.view addSubview:_timerView];
     
+    CGFloat buttonHeight = 60;
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [_timerToggleButton setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_timerToggleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
     [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
-    [_timerToggleButton setFrame:CGRectMake(0, CGRectGetMaxY(tableFrame),
-                                           CGRectGetWidth(self.view.frame), buttonHeight)];
     [_timerToggleButton addTarget:self action:@selector(_toggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_timerToggleButton];
+    
+    //fix picker to top, with height 75
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_configurationPicker
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeTop
+                                                         multiplier:1.0
+                                                           constant:64]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_configurationPicker
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_configurationPicker
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeWidth
+                                                         multiplier:1.0
+                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_configurationPicker
+                                                          attribute:NSLayoutAttributeHeight
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:nil
+                                                          attribute:NSLayoutAttributeHeight
+                                                         multiplier:1.0
+                                                           constant:75]];
+    //fix tableview to bottom on picker, make sure it doens't extent past button
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_tableView
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:_configurationPicker
+                                                          attribute:NSLayoutAttributeBottom
+                                                         multiplier:1.0
+                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_tableView
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_tableView
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeWidth
+                                                         multiplier:1.0
+                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_tableView
+                                                          attribute:NSLayoutAttributeBottom
+                                                          relatedBy:NSLayoutRelationLessThanOrEqual
+                                                             toItem:_timerToggleButton
+                                                          attribute:NSLayoutAttributeTop
+                                                         multiplier:1.0
+                                                           constant:0]];
+    
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerView
+                                                          attribute:NSLayoutAttributeTop
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeTop
+                                                         multiplier:1.0
+                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerView
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerView
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeWidth
+                                                         multiplier:1.0
+                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerView
+                                                          attribute:NSLayoutAttributeBottom
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:_timerToggleButton
+                                                          attribute:NSLayoutAttributeTop
+                                                         multiplier:1.0
+                                                           constant:0]];
+
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerToggleButton
+                                                          attribute:NSLayoutAttributeBottom
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeBottom
+                                                         multiplier:1.0
+                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerToggleButton
+                                                          attribute:NSLayoutAttributeCenterX
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeCenterX
+                                                         multiplier:1.0
+                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerToggleButton
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeWidth
+                                                         multiplier:1.0
+                                                           constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerToggleButton
+                                                          attribute:NSLayoutAttributeHeight
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:nil
+                                                          attribute:NSLayoutAttributeHeight
+                                                         multiplier:1.0
+                                                           constant:buttonHeight]];
 }
 
 

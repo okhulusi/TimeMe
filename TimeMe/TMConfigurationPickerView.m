@@ -32,7 +32,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         _configurations = [[NSMutableArray alloc] init];
-        [self setBackgroundColor:[UIColor redColor]];
         [self _buildScrollView];
     }
     return self;
@@ -75,6 +74,7 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
     }
     _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
     [_scrollView setContentSize:CGSizeMake(CGRectGetWidth(self.frame)*3, CGRectGetHeight(self.frame))];
+
     [_scrollView setDelegate:self];
     [_scrollView setPagingEnabled:YES];
     [self addSubview:_scrollView];
@@ -98,19 +98,9 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
 }
 
 - (void)_configureViews {
-    if (_currentIndex < 2) {
-        [_leftView configureForTimerConfiguration:[_configurations objectAtIndex:0]];
-        [_middleView configureForTimerConfiguration:[_configurations objectAtIndex:1]];
-        [_rightView configureForTimerConfiguration:[_configurations objectAtIndex:2]];
-    } else if (_currentIndex < [_configurations count] - 2){
-        [_leftView configureForTimerConfiguration:[_configurations objectAtIndex:_currentIndex-1]];
-        [_middleView configureForTimerConfiguration:[_configurations objectAtIndex:_currentIndex]];
-        [_rightView configureForTimerConfiguration:[_configurations objectAtIndex:_currentIndex + 1]];
-    } else {
-        [_leftView configureForTimerConfiguration:[_configurations objectAtIndex:_currentIndex - 3]];
-        [_middleView configureForTimerConfiguration:[_configurations objectAtIndex:_currentIndex - 2]];
-        [_rightView configureForTimerConfiguration:[_configurations objectAtIndex:_currentIndex - 1]];
-    }
+    [_leftView configureForTimerConfiguration:[_configurations objectAtIndex:0]];
+    [_middleView configureForTimerConfiguration:[_configurations objectAtIndex:1]];
+    [_rightView configureForTimerConfiguration:[_configurations objectAtIndex:2]];
 }
 
 #pragma mark - UIScrollView
