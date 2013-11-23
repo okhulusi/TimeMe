@@ -92,29 +92,37 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
 }
 
 - (void)_configureViews {
-    [_leftView configureForTimerConfiguration:[_configurations objectAtIndex:0]];
-    [_middleView configureForTimerConfiguration:[_configurations objectAtIndex:1]];
-    [_rightView configureForTimerConfiguration:[_configurations objectAtIndex:2]];
+    if (_currentIndex == 0) {
+        [_leftView configureForTimerConfiguration:[_configurations objectAtIndex:0]];
+        [_middleView configureForTimerConfiguration:[_configurations objectAtIndex:1]];
+        [_rightView configureForTimerConfiguration:[_configurations objectAtIndex:2]];
+    } else {
+        [_leftView configureForTimerConfiguration:[_configurations objectAtIndex:_currentIndex - 1]];
+        [_middleView configureForTimerConfiguration:[_configurations objectAtIndex:_currentIndex]];
+        if (_currentIndex == [_configurations count] - 1) {
+            TMTimerConfiguration *configuration = [[TMTimerConfiguration alloc] init];
+            [_configurations addObject:configuration];
+        }
+        [_rightView configureForTimerConfiguration:[_configurations objectAtIndex:_currentIndex + 1]];
+    }
 }
 
 #pragma mark - UIScrollView
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if ((_scrollView.contentOffset.x <= 0 && _currentIndex > 0) || (_scrollView.contentOffset.x <= _scrollView.frame.size.width && _currentIndex == [_configurations count] && [_configurations count])) {
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if ((_scrollView.contentOffset.x <= 0 && _currentIndex > 0) || (_scrollView.contentOffset.x <= _scrollView.frame.size.width && _currentIndex == [_configurations count])) {
         _currentIndex -= 1;
-        if (_currentIndex > 0) {
-            [_scrollView setContentOffset:CGPointMake(_scrollView.frame.size.width, 0)];
-        }
-    } else if((_scrollView.contentOffset.x >= _scrollView.frame.size.width*2 && _currentIndex < [_configurations count]) || (_scrollView.contentOffset.x >= _scrollView.frame.size.width && _currentIndex == 0)){
+    } else if((_scrollView.contentOffset.x >= _scrollView.frame.size.width*2) || (_scrollView.contentOffset.x >= _scrollView.frame.size.width && _currentIndex == 0)){
         _currentIndex += 1;
-        if(_currentIndex < [_configurations count]){
-            [_scrollView setContentOffset:CGPointMake(_scrollView.frame.size.width, 0)];
+        if (_currentIndex == [_configurations count]) {
+            TMTimerConfiguration *configuration = [[TMTimerConfiguration alloc] init];
+            [_configurations addObject:configuration];
         }
     }
+    if (_currentIndex > 0) {
+        [_scrollView setContentOffset:CGPointMake(_scrollView.frame.size.width, 0)];
+    }
     [self _configureViews];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     [self.delegate configurationPicker:self didSelectConfiguration:self.currentConfiguration];
 }
 
