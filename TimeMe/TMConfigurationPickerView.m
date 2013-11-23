@@ -12,6 +12,7 @@
 
 @interface TMConfigurationPickerView () {
     NSMutableArray *_configurations;
+    NSInteger _currentIndex;
     UIScrollView *_scrollView;
     TMConfigurationView *_leftView;
     TMConfigurationView *_middleView;
@@ -25,48 +26,41 @@
 
 @implementation TMConfigurationPickerView
 
-@synthesize configurations = _configurations;
+static NSString *kCurrentIndexKey = @"currentindexpicker";
+static NSString *kConfigurationsArrayKey = @"configurationsarray";
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
-        _configurations = [[NSMutableArray alloc] init];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        _currentIndex = [defaults integerForKey:kCurrentIndexKey];
+        NSData *configurationsData = [defaults objectForKey:kConfigurationsArrayKey];
+        if (configurationsData) {
+            _configurations = [[NSKeyedUnarchiver unarchiveObjectWithData:configurationsData] mutableCopy];
+        } else {
+            _configurations = [[NSMutableArray alloc] init];
+        }
         [self _buildScrollView];
     }
     return self;
 }
 
-static NSString *kCurrentIndexKey = @"currentindexpicker";
-static NSString *kConfigurationsArrayKey = @"configurationsarray";
-
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    [super encodeWithCoder:aCoder];
-    [aCoder encodeInteger:_currentIndex forKey:kCurrentIndexKey];
-    [aCoder encodeObject:[NSKeyedArchiver archivedDataWithRootObject:_configurations] forKey:kConfigurationsArrayKey];
+- (void)saveConfigurations {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setInteger:_currentIndex forKey:kCurrentIndexKey];
+    [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_configurations] forKey:kConfigurationsArrayKey];
+    [defaults synchronize];
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        _currentIndex = [aDecoder decodeIntegerForKey:kCurrentIndexKey];
-        NSData *configurationsData = [aDecoder decodeObjectForKey:kConfigurationsArrayKey];
-        if (configurationsData) {
-            _configurations = [NSKeyedUnarchiver unarchiveObjectWithData:configurationsData];
-        } else {
-            _configurations = [[NSMutableArray alloc] init];
-        }
-    }
-    return self;
+- (void)refreshViews {
+    [self _configureViews];
 }
 
-- (void)setFrame:(CGRect)frame {
-    [super setFrame:frame];
+- (TMTimerConfiguration *)currentConfiguration {
+    return [_configurations objectAtIndex:_currentIndex];
 }
 
-- (void)setCurrentIndex:(NSInteger)currentIndex {
-    _currentIndex = currentIndex;
-}
 - (void)_buildScrollView {
     while ([_configurations count] < 3) {
         TMTimerConfiguration *configuration = [[TMTimerConfiguration alloc] init];
@@ -118,6 +112,10 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
         }
     }
     [self _configureViews];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    [self.delegate configurationPicker:self didSelectConfiguration:self.currentConfiguration];
 }
 
 @end

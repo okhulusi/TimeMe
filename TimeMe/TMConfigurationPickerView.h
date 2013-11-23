@@ -16,10 +16,10 @@
 
 @interface TMConfigurationPickerView : UIView<NSCoding,UIScrollViewDelegate>
 
-@property (nonatomic) NSInteger currentIndex;
-@property (readonly) TMTimerConfiguration *currentConfiguration;
-@property (nonatomic) NSArray *configurations;
+- (void)refreshViews;
+- (void)saveConfigurations;
 
+@property (readonly) TMTimerConfiguration *currentConfiguration;
 @property (weak) id<TMConfigurationPickerDelegate>delegate;
 
 @end

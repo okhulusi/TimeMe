@@ -34,7 +34,7 @@
 - (void)_setUpViews;
 - (void)_saveViewState;
 
-- (void)_fadeInView:(UIView *)inView outView:(UIView *)outView;
+- (void)_fadeInView:(NSArray *)inViews outView:(NSArray *)outViews;
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated;
 
 @end
@@ -44,9 +44,6 @@
 - (id)init {
     if (self = [super init]) {
         [self setTitle:@"Bzz"];
-        
-        _configurationPicker = [[TMConfigurationPickerView alloc] init];
-        [_configurationPicker setDelegate:self];
         
         TMAlertManager *alertManager = [TMAlertManager getInstance];
         [alertManager setDelegate:self];
@@ -81,30 +78,21 @@
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:YES];
 }
 
-static NSString *kConfigurationPickerKey = @"configurationpickerkey";
 
 - (void)_setUpViews {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSData *configurationPickerData = [defaults objectForKey:kConfigurationPickerKey];
-    if (configurationPickerData) {
-        _configurationPicker = [NSKeyedUnarchiver unarchiveObjectWithData:configurationPickerData];
-        [_configurationPicker setDelegate:self];
-    }
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
 }
 
 - (void)_saveViewState {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_configurationPicker] forKey:kConfigurationPickerKey];
-    [defaults synchronize];
+    [_configurationPicker saveConfigurations];
 }
 
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
     NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
     UIColor *buttonColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x1F/256. green:0xFF/256. blue:0x52/256. alpha:.7];
-    UIView *inView = generatingAlerts ? _timerView : _tableView;
-    UIView *outView = generatingAlerts ? _tableView : _timerView;
+    NSArray *inViews = generatingAlerts ? @[_timerView] : @[_configurationPicker,_tableView];
+    NSArray *outViews = generatingAlerts ? @[_configurationPicker,_tableView] : @[_timerView];
     
     NSString *title = @"Bzz";
     if (generatingAlerts) {
@@ -128,22 +116,34 @@ static NSString *kConfigurationPickerKey = @"configurationpickerkey";
     }
     
     if (animated) {
-        [self _fadeInView:inView outView:outView];
+        [self _fadeInView:inViews outView:outViews];
     } else {
-        [inView setAlpha:1];
-        [self.view addSubview:inView];
-        [outView removeFromSuperview];
+        for (UIView *inView in inViews) {
+            [inView setAlpha:1];
+            [self.view addSubview:inView];
+        }
+        for (UIView *outView in outViews) {
+            [outView removeFromSuperview];
+        }
     }
 }
 
-- (void)_fadeInView:(UIView *)inView outView:(UIView *)outView {
-    [self.view addSubview:inView];
+- (void)_fadeInView:(NSArray *)inViews outView:(NSArray *)outViews {
+    for (UIView *view in inViews) {
+        [self.view addSubview:view];
+    }
     [UIView animateWithDuration:.5
                      animations:^{
-                         [inView setAlpha:1];
-                         [outView setAlpha:0];
+                         for (UIView *view in inViews) {
+                             [view setAlpha:1];
+                         }
+                         for (UIView *view in outViews) {
+                             [view setAlpha:0];
+                         }
                      } completion:^(BOOL finished) {
-                         [outView removeFromSuperview];
+                         for (UIView *view in outViews) {
+                             [view removeFromSuperview];
+                         }
                      }];
 }
 
@@ -199,7 +199,7 @@ static NSString *kConfigurationPickerKey = @"configurationpickerkey";
     
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     [_tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_tableView setBackgroundColor:[UIColor redColor]];
+    [_tableView setBackgroundColor:styleManager.backgroundColor];
     [_tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [_tableView setDataSource:self];
     [_tableView setDelegate:self];
@@ -344,15 +344,6 @@ static NSString *kConfigurationPickerKey = @"configurationpickerkey";
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    [_configurationPicker setCurrentIndex:0];
-}
-
-#pragma mark - UIScrollView
-
-
-
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -482,6 +473,13 @@ static CGFloat __headerHeight = 60;
     }
 }
 
+#pragma mark - TMConfigurationPicker
+
+- (void)configurationPicker:(TMConfigurationPickerView *)pickerView didSelectConfiguration:(TMTimerConfiguration *)configuration {
+    [_tableView reloadData];
+}
+
+
 #pragma mark - TMTimePicker
 
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
@@ -509,6 +507,7 @@ static CGFloat __headerHeight = 60;
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
     [timerConfiguration.displayAlerts sortUsingDescriptors:@[sortDescriptor]];
     
+    [_configurationPicker refreshViews];
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];            
     
     return timeInterval;
