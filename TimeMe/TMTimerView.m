@@ -42,7 +42,7 @@
         [_timerLabel setFrame:CGRectZero];
         [self addSubview:_timerLabel];
         [self addConstraint:[NSLayoutConstraint constraintWithItem:_timerLabel
-                                                         attribute:NSLayoutAttributeBottom
+                                                         attribute:NSLayoutAttributeBaseline
                                                          relatedBy:NSLayoutRelationEqual
                                                             toItem:self
                                                          attribute:NSLayoutAttributeCenterY
@@ -67,10 +67,10 @@
         [self addConstraint:[NSLayoutConstraint constraintWithItem:_intervalLabel
                                                          attribute:NSLayoutAttributeTop
                                                          relatedBy:NSLayoutRelationEqual
-                                                            toItem:self
-                                                         attribute:NSLayoutAttributeCenterY
+                                                            toItem:_timerLabel
+                                                         attribute:NSLayoutAttributeBottom
                                                         multiplier:1.0
-                                                          constant:10]];
+                                                          constant:20]];
         [self addConstraint:[NSLayoutConstraint constraintWithItem:_intervalLabel
                                                          attribute:NSLayoutAttributeCenterX
                                                          relatedBy:NSLayoutRelationEqual
