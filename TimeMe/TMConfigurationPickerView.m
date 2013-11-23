@@ -68,7 +68,12 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
     }
     _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
     [_scrollView setContentSize:CGSizeMake(CGRectGetWidth(self.frame)*3, CGRectGetHeight(self.frame))];
-
+    CGPoint offset = CGPointMake(0, 0);
+    if (_currentIndex != 0) {
+        offset.x = CGRectGetWidth(self.frame);
+    }
+    [_scrollView setContentOffset:offset];
+    [_scrollView setShowsHorizontalScrollIndicator:NO];
     [_scrollView setDelegate:self];
     [_scrollView setPagingEnabled:YES];
     [self addSubview:_scrollView];
