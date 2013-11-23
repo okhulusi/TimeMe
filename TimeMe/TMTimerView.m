@@ -31,26 +31,53 @@
         _updating = NO;
         
         TMStyleManager *styleManager = [TMStyleManager getInstance];
-        CGRect labelFrame = CGRectMake(0, 0, frame.size.width, frame.size.height/2);
-        _timerLabel = [[UILabel alloc] initWithFrame:labelFrame];
+        _timerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [_timerLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_timerLabel setTextAlignment:NSTextAlignmentCenter];
         [_timerLabel setFont:[styleManager.font fontWithSize:70]];
         [_timerLabel setTextColor:styleManager.textColor];
         [_timerLabel setHighlightedTextColor:styleManager.highlightTextColor];
         [_timerLabel setText:@"00:00:00"];
         [_timerLabel sizeToFit];
-        [_timerLabel setFrame:CGRectMake(0, frame.size.height/2 - _timerLabel.frame.size.height,
-                                         frame.size.width, _timerLabel.frame.size.height)];
+        [_timerLabel setFrame:CGRectZero];
         [self addSubview:_timerLabel];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:_timerLabel
+                                                         attribute:NSLayoutAttributeBottom
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeCenterY
+                                                        multiplier:1.0
+                                                          constant:0]];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:_timerLabel
+                                                         attribute:NSLayoutAttributeCenterX
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeCenterX
+                                                        multiplier:1.0
+                                                          constant:0]];
         
-        labelFrame = CGRectMake(0, frame.size.height/2, frame.size.width, frame.size.height/2);
-        _intervalLabel = [[UILabel alloc] initWithFrame:labelFrame];
+        _intervalLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [_intervalLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_intervalLabel setTextAlignment:NSTextAlignmentCenter];
         [_intervalLabel setTextColor:styleManager.textColor];
         [_intervalLabel setHighlightedTextColor:styleManager.highlightTextColor];
         [_intervalLabel setFont:[styleManager.font fontWithSize:60]];
         [_intervalLabel setText:@"00:00:00"];
         [self addSubview:_intervalLabel];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:_intervalLabel
+                                                         attribute:NSLayoutAttributeTop
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeCenterY
+                                                        multiplier:1.0
+                                                          constant:10]];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:_intervalLabel
+                                                         attribute:NSLayoutAttributeCenterX
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeCenterX
+                                                        multiplier:1.0
+                                                          constant:0]];
     }
     return self;
 }

@@ -119,18 +119,18 @@
         [self _fadeInView:inViews outView:outViews];
     } else {
         for (UIView *inView in inViews) {
+            [inView setHidden:NO];
             [inView setAlpha:1];
-            [self.view addSubview:inView];
         }
         for (UIView *outView in outViews) {
-            [outView removeFromSuperview];
+            [outView setHidden:YES];
         }
     }
 }
 
 - (void)_fadeInView:(NSArray *)inViews outView:(NSArray *)outViews {
     for (UIView *view in inViews) {
-        [self.view addSubview:view];
+        [view setHidden:NO];
     }
     [UIView animateWithDuration:.5
                      animations:^{
@@ -142,7 +142,7 @@
                          }
                      } completion:^(BOOL finished) {
                          for (UIView *view in outViews) {
-                             [view removeFromSuperview];
+                             [view setHidden:YES];
                          }
                      }];
 }
