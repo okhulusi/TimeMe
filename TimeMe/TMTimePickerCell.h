@@ -17,6 +17,8 @@
 
 @interface TMTimePickerCell : TMTableViewCell<UIPickerViewDelegate,UIPickerViewDataSource>
 
+- (void)configureForTimeInterval:(NSTimeInterval)timeInterval animated:(BOOL)animated;
+
 @property (weak) id<TMTimePickerDelegate>delegate;
 @property (readonly) UIPickerView *pickerView;
 

@@ -65,6 +65,10 @@
     return timeInterval;
 }
 
+- (void)configureForTimeInterval:(NSTimeInterval)timeInterval animated:(BOOL)animated {
+    [self _configureForTimeInterval:timeInterval animated:animated];
+}
+
 - (void)_configureForTimeInterval:(NSTimeInterval)timeInterval animated:(BOOL)animated {
     NSCalendar *calender = [NSCalendar currentCalendar];
     NSDate *startDate = [[NSDate alloc] init];

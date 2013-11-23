@@ -194,6 +194,7 @@
     pickerFrame.size.height = 75;
     
     _configurationPicker = [[TMConfigurationPickerView alloc] initWithFrame:pickerFrame];
+    [_configurationPicker setDelegate:self];
     [_configurationPicker setTranslatesAutoresizingMaskIntoConstraints:NO];
     [self.view addSubview:_configurationPicker];
     
@@ -476,7 +477,9 @@ static CGFloat __headerHeight = 60;
 #pragma mark - TMConfigurationPicker
 
 - (void)configurationPicker:(TMConfigurationPickerView *)pickerView didSelectConfiguration:(TMTimerConfiguration *)configuration {
-    [_tableView reloadData];
+    TMTimePickerCell *timePickerCell = (TMTimePickerCell *)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    [timePickerCell configureForTimeInterval:configuration.selectedTimeInterval animated:YES];
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 
