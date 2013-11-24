@@ -69,7 +69,7 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
     }
     
     CGFloat pageControlHeight = 20;
-    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0
+    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, pageControlHeight
                                                                  , CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - pageControlHeight)];
     [_scrollView setContentSize:CGSizeMake(CGRectGetWidth(self.frame)*3, CGRectGetHeight(self.frame) - pageControlHeight)];
     CGPoint offset = CGPointMake(0, 0);
@@ -95,7 +95,7 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
     _rightView = [[TMConfigurationView alloc] initWithFrame:viewRect];
     [_scrollView addSubview:_rightView];
     
-    _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.frame) - pageControlHeight*2,
+    _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, 0,
                                                                    CGRectGetWidth(self.frame), pageControlHeight)];
     [_pageControl setNumberOfPages:[_configurations count]];
     [_pageControl setDefersCurrentPageDisplay:YES];
