@@ -29,6 +29,7 @@
 }
 
 - (void)_toggleButtonPressed;
+- (void)_listButtonPressed;
 - (void)_addButtonPressed;
 
 - (void)_setUpViews;
@@ -78,6 +79,9 @@
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:YES];
 }
 
+- (void)_listButtonPressed {
+
+}
 
 - (void)_setUpViews {
     TMAlertManager *alertManager = [TMAlertManager getInstance];
@@ -187,6 +191,17 @@
     
     [self.navigationController.navigationBar setTranslucent:NO];
     [self setAutomaticallyAdjustsScrollViewInsets:NO];
+    
+    UIButton *listButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage *listImage = [UIImage imageNamed:@"ListIcon"];
+    [listButton setBackgroundImage:listImage forState:UIControlStateNormal];
+    UIImage *highlightImage = [UIImage imageNamed:@"ListIconHighlighted"];
+    [listButton setBackgroundImage:highlightImage forState:UIControlStateHighlighted];
+    [listButton addTarget:self action:@selector(_listButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [listButton setFrame:CGRectMake(0, 0, 44, 44)];
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:listButton];
+    [self.navigationItem setLeftBarButtonItem:barButton];
+    
     
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     [self.view setBackgroundColor:styleManager.backgroundColor];
