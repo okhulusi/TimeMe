@@ -191,7 +191,7 @@
     [self.view setBackgroundColor:styleManager.backgroundColor];
     
     CGRect pickerFrame = self.view.frame;
-    pickerFrame.size.height = 75;
+    pickerFrame.size.height = 85;
     
     _configurationPicker = [[TMConfigurationPickerView alloc] initWithFrame:pickerFrame];
     [_configurationPicker setDelegate:self];

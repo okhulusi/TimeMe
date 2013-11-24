@@ -13,6 +13,7 @@
 @interface TMConfigurationPickerView () {
     NSMutableArray *_configurations;
     NSInteger _currentIndex;
+    UIPageControl *_pageControl;
     UIScrollView *_scrollView;
     TMConfigurationView *_leftView;
     TMConfigurationView *_middleView;
@@ -66,8 +67,11 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
         TMTimerConfiguration *configuration = [[TMTimerConfiguration alloc] init];
         [_configurations addObject:configuration];
     }
-    _scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
-    [_scrollView setContentSize:CGSizeMake(CGRectGetWidth(self.frame)*3, CGRectGetHeight(self.frame))];
+    
+    CGFloat pageControlHeight = 20;
+    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0
+                                                                 , CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - pageControlHeight)];
+    [_scrollView setContentSize:CGSizeMake(CGRectGetWidth(self.frame)*3, CGRectGetHeight(self.frame) - pageControlHeight)];
     CGPoint offset = CGPointMake(0, 0);
     if (_currentIndex != 0) {
         offset.x = CGRectGetWidth(self.frame);
@@ -79,7 +83,7 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
     [self addSubview:_scrollView];
 
     
-    CGRect viewRect = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame));
+    CGRect viewRect = CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame) - pageControlHeight);
     _leftView = [[TMConfigurationView alloc] initWithFrame:viewRect];
     [_scrollView addSubview:_leftView];
     
@@ -91,7 +95,11 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
     _rightView = [[TMConfigurationView alloc] initWithFrame:viewRect];
     [_scrollView addSubview:_rightView];
     
-    [_scrollView setContentSize:CGSizeMake(CGRectGetWidth(self.frame)*3, CGRectGetHeight(self.frame))];
+    _pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.frame) - pageControlHeight*2,
+                                                                   CGRectGetWidth(self.frame), pageControlHeight)];
+    [_pageControl setNumberOfPages:[_configurations count]];
+    [_pageControl setDefersCurrentPageDisplay:YES];
+    [self addSubview:_pageControl];
     
     [self _configureViews];
 }
@@ -107,6 +115,7 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
         if (_currentIndex == [_configurations count] - 1) {
             TMTimerConfiguration *configuration = [[TMTimerConfiguration alloc] init];
             [_configurations addObject:configuration];
+            [_pageControl setNumberOfPages:[_configurations count]];
         }
         [_rightView configureForTimerConfiguration:[_configurations objectAtIndex:_currentIndex + 1]];
     }
@@ -122,6 +131,7 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
         if (_currentIndex == [_configurations count]) {
             TMTimerConfiguration *configuration = [[TMTimerConfiguration alloc] init];
             [_configurations addObject:configuration];
+            [_pageControl setNumberOfPages:[_configurations count]];
         }
     }
     if (_currentIndex > 0) {
@@ -129,6 +139,7 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
     }
     [self _configureViews];
     [self.delegate configurationPicker:self didSelectConfiguration:self.currentConfiguration];
+    [_pageControl setCurrentPage:_currentIndex];
 }
 
 @end
