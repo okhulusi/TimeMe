@@ -185,6 +185,7 @@
 - (void)loadView {
     [super loadView];
     
+    [self.navigationController.navigationBar setTranslucent:NO];
     [self setAutomaticallyAdjustsScrollViewInsets:NO];
     
     TMStyleManager *styleManager = [TMStyleManager getInstance];
@@ -227,7 +228,7 @@
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeTop
                                                          multiplier:1.0
-                                                           constant:64]];
+                                                           constant:0]];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_configurationPicker
                                                           attribute:NSLayoutAttributeCenterX
                                                           relatedBy:NSLayoutRelationEqual
