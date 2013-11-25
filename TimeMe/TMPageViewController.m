@@ -46,6 +46,10 @@
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)_fadeInView:(NSArray *)inViews outView:(NSArray *)outViews {
     for (UIView *view in inViews) {
         [view setHidden:NO];
