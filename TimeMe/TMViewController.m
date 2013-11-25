@@ -8,6 +8,7 @@
 
 #import "TMViewController.h"
 #import "TMTableViewCell.h"
+#import "TMTimeLabelCell.h"
 #import "TMIntervalLabelCell.h"
 #import "TMTimePickerCell.h"
 #import "TMAlertManager.h"
@@ -172,7 +173,7 @@ static CGFloat __headerHeight = 60;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger rowCount;
     if (section == 0) {
-        rowCount = 1;
+        rowCount = 2;
     } else {
         rowCount = [_configuration.displayAlerts count];
     }
@@ -183,11 +184,22 @@ static CGFloat __headerHeight = 60;
     TMTableViewCell *cell = nil;
     NSTimeInterval timeInterval = _configuration.selectedTimeInterval;
     if (indexPath.section == 0) {
-        static NSString *kPickerViewCellID = @"pickerviewcellid";
-        cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];
-        if (!cell) {
-            cell = [[TMTimePickerCell alloc] initWithReuseIdentifier:kPickerViewCellID];
-            ((TMTimePickerCell *)cell).delegate = self;
+        if (indexPath.row == 0) { //we display info on the timer, not the timer picker itself
+            static NSString *kTimerPickerTitleCellID = @"timercelltitlepickerid";
+            cell = [tableView dequeueReusableCellWithIdentifier:kTimerPickerTitleCellID];
+            if (!cell) {
+                cell = [[TMTimeLabelCell alloc] initWithReuseIdentifier:kTimerPickerTitleCellID];
+            }
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            NSString *titleText = @"Duration";
+            [cell.textLabel setText:titleText];
+        } else {
+            static NSString *kPickerViewCellID = @"pickerviewcellid";
+            cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];
+            if (!cell) {
+                cell = [[TMTimePickerCell alloc] initWithReuseIdentifier:kPickerViewCellID];
+                ((TMTimePickerCell *)cell).delegate = self;
+            }
         }
     } else {
         static NSString *kAlertIntervalCellID = @"alertintervalcellid";
@@ -223,7 +235,7 @@ static CGFloat __headerHeight = 60;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat height = 44;
     if (indexPath.section == 0) {
-        height = 120;
+        height = indexPath.row == 1 ? 120 : 75;
     }
     return height;
 }
@@ -246,14 +258,6 @@ static CGFloat __headerHeight = 60;
         [_tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         [_tableView endUpdates];
     }
-}
-
-#pragma mark - TMConfigurationPicker
-
-- (void)configurationPicker:(TMConfigurationPickerView *)pickerView didSelectConfiguration:(TMTimerConfiguration *)configuration {
-    TMTimePickerCell *timePickerCell = (TMTimePickerCell *)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
-    [timePickerCell configureForTimeInterval:configuration.selectedTimeInterval animated:YES];
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 
@@ -283,6 +287,8 @@ static CGFloat __headerHeight = 60;
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
     [_configuration.displayAlerts sortUsingDescriptors:@[sortDescriptor]];
     
+    TMTableViewCell *cell = (TMTableViewCell *)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+    [cell configureForTimeInterval:timeInterval];
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];            
     
     return timeInterval;

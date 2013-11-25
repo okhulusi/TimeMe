@@ -12,6 +12,8 @@
 #import "TMConfigurationManager.h"
 #import "TMViewController.h"
 #import "NSString+TMTimeIntervalString.h"
+#import "TMAlertManager.h"
+#import "TMTimerConfiguration.h"
 
 @interface TMPageViewController () {
     UIPageViewController *_pageViewController;
@@ -36,8 +38,6 @@
     self = [super init];
     if (self) {
         [self setTitle:@"Bzz"];
-        TMAlertManager *alertManager = [TMAlertManager getInstance];
-        [alertManager setDelegate:self];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(_setUpViews)
                                                      name:UIApplicationDidBecomeActiveNotification
@@ -110,6 +110,11 @@
 
 }
 
+- (void)_setUpViews {
+    TMAlertManager *alertManager = [TMAlertManager getInstance];
+    [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
+}
+
 - (void)loadView {
     [super loadView];
     
@@ -135,6 +140,9 @@
     TMConfigurationManager *configurationManager = [TMConfigurationManager getInstance];
     
     NSArray *configurations = configurationManager.configurations;
+    TMTimerConfiguration *configuration = [[TMTimerConfiguration alloc] init];
+    configurations = @[configuration];
+    
     NSMutableArray *configurationViewControllers = [[NSMutableArray alloc] init];
     for (TMTimerConfiguration *configuration in configurations) {
         TMViewController *viewController = [[TMViewController alloc] initWithConfiguration:configuration];
@@ -145,6 +153,7 @@
                                animated:NO
                              completion:nil];
     [self.view addSubview:_pageViewController.view];
+    [_pageViewController.view setTranslatesAutoresizingMaskIntoConstraints:NO];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_timerToggleButton setTranslatesAutoresizingMaskIntoConstraints:NO];
