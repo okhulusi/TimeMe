@@ -18,18 +18,20 @@
 @interface TMPageViewController () {
     UIPageViewController *_pageViewController;
     UIPageControl *_pageControl;
+    NSInteger _currentPage;
+    
     TMTimerView *_timerView;
     UIButton *_timerToggleButton;
+    
+    NSMutableArray *_configurationViewControllers;
 }
 
 - (void)_listButtonPressed;
 - (void)_toggleButtonPressed;
 
-
 - (void)_setUpViews;
 - (void)_fadeInView:(NSArray *)inViews outView:(NSArray *)outViews;
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated;
-
 @end
 
 @implementation TMPageViewController
@@ -42,6 +44,7 @@
                                                  selector:@selector(_setUpViews)
                                                      name:UIApplicationDidBecomeActiveNotification
                                                    object:nil];
+        _configurationViewControllers = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -67,6 +70,22 @@
                              [view setHidden:YES];
                          }
                      }];
+}
+
+- (void)_toggleButtonPressed {
+    TMAlertManager *alertManager = [TMAlertManager getInstance];
+    TMConfigurationManager *configurationManager = [TMConfigurationManager getInstance];
+    TMTimerConfiguration *configuration = [configurationManager.configurations objectAtIndex:_currentPage];
+    if (!alertManager.generatingAlerts && configuration.selectedTimeInterval) {
+        NSString *title = [NSString stringForTimeInterval:configuration.selectedTimeInterval style:TMTimeIntervalStringDigital];
+        [self setTitle:title];
+        [alertManager setTimerLength:configuration.selectedTimeInterval];
+        [alertManager startAlerts:[configuration.selectedAlerts allObjects]];
+    } else {
+        [self setTitle:@"Bzz"];
+        [alertManager stopAlerts];
+    }
+    [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:YES];
 }
 
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
@@ -115,6 +134,27 @@
     [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
 }
 
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController {
+    TMViewController *tmViewController = (TMViewController *)viewController;
+    NSInteger index = tmViewController.index;
+    TMViewController *retViewController = index >= [_configurationViewControllers count] - 1? nil : [_configurationViewControllers objectAtIndex:index + 1];
+    return retViewController;
+}
+
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController {
+    TMViewController *tmViewController = (TMViewController *)viewController;
+    NSInteger index = tmViewController.index;
+    TMViewController *retViewController = index <= 0 ? nil : [_configurationViewControllers objectAtIndex:index-1];
+    return retViewController;
+}
+
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
+    if (completed) {
+        TMViewController *viewController = [pageViewController.viewControllers firstObject];
+        [_pageControl setCurrentPage:viewController.index];
+    }
+}
+
 - (void)loadView {
     [super loadView];
     
@@ -136,22 +176,22 @@
     
     _pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     [_pageViewController setDataSource:self];
+    [_pageViewController setDelegate:self];
     
     TMConfigurationManager *configurationManager = [TMConfigurationManager getInstance];
-    
     NSArray *configurations = configurationManager.configurations;
-    TMTimerConfiguration *configuration = [[TMTimerConfiguration alloc] init];
-    configurations = @[configuration];
+    [configurations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        TMViewController *configurationViewController = [[TMViewController alloc] init];
+        [configurationViewController setConfiguration:(TMTimerConfiguration *)obj];
+        [configurationViewController setIndex:idx];
+        [_configurationViewControllers addObject:configurationViewController];
+    }];
     
-    NSMutableArray *configurationViewControllers = [[NSMutableArray alloc] init];
-    for (TMTimerConfiguration *configuration in configurations) {
-        TMViewController *viewController = [[TMViewController alloc] initWithConfiguration:configuration];
-        [configurationViewControllers addObject:viewController];
-    }
-    [_pageViewController setViewControllers:configurationViewControllers
-                              direction:UIPageViewControllerNavigationDirectionForward
-                               animated:NO
-                             completion:nil];
+
+    [_pageViewController setViewControllers:@[[_configurationViewControllers objectAtIndex:_currentPage]]
+                                  direction:UIPageViewControllerNavigationDirectionForward
+                                   animated:NO
+                                 completion:nil];
     [self.view addSubview:_pageViewController.view];
     [_pageViewController.view setTranslatesAutoresizingMaskIntoConstraints:NO];
     
@@ -170,7 +210,8 @@
     
     _pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
     [_pageControl setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_pageControl setNumberOfPages:[configurationViewControllers count]];
+    [_pageControl setNumberOfPages:[configurationManager.configurations count]];
+    [_pageControl setCurrentPage:_currentPage];
     [self.view addSubview:_pageControl];
     //fix pageviewcontroller view to top of pagecontrol
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_pageViewController.view

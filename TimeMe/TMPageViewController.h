@@ -7,6 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-@interface TMPageViewController : UIViewController<UIPageViewControllerDataSource>
+@interface TMPageViewController : UIViewController<UIPageViewControllerDataSource,UIPageViewControllerDelegate>
 
 @end
