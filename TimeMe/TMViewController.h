@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "TMTimePickerCell.h"
-#import "TMAlertManager.h"
 #import "TMAddIntervalViewController.h"
-#import "TMConfigurationPickerView.h"
 
-@interface TMViewController : UIViewController<UITableViewDelegate,UITableViewDataSource, TMTimePickerDelegate, TMAlertDelegate,TMAddIntervalDelegate,TMConfigurationPickerDelegate>
+@class TMTimerConfiguration;
+
+@interface TMViewController : UIViewController<UITableViewDelegate,UITableViewDataSource, TMTimePickerDelegate, TMAddIntervalDelegate>
+
+- (id)initWithConfiguration:(TMTimerConfiguration *)configuration;
+
 @end

@@ -7,11 +7,9 @@
 //
 
 #import "TMViewController.h"
-#import <AudioToolbox/AudioToolbox.h>
 #import "TMTableViewCell.h"
 #import "TMIntervalLabelCell.h"
 #import "TMTimePickerCell.h"
-#import "TMTimerView.h"
 #import "TMAlertManager.h"
 #import "TMStyleManager.h"
 #import "NSString+TMTimeIntervalString.h"
@@ -21,140 +19,26 @@
 
 
 @interface TMViewController () {
-    TMConfigurationPickerView *_configurationPicker;
     UITableView *_tableView;
-    TMTimerView *_timerView;
-    
-    UIButton *_timerToggleButton;
+    TMTimerConfiguration *_configuration;
 }
 
-- (void)_toggleButtonPressed;
-- (void)_listButtonPressed;
 - (void)_addButtonPressed;
-
-- (void)_setUpViews;
-- (void)_saveViewState;
-
-- (void)_fadeInView:(NSArray *)inViews outView:(NSArray *)outViews;
-- (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated;
-
 @end
 
 @implementation TMViewController
 
-- (id)init {
-    if (self = [super init]) {
-        [self setTitle:@"Bzz"];
-        
-        TMAlertManager *alertManager = [TMAlertManager getInstance];
-        [alertManager setDelegate:self];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(_setUpViews)
-                                                     name:UIApplicationDidBecomeActiveNotification
-                                                   object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(_saveViewState)
-                                                     name:UIApplicationDidEnterBackgroundNotification
-                                                   object:nil];
-        
+- (id)initWithConfiguration:(TMTimerConfiguration *)configuration {
+    self = [super init];
+    if (self) {
+        _configuration = configuration;
     }
     return self;
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)_toggleButtonPressed {
-    TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
-    TMAlertManager *alertManager = [TMAlertManager getInstance];
-    if (!alertManager.generatingAlerts && timerConfiguration.selectedTimeInterval) {
-        [alertManager setTimerLength:timerConfiguration.selectedTimeInterval];
-        NSArray *selectedAlerts = [timerConfiguration.selectedAlerts allObjects];
-        [alertManager startAlerts:selectedAlerts];
-    } else {
-        [alertManager stopAlerts];
-    }
-    [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:YES];
-}
-
-- (void)_listButtonPressed {
-
-}
-
-- (void)_setUpViews {
-    TMAlertManager *alertManager = [TMAlertManager getInstance];
-    [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
-}
-
-- (void)_saveViewState {
-    [_configurationPicker saveConfigurations];
-}
-
-- (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
-    NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
-    UIColor *buttonColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x1F/256. green:0xFF/256. blue:0x52/256. alpha:.7];
-    NSArray *inViews = generatingAlerts ? @[_timerView] : @[_configurationPicker,_tableView];
-    NSArray *outViews = generatingAlerts ? @[_configurationPicker,_tableView] : @[_timerView];
-    
-    NSString *title = @"Bzz";
-    if (generatingAlerts) {
-        TMAlertManager *alertManager = [TMAlertManager getInstance];
-        title = [NSString stringForTimeInterval:alertManager.timerLength style:TMTimeIntervalStringDigital];
-    }
-    [self setTitle:title];
-    
-    if (generatingAlerts) {
-        [_timerView beginUpdating];
-    } else {
-        [_tableView reloadData];
-        [_timerView endUpdating];
-    }
-    
-    if (buttonTitle) {
-        [_timerToggleButton setTitle:buttonTitle forState:UIControlStateNormal];
-    }
-    if (buttonColor) {
-        [_timerToggleButton setBackgroundColor:buttonColor];
-    }
-    
-    if (animated) {
-        [self _fadeInView:inViews outView:outViews];
-    } else {
-        for (UIView *inView in inViews) {
-            [inView setHidden:NO];
-            [inView setAlpha:1];
-        }
-        for (UIView *outView in outViews) {
-            [outView setHidden:YES];
-        }
-    }
-}
-
-- (void)_fadeInView:(NSArray *)inViews outView:(NSArray *)outViews {
-    for (UIView *view in inViews) {
-        [view setHidden:NO];
-    }
-    [UIView animateWithDuration:.5
-                     animations:^{
-                         for (UIView *view in inViews) {
-                             [view setAlpha:1];
-                         }
-                         for (UIView *view in outViews) {
-                             [view setAlpha:0];
-                         }
-                     } completion:^(BOOL finished) {
-                         for (UIView *view in outViews) {
-                             [view setHidden:YES];
-                         }
-                     }];
-}
-
 - (void)_addButtonPressed {
     TMAddIntervalViewController *addVC = [[TMAddIntervalViewController alloc] init];
-    TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
-    [addVC configureForTimeInterval:timerConfiguration.selectedTimeInterval];
+    [addVC configureForTimeInterval:_configuration.selectedTimeInterval];
     addVC.delegate = self;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addVC];
     [self.navigationController presentViewController:navigationController animated:YES completion:nil];
@@ -164,16 +48,15 @@
 
 - (void)addIntervalController:(TMAddIntervalViewController *)addIntervalController didSelectInterval:(NSTimeInterval)timeInterval {
     if (timeInterval) {
-        TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
         NSNumber *interval = @(timeInterval);
-        [timerConfiguration.hiddenAlerts addObject:interval];
-        if (![timerConfiguration.addedAlerts containsObject:interval]) {
-            [timerConfiguration.addedAlerts addObject:interval];
-            if (timeInterval < timerConfiguration.selectedTimeInterval) {
-                [timerConfiguration.selectedAlerts addObject:interval];
-                [timerConfiguration.displayAlerts addObject:interval];
+        [_configuration.hiddenAlerts addObject:interval];
+        if (![_configuration.addedAlerts containsObject:interval]) {
+            [_configuration.addedAlerts addObject:interval];
+            if (timeInterval < _configuration.selectedTimeInterval) {
+                [_configuration.selectedAlerts addObject:interval];
+                [_configuration.displayAlerts addObject:interval];
                 NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
-                [timerConfiguration.displayAlerts sortUsingDescriptors:@[sortDescriptor]];
+                [_configuration.displayAlerts sortUsingDescriptors:@[sortDescriptor]];
             }
         }
     }
@@ -192,27 +75,9 @@
     [self.navigationController.navigationBar setTranslucent:NO];
     [self setAutomaticallyAdjustsScrollViewInsets:NO];
     
-    UIButton *listButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage *listImage = [UIImage imageNamed:@"ListIcon"];
-    [listButton setBackgroundImage:listImage forState:UIControlStateNormal];
-    UIImage *highlightImage = [UIImage imageNamed:@"ListIconHighlighted"];
-    [listButton setBackgroundImage:highlightImage forState:UIControlStateHighlighted];
-    [listButton addTarget:self action:@selector(_listButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [listButton setFrame:CGRectMake(0, 0, 44, 44)];
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:listButton];
-    [self.navigationItem setLeftBarButtonItem:barButton];
-    
     
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     [self.view setBackgroundColor:styleManager.backgroundColor];
-    
-    CGRect pickerFrame = self.view.frame;
-    pickerFrame.size.height = 85;
-    
-    _configurationPicker = [[TMConfigurationPickerView alloc] initWithFrame:pickerFrame];
-    [_configurationPicker setDelegate:self];
-    [_configurationPicker setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [self.view addSubview:_configurationPicker];
     
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     [_tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -221,56 +86,12 @@
     [_tableView setDataSource:self];
     [_tableView setDelegate:self];
     [self.view addSubview:_tableView];
-    
-    _timerView = [[TMTimerView alloc] initWithFrame:CGRectZero];
-    [_timerView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_timerView setAlpha:0];
-    [self.view addSubview:_timerView];
-    
-    CGFloat buttonHeight = 60;
-    _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_timerToggleButton setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_timerToggleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_timerToggleButton.titleLabel setFont:[styleManager.font fontWithSize:25]];
-    [_timerToggleButton setTitle:@"Start" forState:UIControlStateNormal];
-    [_timerToggleButton addTarget:self action:@selector(_toggleButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:_timerToggleButton];
-    
-    //fix picker to top, with height 75
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_configurationPicker
-                                                          attribute:NSLayoutAttributeTop
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeTop
-                                                         multiplier:1.0
-                                                           constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_configurationPicker
-                                                          attribute:NSLayoutAttributeCenterX
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeCenterX
-                                                         multiplier:1.0
-                                                           constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_configurationPicker
-                                                          attribute:NSLayoutAttributeWidth
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeWidth
-                                                         multiplier:1.0
-                                                           constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_configurationPicker
-                                                          attribute:NSLayoutAttributeHeight
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:nil
-                                                          attribute:NSLayoutAttributeHeight
-                                                         multiplier:1.0
-                                                           constant:75]];
     //fix tableview to bottom on picker, make sure it doens't extent past button
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_tableView
                                                           attribute:NSLayoutAttributeTop
                                                           relatedBy:NSLayoutRelationEqual
-                                                             toItem:_configurationPicker
-                                                          attribute:NSLayoutAttributeBottom
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeTop
                                                          multiplier:1.0
                                                            constant:0]];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_tableView
@@ -289,76 +110,17 @@
                                                            constant:0]];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_tableView
                                                           attribute:NSLayoutAttributeBottom
-                                                          relatedBy:NSLayoutRelationLessThanOrEqual
-                                                             toItem:_timerToggleButton
-                                                          attribute:NSLayoutAttributeTop
-                                                         multiplier:1.0
-                                                           constant:0]];
-    
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerView
-                                                          attribute:NSLayoutAttributeTop
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeTop
-                                                         multiplier:1.0
-                                                           constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerView
-                                                          attribute:NSLayoutAttributeCenterX
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeCenterX
-                                                         multiplier:1.0
-                                                           constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerView
-                                                          attribute:NSLayoutAttributeWidth
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeWidth
-                                                         multiplier:1.0
-                                                           constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerView
-                                                          attribute:NSLayoutAttributeBottom
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:_timerToggleButton
-                                                          attribute:NSLayoutAttributeTop
-                                                         multiplier:1.0
-                                                           constant:0]];
-
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerToggleButton
-                                                          attribute:NSLayoutAttributeBottom
                                                           relatedBy:NSLayoutRelationEqual
                                                              toItem:self.view
                                                           attribute:NSLayoutAttributeBottom
                                                          multiplier:1.0
                                                            constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerToggleButton
-                                                          attribute:NSLayoutAttributeCenterX
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeCenterX
-                                                         multiplier:1.0
-                                                           constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerToggleButton
-                                                          attribute:NSLayoutAttributeWidth
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:self.view
-                                                          attribute:NSLayoutAttributeWidth
-                                                         multiplier:1.0
-                                                           constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_timerToggleButton
-                                                          attribute:NSLayoutAttributeHeight
-                                                          relatedBy:NSLayoutRelationEqual
-                                                             toItem:nil
-                                                          attribute:NSLayoutAttributeHeight
-                                                         multiplier:1.0
-                                                           constant:buttonHeight]];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    TMAlertManager *alertManager = [TMAlertManager getInstance];
-    [self _configureForGeneratingAlerts:alertManager.generatingAlerts animated:NO];
+    [_tableView reloadData];
 }
 
 #pragma mark - UITableView
@@ -412,16 +174,14 @@ static CGFloat __headerHeight = 60;
     if (section == 0) {
         rowCount = 1;
     } else {
-        TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
-        rowCount = [timerConfiguration.displayAlerts count];
+        rowCount = [_configuration.displayAlerts count];
     }
     return rowCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath { // should be lightweight
     TMTableViewCell *cell = nil;
-    TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
-    NSTimeInterval timeInterval = timerConfiguration.selectedTimeInterval;
+    NSTimeInterval timeInterval = _configuration.selectedTimeInterval;
     if (indexPath.section == 0) {
         static NSString *kPickerViewCellID = @"pickerviewcellid";
         cell = [tableView dequeueReusableCellWithIdentifier:kPickerViewCellID];
@@ -435,8 +195,8 @@ static CGFloat __headerHeight = 60;
         if (!cell) {
             cell = [[TMIntervalLabelCell alloc] initWithReuseIdentifier:kAlertIntervalCellID];
         }
-        NSNumber *alertInterval = [timerConfiguration.displayAlerts objectAtIndex:indexPath.row];
-        BOOL isChecked = [timerConfiguration.selectedAlerts containsObject:alertInterval];
+        NSNumber *alertInterval = [_configuration.displayAlerts objectAtIndex:indexPath.row];
+        BOOL isChecked = [_configuration.selectedAlerts containsObject:alertInterval];
         timeInterval = [alertInterval doubleValue];
         [(TMIntervalLabelCell *)cell setChecked:isChecked animated:NO];
     }
@@ -447,9 +207,8 @@ static CGFloat __headerHeight = 60;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 1) {
-        TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
-        NSNumber *alertInterval = [timerConfiguration.displayAlerts objectAtIndex:indexPath.row];
-        NSMutableSet *selectedAlerts = timerConfiguration.selectedAlerts;
+        NSNumber *alertInterval = [_configuration.displayAlerts objectAtIndex:indexPath.row];
+        NSMutableSet *selectedAlerts = _configuration.selectedAlerts;
         BOOL isSelected = [selectedAlerts containsObject:alertInterval];
         if (isSelected) {
             [selectedAlerts removeObject:alertInterval];
@@ -479,11 +238,10 @@ static CGFloat __headerHeight = 60;
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete && indexPath.section == 1) {
-        TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
-        NSNumber *alertInterval = [timerConfiguration.displayAlerts objectAtIndex:indexPath.row];
-        [timerConfiguration.addedAlerts removeObject:alertInterval];
-        [timerConfiguration.selectedAlerts removeObject:alertInterval];
-        [timerConfiguration.displayAlerts removeObjectAtIndex:indexPath.row];
+        NSNumber *alertInterval = [_configuration.displayAlerts objectAtIndex:indexPath.row];
+        [_configuration.addedAlerts removeObject:alertInterval];
+        [_configuration.selectedAlerts removeObject:alertInterval];
+        [_configuration.displayAlerts removeObjectAtIndex:indexPath.row];
         [_tableView beginUpdates];
         [_tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         [_tableView endUpdates];
@@ -504,51 +262,30 @@ static CGFloat __headerHeight = 60;
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
     //configure configuration selector
     
-    TMTimerConfiguration *timerConfiguration = _configurationPicker.currentConfiguration;
-    [timerConfiguration setSelectedTimeInterval:timeInterval];
+    [_configuration setSelectedTimeInterval:timeInterval];
     
-    [timerConfiguration.displayAlerts removeAllObjects];
+    [_configuration.displayAlerts removeAllObjects];
     NSArray *availableAlerts = [TMAlertManager alertIntervalsForTimerLength:timeInterval];
-    [timerConfiguration.displayAlerts addObjectsFromArray:availableAlerts];
+    [_configuration.displayAlerts addObjectsFromArray:availableAlerts];
     
-    for (NSNumber *alertInterval in timerConfiguration.hiddenAlerts) {
-        [timerConfiguration.displayAlerts removeObject:alertInterval];
+    for (NSNumber *alertInterval in _configuration.hiddenAlerts) {
+        [_configuration.displayAlerts removeObject:alertInterval];
     }
     
-    for (NSNumber *alertInterval in timerConfiguration.addedAlerts) {
+    for (NSNumber *alertInterval in _configuration.addedAlerts) {
         if ([alertInterval doubleValue] < timeInterval) {
-            if (![timerConfiguration.displayAlerts containsObject:alertInterval]) {
-                [timerConfiguration.displayAlerts addObject:alertInterval];
+            if (![_configuration.displayAlerts containsObject:alertInterval]) {
+                [_configuration.displayAlerts addObject:alertInterval];
             }
         }
     }
 
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"self" ascending:NO];
-    [timerConfiguration.displayAlerts sortUsingDescriptors:@[sortDescriptor]];
+    [_configuration.displayAlerts sortUsingDescriptors:@[sortDescriptor]];
     
-    [_configurationPicker refreshViews];
     [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];            
     
     return timeInterval;
-}
-
-#pragma mark - TMAlertManager
-
-- (void)alertManager:(TMAlertManager *)alertManager didFireAlert:(NSNumber *)alert {
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-    [_timerView setHighlighted:YES];
-    double delayInSeconds = .3;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [_timerView setHighlighted:NO];
-    });
-}
-
-- (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert {
-    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-    [_tableView reloadData];
-    
-    [self _configureForGeneratingAlerts:NO animated:YES];
 }
 
 @end
