@@ -7,9 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface TMPageViewController : UIViewController
-
-@property (nonatomic) UIPageViewController *pageViewController;
+#import "TMAlertManager.h"
+@interface TMPageViewController : UIViewController<UIPageViewControllerDataSource,TMAlertDelegate>
 
 @end
