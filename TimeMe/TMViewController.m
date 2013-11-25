@@ -38,7 +38,9 @@
     [addVC configureForTimeInterval:_configuration.selectedTimeInterval];
     addVC.delegate = self;
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addVC];
-    [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+    UIViewController *parent = self.parentViewController;
+    UINavigationController *parentNavigationController = parent.navigationController;
+    [parentNavigationController presentViewController:navigationController animated:YES completion:nil];
 }
 
 #pragma mark - TMAddInterval

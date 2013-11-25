@@ -198,6 +198,7 @@
                                    animated:NO
                                  completion:nil];
     [self.view addSubview:_pageViewController.view];
+    [self addChildViewController:_pageViewController];
     [_pageViewController.view setTranslatesAutoresizingMaskIntoConstraints:NO];
     
     _timerToggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
