@@ -14,6 +14,7 @@
 
 @interface TMViewController : UIViewController<UITableViewDelegate,UITableViewDataSource, TMTimePickerDelegate, TMAddIntervalDelegate>
 
-@property (nonatomic)TMTimerConfiguration *configuration;
+@property (nonatomic) TMTimerConfiguration *configuration;
+@property (nonatomic) NSInteger index;
 
 @end
