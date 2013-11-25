@@ -14,6 +14,8 @@
 
 @implementation TMPageViewController
 
-
+- (void)loadView {
+    [super loadView];
+}
 
 @end

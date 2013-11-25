@@ -10,4 +10,6 @@
 
 @interface TMPageViewController : UIViewController
 
+@property (nonatomic) UIPageViewController *pageViewController;
+
 @end
