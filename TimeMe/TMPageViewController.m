@@ -72,6 +72,10 @@
                      }];
 }
 
+- (void)_listButtonPressed {
+    //show a modal view with the configurations
+}
+
 - (void)_toggleButtonPressed {
     TMAlertManager *alertManager = [TMAlertManager getInstance];
     TMConfigurationManager *configurationManager = [TMConfigurationManager getInstance];
@@ -91,8 +95,8 @@
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated {
     NSString *buttonTitle = generatingAlerts ? @"Stop" : @"Start";
     UIColor *buttonColor = generatingAlerts ? [UIColor redColor] : [UIColor colorWithRed:0x1F/256. green:0xFF/256. blue:0x52/256. alpha:.7];
-    NSArray *inViews = generatingAlerts ? @[_timerView] : @[_pageViewController.view];
-    NSArray *outViews = generatingAlerts ? @[_pageViewController.view] : @[_timerView];
+    NSArray *inViews = generatingAlerts ? @[_timerView] : @[_pageViewController.view,_pageControl];
+    NSArray *outViews = generatingAlerts ? @[_pageViewController.view,_pageControl] : @[_timerView];
     
     NSString *title = @"Bzz";
     if (generatingAlerts) {
@@ -151,6 +155,7 @@
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
     if (completed) {
         TMViewController *viewController = [pageViewController.viewControllers firstObject];
+        _currentPage = viewController.index;
         [_pageControl setCurrentPage:viewController.index];
     }
 }
