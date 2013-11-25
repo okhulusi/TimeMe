@@ -21,7 +21,6 @@
 
 @interface TMViewController () {
     UITableView *_tableView;
-    TMTimerConfiguration *_configuration;
 }
 
 - (void)_addButtonPressed;
@@ -29,12 +28,9 @@
 
 @implementation TMViewController
 
-- (id)initWithConfiguration:(TMTimerConfiguration *)configuration {
-    self = [super init];
-    if (self) {
-        _configuration = configuration;
-    }
-    return self;
+- (void)setConfiguration:(TMTimerConfiguration *)configuration {
+    _configuration = configuration;
+    [_tableView reloadData];
 }
 
 - (void)_addButtonPressed {
