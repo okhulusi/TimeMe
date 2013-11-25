@@ -7,7 +7,7 @@
 //
 
 #import "TMAlertManager.h"
-
+#import <AudioToolbox/AudioToolbox.h>
 #import "NSString+TMTimeIntervalString.h"
 
 #define TWO_MINUTES (2.*60.)
@@ -115,7 +115,7 @@ static TMAlertManager *__instance = nil;
             [self.delegate alertManager:self didFinishAlerts:alert];
         }
     }
-
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
 - (void)stopAlerts {

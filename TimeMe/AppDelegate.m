@@ -7,9 +7,9 @@
 //
 
 #import "AppDelegate.h"
-#import "TMViewController.h"
 #import "TMAlertManager.h"
 #import "TMStyleManager.h"
+#import "TMPageViewController.h"
 
 @implementation AppDelegate
 
@@ -19,7 +19,7 @@
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    TMViewController *viewController = [[TMViewController alloc] init];
+    TMPageViewController *viewController = [[TMPageViewController alloc] init];
     
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     [self.window setRootViewController:navigationController];
