@@ -21,6 +21,12 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         TMStyleManager *styleManager = [TMStyleManager getInstance];
+        [self setBackgroundColor:styleManager.backgroundColor];
+        [self.textLabel setTextColor:styleManager.textColor];
+        [self.textLabel setHighlightedTextColor:styleManager.highlightTextColor];
+        [self.detailTextLabel setTextColor:styleManager.detailTextColor];
+        [self.detailTextLabel setHighlightedTextColor:styleManager.highlightTextColor];
+        [self.detailTextLabel setNumberOfLines:0];
         [self.textLabel setFont:[styleManager.font fontWithSize:20]];
         [self.detailTextLabel setFont:[styleManager.font fontWithSize:18]];
     }

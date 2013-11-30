@@ -7,25 +7,30 @@
 //
 
 #import "TMConfigurationTableViewCell.h"
-
+#import "TMTimerConfiguration.h"
+#import "NSString+TMTimeIntervalString.h"
+#import "TMStyleManager.h"
 @implementation TMConfigurationTableViewCell
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        // Initialization code
+        TMStyleManager *styleManager = [TMStyleManager getInstance];
+        [self.detailTextLabel setTextColor:styleManager.textColor];
+        [self.detailTextLabel setHighlightedTextColor:styleManager.highlightTextColor];
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
+- (void)configureForTimerConfiguration:(TMTimerConfiguration *)configuration {
+    NSString *title = [NSString stringForTimeInterval:configuration.selectedTimeInterval style:TMTimeIntervalStringWords];
+    [self.textLabel setText:title];
+    
+    NSString *detail = [NSString stringWithFormat:@"Bzz %ld time",[configuration.selectedAlerts count]];
+    if ([configuration.selectedAlerts count] != 1) {
+        detail = [detail stringByAppendingString:@"s"];
+    }
+    [self.detailTextLabel setText:detail];
 }
-*/
 
 @end

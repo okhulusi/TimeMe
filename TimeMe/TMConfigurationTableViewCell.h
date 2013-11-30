@@ -8,6 +8,8 @@
 
 #import "TMTableViewCell.h"
 
-@interface TMConfigurationTableViewCell : TMTableViewCell
+@class TMTimerConfiguration;
 
+@interface TMConfigurationTableViewCell : TMTableViewCell
+- (void)configureForTimerConfiguration:(TMTimerConfiguration *)configuration;
 @end
