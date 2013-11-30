@@ -14,6 +14,7 @@
 #import "NSString+TMTimeIntervalString.h"
 #import "TMAlertManager.h"
 #import "TMTimerConfiguration.h"
+#import "TMConfigurationViewController.h"
 
 @interface TMPageViewController () {
     UIPageViewController *_pageViewController;
@@ -73,7 +74,9 @@
 }
 
 - (void)_listButtonPressed {
-    //show a modal view with the configurations
+    TMConfigurationViewController *viewController = [[TMConfigurationViewController alloc] initWithStyle:UITableViewStylePlain];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+    [self.navigationController presentViewController:navigationController animated:YES completion:nil];
 }
 
 - (void)_toggleButtonPressed {
