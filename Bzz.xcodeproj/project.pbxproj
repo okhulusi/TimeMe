@@ -36,6 +36,7 @@
 		D38E5E7E1834463C0059071A /* TMAddIntervalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D38E5E7D1834463C0059071A /* TMAddIntervalViewController.m */; };
 		D3BDE84C180A4398005D0AC3 /* TMIntervalLabelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D3BDE84B180A4398005D0AC3 /* TMIntervalLabelCell.m */; };
 		D3BDE84F180A45B1005D0AC3 /* TMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D3BDE84E180A45B1005D0AC3 /* TMTableViewCell.m */; };
+		D3CF7CDB18498E81002A66CD /* TMConfigurationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CF7CDA18498E81002A66CD /* TMConfigurationViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +100,8 @@
 		D3BDE84B180A4398005D0AC3 /* TMIntervalLabelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMIntervalLabelCell.m; sourceTree = "<group>"; };
 		D3BDE84D180A45B1005D0AC3 /* TMTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMTableViewCell.h; sourceTree = "<group>"; };
 		D3BDE84E180A45B1005D0AC3 /* TMTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMTableViewCell.m; sourceTree = "<group>"; };
+		D3CF7CD918498E81002A66CD /* TMConfigurationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMConfigurationViewController.h; sourceTree = "<group>"; };
+		D3CF7CDA18498E81002A66CD /* TMConfigurationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMConfigurationViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +224,8 @@
 				D36AE22C1842B2560075C8E9 /* TMPageViewController.m */,
 				AA2F1DF317ECD84D001AB1D6 /* TMViewController.h */,
 				AA2F1DF417ECD84D001AB1D6 /* TMViewController.m */,
+				D3CF7CD918498E81002A66CD /* TMConfigurationViewController.h */,
+				D3CF7CDA18498E81002A66CD /* TMConfigurationViewController.m */,
 				D38E5E7C1834463C0059071A /* TMAddIntervalViewController.h */,
 				D38E5E7D1834463C0059071A /* TMAddIntervalViewController.m */,
 			);
@@ -377,6 +382,7 @@
 				D36AE22D1842B2560075C8E9 /* TMPageViewController.m in Sources */,
 				D3BDE84F180A45B1005D0AC3 /* TMTableViewCell.m in Sources */,
 				AA2F1DEF17ECD84D001AB1D6 /* AppDelegate.m in Sources */,
+				D3CF7CDB18498E81002A66CD /* TMConfigurationViewController.m in Sources */,
 				D36AE2321842B3160075C8E9 /* TMConfigurationManager.m in Sources */,
 				D38DE84E1809C5E900771267 /* NSString+TMTimeIntervalString.m in Sources */,
 				AA2F1DEB17ECD84D001AB1D6 /* main.m in Sources */,
