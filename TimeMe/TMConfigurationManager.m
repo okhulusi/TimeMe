@@ -7,6 +7,7 @@
 //
 
 #import "TMConfigurationManager.h"
+#import "TMTimerConfiguration.h"
 
 @interface TMConfigurationManager () {
     NSMutableArray *_configurations;
@@ -40,6 +41,8 @@ static NSString *kConfigurationsArrayKey = @"configurationsarray";
             _configurations = [[NSKeyedUnarchiver unarchiveObjectWithData:configurationsData] mutableCopy];
         } else {
             _configurations = [[NSMutableArray alloc] init];
+            TMTimerConfiguration *configuration = [[TMTimerConfiguration alloc] init];
+            [_configurations addObject:configuration];
         }
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(_saveConfigurations)
