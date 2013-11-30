@@ -163,6 +163,28 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    TMConfigurationManager *configurationManager = [TMConfigurationManager getInstance];
+    NSArray *configurations = configurationManager.configurations;
+    [_configurationViewControllers removeAllObjects];
+    [configurations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        TMViewController *configurationViewController = [[TMViewController alloc] init];
+        [configurationViewController setConfiguration:(TMTimerConfiguration *)obj];
+        [configurationViewController setIndex:idx];
+        [_configurationViewControllers addObject:configurationViewController];
+    }];
+    if (_currentPage >= [_configurationViewControllers count]) {
+        _currentPage = [_configurationViewControllers count] - 1;
+    }
+    [_pageViewController setViewControllers:@[[_configurationViewControllers objectAtIndex:_currentPage]]
+                                  direction:UIPageViewControllerNavigationDirectionForward
+                                   animated:NO
+                                 completion:nil];
+    [_pageControl setNumberOfPages:[configurationManager.configurations count]];
+    [_pageControl setCurrentPage:_currentPage];
+}
+
 - (void)loadView {
     [super loadView];
     
@@ -186,20 +208,7 @@
     [_pageViewController setDataSource:self];
     [_pageViewController setDelegate:self];
     
-    TMConfigurationManager *configurationManager = [TMConfigurationManager getInstance];
-    NSArray *configurations = configurationManager.configurations;
-    [configurations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        TMViewController *configurationViewController = [[TMViewController alloc] init];
-        [configurationViewController setConfiguration:(TMTimerConfiguration *)obj];
-        [configurationViewController setIndex:idx];
-        [_configurationViewControllers addObject:configurationViewController];
-    }];
-    
 
-    [_pageViewController setViewControllers:@[[_configurationViewControllers objectAtIndex:_currentPage]]
-                                  direction:UIPageViewControllerNavigationDirectionForward
-                                   animated:NO
-                                 completion:nil];
     [self.view addSubview:_pageViewController.view];
     [self addChildViewController:_pageViewController];
     [_pageViewController.view setTranslatesAutoresizingMaskIntoConstraints:NO];
@@ -219,8 +228,7 @@
     
     _pageControl = [[UIPageControl alloc] initWithFrame:CGRectZero];
     [_pageControl setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [_pageControl setNumberOfPages:[configurationManager.configurations count]];
-    [_pageControl setCurrentPage:_currentPage];
+
     [self.view addSubview:_pageControl];
     //fix pageviewcontroller view to top of pagecontrol
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_pageViewController.view

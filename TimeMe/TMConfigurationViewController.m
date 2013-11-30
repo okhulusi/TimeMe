@@ -72,6 +72,7 @@
     TMConfigurationManager *configurationManager = [TMConfigurationManager getInstance];
     TMTimerConfiguration *configuration = [configurationManager.configurations objectAtIndex:indexPath.row];
     [cell configureForTimerConfiguration:configuration];
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     return cell;
 }
 
