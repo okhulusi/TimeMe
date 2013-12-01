@@ -17,13 +17,14 @@
 #import "TMAddIntervalViewController.h"
 #import "TMTimerConfiguration.h"
 #import "TMConfigurationPickerView.h"
+#import "TMSectionHeader.h"
 
 
 @interface TMViewController () {
+    TMSectionHeader *_sectionHeader;
     UITableView *_tableView;
 }
 
-- (void)_addButtonPressed;
 @end
 
 @implementation TMViewController
@@ -33,7 +34,9 @@
     [_tableView reloadData];
 }
 
-- (void)_addButtonPressed {
+#pragma mark - TMSectionHeader
+
+- (void)sectionHeaderAddButtonPressed {
     if (_configuration.selectedTimeInterval) {
         TMAddIntervalViewController *addVC = [[TMAddIntervalViewController alloc] init];
         [addVC configureForTimeInterval:_configuration.selectedTimeInterval];
@@ -43,6 +46,12 @@
         UINavigationController *parentNavigationController = parent.navigationController;
         [parentNavigationController presentViewController:navigationController animated:YES completion:nil];
     }
+}
+
+- (void)sectionHeaderEditButtonPressed {
+    BOOL editing = !_tableView.editing;
+    [_tableView setEditing:editing animated:YES];
+    [_sectionHeader setEditing:editing];
 }
 
 #pragma mark - TMAddInterval
@@ -87,7 +96,6 @@
     [_tableView setDataSource:self];
     [_tableView setDelegate:self];
     [self.view addSubview:_tableView];
-    //fix tableview to bottom on picker, make sure it doens't extent past button
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_tableView
                                                           attribute:NSLayoutAttributeTop
                                                           relatedBy:NSLayoutRelationEqual
@@ -142,30 +150,10 @@ static CGFloat __headerHeight = 60;
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *headerView = nil;
     if (section == 1) {
-        TMStyleManager *styleManager = [TMStyleManager getInstance];
-        UIColor *headerColor = [styleManager.backgroundColor colorWithAlphaComponent:1];
-        CGFloat padding = 10;
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(padding + 5, padding,
-                                                                   CGRectGetWidth(self.view.frame)-(2*padding), __headerHeight - (2*padding))];
-
-        [label setText:@"Bzz me at:"];
-        label.textAlignment = NSTextAlignmentLeft;
-        [label setBackgroundColor:styleManager.backgroundColor];
-        [label setTextColor:styleManager.textColor];
-        [label setFont:[styleManager.font fontWithSize:19]];
-        headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0,
-                                                              CGRectGetWidth(self.view.frame), __headerHeight)];
-        [headerView setBackgroundColor: headerColor];
-        [headerView addSubview:label];
-        
-        UIButton *addButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [addButton setTitle:@"+" forState:UIControlStateNormal];
-        [addButton.titleLabel setFont:[styleManager.font fontWithSize:30]];
-        [addButton setTitleColor:styleManager.textColor forState:UIControlStateNormal];
-        [addButton setBackgroundColor:styleManager.backgroundColor];
-        [addButton setFrame:CGRectMake(CGRectGetWidth(self.view.frame) - 70, 0, 70, __headerHeight)];
-        [addButton addTarget:self action:@selector(_addButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-        [headerView addSubview:addButton];
+        _sectionHeader = [[TMSectionHeader alloc] initWithFrame:CGRectMake(0, 0,
+                                                                       CGRectGetWidth(self.view.frame),__headerHeight)];
+        [_sectionHeader setDelegate:self];
+        headerView = _sectionHeader;
     }
     return headerView;
 }

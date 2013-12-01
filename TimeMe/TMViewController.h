@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "TMTimePickerCell.h"
 #import "TMAddIntervalViewController.h"
+#import "TMSectionHeader.h"
 
 @class TMTimerConfiguration;
 
-@interface TMViewController : UIViewController<UITableViewDelegate,UITableViewDataSource, TMTimePickerDelegate, TMAddIntervalDelegate>
+@interface TMViewController : UIViewController<UITableViewDelegate,UITableViewDataSource, TMTimePickerDelegate, TMAddIntervalDelegate,TMSectionHeaderDelegate>
 
 @property (nonatomic) TMTimerConfiguration *configuration;
 @property (nonatomic) NSInteger index;

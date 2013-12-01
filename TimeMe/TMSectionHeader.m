@@ -30,6 +30,7 @@
         [self setBackgroundColor:styleManager.backgroundColor];
         
         _editButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [_editButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_editButton setTitle:@"-" forState:UIControlStateNormal];
         [_editButton.titleLabel setFont:[styleManager.font fontWithSize:30]];
         [_editButton setTitleColor:styleManager.textColor forState:UIControlStateNormal];
@@ -38,6 +39,7 @@
         [self addSubview:_editButton];
         
         _label = [[UILabel alloc] init];
+        [_label setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_label setText:@"Bzz me at:"];
         [_label setTextAlignment:NSTextAlignmentCenter];
         [_label setBackgroundColor:styleManager.backgroundColor];
@@ -46,6 +48,7 @@
         [self addSubview:_label];
         
         _addButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [_addButton setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_addButton setTitle:@"+" forState:UIControlStateNormal];
         [_addButton.titleLabel setFont:[styleManager.font fontWithSize:30]];
         [_addButton setTitleColor:styleManager.textColor forState:UIControlStateNormal];
@@ -143,7 +146,7 @@
 }
 
 - (void)setEditing:(BOOL)editing {
-    NSString *editTitle = editing ? @"X" : @"-";
+    NSString *editTitle = editing ? @"x" : @"-";
     [_editButton setTitle:editTitle forState:UIControlStateNormal];
     [_addButton setHidden:editing];
 }
