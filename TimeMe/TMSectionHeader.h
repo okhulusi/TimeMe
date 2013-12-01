@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TMSectionHeader : UIView
+@protocol TMSectionHeaderDelegate <NSObject>
+- (void)sectionHeaderEditButtonPressed;
+- (void)sectionHeaderAddButtonPressed;
+@end
 
+@interface TMSectionHeader : UIView
+- (void)setEditing:(BOOL)editing;
+
+@property (weak) id<TMSectionHeaderDelegate>delegate;
 @end
