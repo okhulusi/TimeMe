@@ -34,13 +34,15 @@
 }
 
 - (void)_addButtonPressed {
-    TMAddIntervalViewController *addVC = [[TMAddIntervalViewController alloc] init];
-    [addVC configureForTimeInterval:_configuration.selectedTimeInterval];
-    addVC.delegate = self;
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addVC];
-    UIViewController *parent = self.parentViewController;
-    UINavigationController *parentNavigationController = parent.navigationController;
-    [parentNavigationController presentViewController:navigationController animated:YES completion:nil];
+    if (_configuration.selectedTimeInterval) {
+        TMAddIntervalViewController *addVC = [[TMAddIntervalViewController alloc] init];
+        [addVC configureForTimeInterval:_configuration.selectedTimeInterval];
+        addVC.delegate = self;
+        UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:addVC];
+        UIViewController *parent = self.parentViewController;
+        UINavigationController *parentNavigationController = parent.navigationController;
+        [parentNavigationController presentViewController:navigationController animated:YES completion:nil];
+    }
 }
 
 #pragma mark - TMAddInterval
@@ -49,7 +51,7 @@
     if (timeInterval) {
         NSNumber *interval = @(timeInterval);
         [_configuration.hiddenAlerts addObject:interval];
-        if (![_configuration.addedAlerts containsObject:interval]) {
+        if (![_configuration.addedAlerts containsObject:interval] && ![_configuration.displayAlerts containsObject:interval]) {
             [_configuration.addedAlerts addObject:interval];
             if (timeInterval < _configuration.selectedTimeInterval) {
                 [_configuration.selectedAlerts addObject:interval];
