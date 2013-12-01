@@ -38,6 +38,7 @@
 		D3BDE84F180A45B1005D0AC3 /* TMTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D3BDE84E180A45B1005D0AC3 /* TMTableViewCell.m */; };
 		D3CF7CDB18498E81002A66CD /* TMConfigurationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CF7CDA18498E81002A66CD /* TMConfigurationViewController.m */; };
 		D3CF7CDE18498FF6002A66CD /* TMConfigurationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D3CF7CDD18498FF6002A66CD /* TMConfigurationTableViewCell.m */; };
+		D3E3E340184BA354005DEC60 /* TMSectionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = D3E3E33F184BA354005DEC60 /* TMSectionHeader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +106,8 @@
 		D3CF7CDA18498E81002A66CD /* TMConfigurationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMConfigurationViewController.m; sourceTree = "<group>"; };
 		D3CF7CDC18498FF6002A66CD /* TMConfigurationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMConfigurationTableViewCell.h; sourceTree = "<group>"; };
 		D3CF7CDD18498FF6002A66CD /* TMConfigurationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMConfigurationTableViewCell.m; sourceTree = "<group>"; };
+		D3E3E33E184BA354005DEC60 /* TMSectionHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMSectionHeader.h; sourceTree = "<group>"; };
+		D3E3E33F184BA354005DEC60 /* TMSectionHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMSectionHeader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,6 +243,8 @@
 			children = (
 				D38DE83D1805F22000771267 /* TMStyleManager.h */,
 				D38DE83E1805F22000771267 /* TMStyleManager.m */,
+				D3E3E33E184BA354005DEC60 /* TMSectionHeader.h */,
+				D3E3E33F184BA354005DEC60 /* TMSectionHeader.m */,
 				D38DE84318071F6A00771267 /* TMTimerView.h */,
 				D38DE84418071F6A00771267 /* TMTimerView.m */,
 				D36AE225183E70C70075C8E9 /* TMConfigurationPickerView.h */,
@@ -383,6 +388,7 @@
 				D36AE22A183E71660075C8E9 /* TMConfigurationView.m in Sources */,
 				D3CF7CDE18498FF6002A66CD /* TMConfigurationTableViewCell.m in Sources */,
 				D3BDE84C180A4398005D0AC3 /* TMIntervalLabelCell.m in Sources */,
+				D3E3E340184BA354005DEC60 /* TMSectionHeader.m in Sources */,
 				D38DE84B1809BFA400771267 /* TMAlertManager.m in Sources */,
 				D335DE1E1836E007008F9530 /* TMMaxPickerCell.m in Sources */,
 				D36AE22D1842B2560075C8E9 /* TMPageViewController.m in Sources */,
