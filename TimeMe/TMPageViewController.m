@@ -17,6 +17,8 @@
 #import "TMConfigurationViewController.h"
 
 @interface TMPageViewController () {
+    UIBarButtonItem *_listButton;
+    
     UIPageViewController *_pageViewController;
     UIPageControl *_pageControl;
     NSInteger _currentPage;
@@ -109,9 +111,10 @@
     [self setTitle:title];
     
     if (generatingAlerts) {
+        [self.navigationItem setLeftBarButtonItem:nil animated:animated];
         [_timerView beginUpdating];
     } else {
-        //TODO:push page controller
+        [self.navigationItem setLeftBarButtonItem:_listButton animated:animated];
         [_timerView endUpdating];
     }
     
@@ -198,8 +201,8 @@
     [listButton setBackgroundImage:highlightImage forState:UIControlStateHighlighted];
     [listButton addTarget:self action:@selector(_listButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [listButton setFrame:CGRectMake(0, 0, 44, 44)];
-    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithCustomView:listButton];
-    [self.navigationItem setLeftBarButtonItem:barButton];
+    _listButton = [[UIBarButtonItem alloc] initWithCustomView:listButton];
+    [self.navigationItem setLeftBarButtonItem:_listButton];
     
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     [self.view setBackgroundColor:styleManager.backgroundColor];
