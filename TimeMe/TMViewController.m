@@ -91,6 +91,7 @@
     
     _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     [_tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [_tableView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [_tableView setBackgroundColor:styleManager.backgroundColor];
     [_tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [_tableView setDataSource:self];
@@ -151,7 +152,7 @@ static CGFloat __headerHeight = 60;
     UIView *headerView = nil;
     if (section == 1) {
         _sectionHeader = [[TMSectionHeader alloc] initWithFrame:CGRectMake(0, 0,
-                                                                       CGRectGetWidth(self.view.frame),__headerHeight)];
+                                                                           CGRectGetWidth(self.view.frame),__headerHeight)];
         [_sectionHeader setDelegate:self];
         headerView = _sectionHeader;
     }
@@ -252,8 +253,6 @@ static CGFloat __headerHeight = 60;
 #pragma mark - TMTimePicker
 
 - (NSTimeInterval)timePickerCell:(TMTimePickerCell *)timePickerCell didSetTimeInterval:(NSTimeInterval)timeInterval {
-    //configure configuration selector
-    
     [_configuration setSelectedTimeInterval:timeInterval];
     
     [_configuration.displayAlerts removeAllObjects];
@@ -277,8 +276,8 @@ static CGFloat __headerHeight = 60;
     
     TMTableViewCell *cell = (TMTableViewCell *)[_tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     [cell configureForTimeInterval:timeInterval];
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation: UITableViewRowAnimationAutomatic];            
     
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
     return timeInterval;
 }
 
