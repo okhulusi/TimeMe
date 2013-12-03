@@ -62,7 +62,7 @@
                                                             toItem:self
                                                          attribute:NSLayoutAttributeLeading
                                                         multiplier:1.0
-                                                          constant:10]];
+                                                          constant:0]];
         [self addConstraint:[NSLayoutConstraint constraintWithItem:_editButton
                                                          attribute:NSLayoutAttributeWidth
                                                          relatedBy:NSLayoutRelationEqual
@@ -139,7 +139,7 @@
                                                             toItem:self
                                                          attribute:NSLayoutAttributeTrailing
                                                         multiplier:1.0
-                                                          constant:-10]];
+                                                          constant:0]];
         [self setEditing:NO];
     }
     return self;
