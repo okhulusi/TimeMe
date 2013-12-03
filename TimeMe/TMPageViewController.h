@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@interface TMPageViewController : UIViewController<UIPageViewControllerDataSource,UIPageViewControllerDelegate>
+#import "TMConfigurationViewController.h"
+@interface TMPageViewController : UIViewController<UIPageViewControllerDataSource,UIPageViewControllerDelegate,TMConfigurationViewControllerDelegate>
 
 @end

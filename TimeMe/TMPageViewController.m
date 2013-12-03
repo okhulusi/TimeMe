@@ -77,8 +77,15 @@
 
 - (void)_listButtonPressed {
     TMConfigurationViewController *viewController = [[TMConfigurationViewController alloc] initWithStyle:UITableViewStylePlain];
+    [viewController setDelegate:self];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
     [self.navigationController presentViewController:navigationController animated:YES completion:nil];
+}
+
+- (void)configurationViewController:(TMConfigurationViewController *)configurationViewController didSelectIndex:(NSInteger)index {
+    _currentPage = index;
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    
 }
 
 - (void)_toggleButtonPressed {
