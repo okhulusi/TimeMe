@@ -170,6 +170,10 @@
     [super viewWillAppear:animated];
     TMConfigurationManager *configurationManager = [TMConfigurationManager getInstance];
     NSArray *configurations = configurationManager.configurations;
+    if (![configurations count]) {
+        TMTimerConfiguration *configuration = [[TMTimerConfiguration alloc] init];
+        [configurationManager addTimerConfiguration:configuration];
+    }
     [_configurationViewControllers removeAllObjects];
     [configurations enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         TMViewController *configurationViewController = [[TMViewController alloc] init];
