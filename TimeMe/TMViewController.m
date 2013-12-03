@@ -154,6 +154,7 @@ static CGFloat __headerHeight = 60;
         _sectionHeader = [[TMSectionHeader alloc] initWithFrame:CGRectMake(0, 0,
                                                                            CGRectGetWidth(self.view.frame),__headerHeight)];
         [_sectionHeader setDelegate:self];
+        [_sectionHeader setEditing:_tableView.editing];
         headerView = _sectionHeader;
     }
     return headerView;
@@ -242,6 +243,7 @@ static CGFloat __headerHeight = 60;
     if (editingStyle == UITableViewCellEditingStyleDelete && indexPath.section == 1) {
         NSNumber *alertInterval = [_configuration.displayAlerts objectAtIndex:indexPath.row];
         [_configuration.addedAlerts removeObject:alertInterval];
+        [_configuration.hiddenAlerts addObject:alertInterval];
         [_configuration.selectedAlerts removeObject:alertInterval];
         [_configuration.displayAlerts removeObjectAtIndex:indexPath.row];
         [_tableView beginUpdates];
