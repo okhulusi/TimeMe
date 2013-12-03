@@ -152,9 +152,15 @@ static CGFloat __headerHeight = 60;
     UIView *headerView = nil;
     if (section == 1) {
         _sectionHeader = [[TMSectionHeader alloc] initWithFrame:CGRectMake(0, 0,
-                                                                           CGRectGetWidth(self.view.frame),__headerHeight)];
+                                                                               CGRectGetWidth(self.view.frame),__headerHeight)];
         [_sectionHeader setDelegate:self];
-        [_sectionHeader setEditing:_tableView.editing];
+        BOOL editing = _tableView.editing;
+        [_sectionHeader setEditing:editing];
+        if (editing || [_configuration.displayAlerts count]) {
+            [_sectionHeader setEnabled:YES];
+        } else {
+            [_sectionHeader setEnabled:NO];
+        }
         headerView = _sectionHeader;
     }
     return headerView;

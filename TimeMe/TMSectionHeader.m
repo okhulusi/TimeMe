@@ -34,6 +34,7 @@
         [_editButton setTitle:@"-" forState:UIControlStateNormal];
         [_editButton.titleLabel setFont:[styleManager.font fontWithSize:30]];
         [_editButton setTitleColor:styleManager.textColor forState:UIControlStateNormal];
+        [_editButton setTitleColor:styleManager.highlightBackgroundColor forState:UIControlStateDisabled];
         [_editButton setBackgroundColor:styleManager.backgroundColor];
         [_editButton addTarget:self action:@selector(_editButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_editButton];
@@ -52,6 +53,7 @@
         [_addButton setTitle:@"+" forState:UIControlStateNormal];
         [_addButton.titleLabel setFont:[styleManager.font fontWithSize:30]];
         [_addButton setTitleColor:styleManager.textColor forState:UIControlStateNormal];
+        [_addButton setTitleColor:styleManager.highlightBackgroundColor forState:UIControlStateDisabled];
         [_addButton setBackgroundColor:styleManager.backgroundColor];
         [_addButton addTarget:self action:@selector(_addButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_addButton];
@@ -149,6 +151,11 @@
     NSString *editTitle = editing ? @"x" : @"-";
     [_editButton setTitle:editTitle forState:UIControlStateNormal];
     [_addButton setHidden:editing];
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    [_editButton setEnabled:enabled];
+    [_addButton setEnabled:enabled];
 }
 
 - (void)_addButtonPressed {

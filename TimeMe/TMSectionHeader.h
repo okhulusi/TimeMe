@@ -15,6 +15,7 @@
 
 @interface TMSectionHeader : UIView
 - (void)setEditing:(BOOL)editing;
+- (void)setEnabled:(BOOL)enabled;
 
 @property (weak) id<TMSectionHeaderDelegate>delegate;
 @end
