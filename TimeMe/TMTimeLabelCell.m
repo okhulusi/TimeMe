@@ -27,14 +27,6 @@
     return self;
 }
 
-- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
-    [super setHighlighted:highlighted animated:animated];
-    TMStyleManager *styleManager = [TMStyleManager getInstance];
-    UIColor *backgroundColor = highlighted ? styleManager.highlightBackgroundColor : styleManager.backgroundColor;
-    [self.contentView setBackgroundColor:backgroundColor];
-    [self setBackgroundColor:backgroundColor];
-}
-
 - (void)configureForTimeInterval:(NSTimeInterval)timeInterval {
     NSString *intervalString = [NSString stringForTimeInterval:timeInterval style:TMTimeIntervalStringWords];
     [self.detailTextLabel setText:intervalString];

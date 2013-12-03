@@ -26,11 +26,18 @@
     NSString *title = [NSString stringForTimeInterval:configuration.selectedTimeInterval style:TMTimeIntervalStringWords];
     [self.textLabel setText:title];
     
-    NSString *detail = [NSString stringWithFormat:@"Bzz %ld time",[configuration.selectedAlerts count]];
+    NSString *detail = [NSString stringWithFormat:@"Bzz %ld time",(unsigned long)[configuration.selectedAlerts count]];
     if ([configuration.selectedAlerts count] != 1) {
         detail = [detail stringByAppendingString:@"s"];
     }
     [self.detailTextLabel setText:detail];
 }
 
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
+    [super setHighlighted:highlighted animated:animated];
+    TMStyleManager *styleManager = [TMStyleManager getInstance];
+    UIColor *backgroundColor = highlighted ? styleManager.highlightBackgroundColor : styleManager.backgroundColor;
+    [self.contentView setBackgroundColor:backgroundColor];
+    [self setBackgroundColor:backgroundColor];
+}
 @end

@@ -201,6 +201,7 @@ static CGFloat __headerHeight = 60;
         timeInterval = [alertInterval doubleValue];
         [(TMIntervalLabelCell *)cell setChecked:isChecked animated:NO];
     }
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [cell configureForTimeInterval:timeInterval];
     return cell;
 }
