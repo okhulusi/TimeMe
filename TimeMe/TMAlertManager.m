@@ -20,6 +20,7 @@ const NSString *kTMAlertKey = @"tmalertkey";
 @interface TMAlertManager () {
     NSMutableArray *_currentAlerts;
 }
+- (void)_popTopAlert;
 @end
 
 @implementation TMAlertManager
@@ -102,10 +103,7 @@ static TMAlertManager *__instance = nil;
 - (void)didFireAlert:(NSNumber *)alert {
     if ([_currentAlerts count]) {
         _intervalStart = [[NSDate date] timeIntervalSinceReferenceDate];
-        NSTimeInterval oldInterval = [[_currentAlerts firstObject] doubleValue];
-        [_currentAlerts removeObjectAtIndex:0];
-        NSTimeInterval nextInterval = [_currentAlerts count] ? [[_currentAlerts firstObject] doubleValue] : 0;
-        _intervalLength = nextInterval - oldInterval;
+        [self _popTopAlert];
         if ([self.delegate respondsToSelector:@selector(alertManager:didFireAlert:)]) {
             [self.delegate alertManager:self didFireAlert:alert];
         }
@@ -152,17 +150,24 @@ static NSString *kGeneratingAlertsKey = @"generatingalerts";
         if ([_currentAlerts count]) {
             NSTimeInterval elapsedTime = now - _timerStart;
             _intervalStart = _timerStart;
+            _intervalLength = _timerLength;
             while ([_currentAlerts count] && (elapsedTime > [[_currentAlerts firstObject] doubleValue])) {     //check if we have any expired timers
-                _intervalStart += [[_currentAlerts firstObject] doubleValue];
-                [_currentAlerts removeObjectAtIndex:0];
+                NSTimeInterval intervalValue = [[_currentAlerts firstObject] doubleValue];
+                _intervalStart += intervalValue;
+                [self _popTopAlert];
             }
             if (![_currentAlerts count]) {
                 _intervalLength = 0;
-            } else {
-                _intervalLength = _timerLength - [[_currentAlerts firstObject] doubleValue];
             }
         }
     }
+}
+
+- (void)_popTopAlert {
+    NSTimeInterval oldInterval = [[_currentAlerts firstObject] doubleValue];
+    [_currentAlerts removeObjectAtIndex:0];
+    NSTimeInterval nextInterval = [_currentAlerts count] ? [[_currentAlerts firstObject] doubleValue] : 0;
+    _intervalLength = nextInterval - oldInterval;
 }
 
 
