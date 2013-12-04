@@ -48,4 +48,14 @@ static NSString *kHiddenAlertsKey = @"hiddenalertskey";
     [aCoder encodeObject:_hiddenAlerts forKey:kHiddenAlertsKey];
 }
 
+- (NSArray *)selectedAlertsForTimerInterval:(NSTimeInterval)timeInterval {
+    NSMutableArray *selectedAlerts = [[NSMutableArray alloc] init];
+    for (NSNumber *alert in _selectedAlerts) {
+        if ([alert doubleValue] < timeInterval) {
+            [selectedAlerts addObject:alert];
+        }
+    }
+    return selectedAlerts;
+}
+
 @end

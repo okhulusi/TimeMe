@@ -117,7 +117,7 @@
         NSString *title = [NSString stringForTimeInterval:configuration.selectedTimeInterval style:TMTimeIntervalStringDigital];
         [self setTitle:title];
         [alertManager setTimerLength:configuration.selectedTimeInterval];
-        [alertManager startAlerts:[configuration.selectedAlerts allObjects]];
+        [alertManager startAlerts:[configuration selectedAlertsForTimerInterval:configuration.selectedTimeInterval]];
     } else {
         [self setTitle:@"Bzz"];
         [alertManager stopAlerts];

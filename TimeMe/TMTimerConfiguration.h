@@ -16,4 +16,6 @@
 @property (readonly) NSMutableSet *addedAlerts;
 @property (readonly) NSMutableSet *hiddenAlerts;
 
+- (NSArray *)selectedAlertsForTimerInterval:(NSTimeInterval)timeInterval;
+
 @end
