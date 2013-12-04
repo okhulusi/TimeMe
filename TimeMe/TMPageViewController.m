@@ -35,6 +35,7 @@
 - (void)_setUpViews;
 - (void)_fadeInView:(NSArray *)inViews outView:(NSArray *)outViews;
 - (void)_configureForGeneratingAlerts:(BOOL)generatingAlerts animated:(BOOL)animated;
+- (void)_flashTimerView;
 @end
 
 @implementation TMPageViewController
@@ -43,6 +44,8 @@
     self = [super init];
     if (self) {
         [self setTitle:@"Bzz"];
+        TMAlertManager *alertManager = [TMAlertManager getInstance];
+        [alertManager setDelegate:self];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(_setUpViews)
                                                      name:UIApplicationDidBecomeActiveNotification
@@ -54,6 +57,24 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+#pragma mark - TMAlertDelegate
+- (void)alertManager:(TMAlertManager *)alertManager didFireAlert:(NSNumber *)alert {
+    [self _flashTimerView];
+}
+
+- (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert {
+    [self _flashTimerView];
+}
+
+- (void)_flashTimerView {
+    [_timerView setHighlighted:YES];
+    double delayInSeconds = .3;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [_timerView setHighlighted:NO];
+    });
 }
 
 - (void)_fadeInView:(NSArray *)inViews outView:(NSArray *)outViews {
