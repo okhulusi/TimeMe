@@ -150,7 +150,7 @@ static NSString *kGeneratingAlertsKey = @"generatingalerts";
         if ([_currentAlerts count]) {
             NSTimeInterval elapsedTime = now - _timerStart;
             _intervalStart = _timerStart;
-            _intervalLength = _timerLength;
+            _intervalLength = [[_currentAlerts firstObject] doubleValue];
             while ([_currentAlerts count] && (elapsedTime > [[_currentAlerts firstObject] doubleValue])) {     //check if we have any expired timers
                 NSTimeInterval intervalValue = [[_currentAlerts firstObject] doubleValue];
                 _intervalStart += intervalValue;
