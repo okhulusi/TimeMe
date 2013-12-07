@@ -15,8 +15,9 @@
 
 @interface TMTimerView () {
     BOOL _updating;
-    
+    UILabel *_durationLabel;
     UILabel *_timerLabel;
+    UILabel *_timeRemainingLabel;
     UILabel *_intervalLabel;
 }
 
@@ -31,6 +32,14 @@
         _updating = NO;
         
         TMStyleManager *styleManager = [TMStyleManager getInstance];
+        _durationLabel = [[UILabel alloc] init];
+        [_durationLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [_durationLabel setTextAlignment:NSTextAlignmentLeft];
+        [_durationLabel setFont:[styleManager.font fontWithSize:20]];
+        [_durationLabel setTextColor:styleManager.textColor];
+        [_durationLabel setHighlightedTextColor:styleManager.highlightTextColor];
+        [_durationLabel setText:@"Time left"];
+        [self addSubview:_durationLabel];
         _timerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [_timerLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_timerLabel setTextAlignment:NSTextAlignmentCenter];
@@ -41,6 +50,20 @@
         [_timerLabel sizeToFit];
         [_timerLabel setFrame:CGRectZero];
         [self addSubview:_timerLabel];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:_durationLabel
+                                                         attribute:NSLayoutAttributeBottom
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:_timerLabel
+                                                         attribute:NSLayoutAttributeTop
+                                                        multiplier:1.0
+                                                          constant:0]];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:_durationLabel
+                                                         attribute:NSLayoutAttributeLeading
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeLeading
+                                                        multiplier:1.0
+                                                          constant:15]];
         [self addConstraint:[NSLayoutConstraint constraintWithItem:_timerLabel
                                                          attribute:NSLayoutAttributeBottom
                                                          relatedBy:NSLayoutRelationEqual
@@ -55,7 +78,14 @@
                                                          attribute:NSLayoutAttributeCenterX
                                                         multiplier:1.0
                                                           constant:0]];
-        
+        _timeRemainingLabel = [[UILabel alloc] init];
+        [_timeRemainingLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [_timeRemainingLabel setTextAlignment:NSTextAlignmentLeft];
+        [_timeRemainingLabel setTextColor:styleManager.textColor];
+        [_timeRemainingLabel setHighlightedTextColor:styleManager.highlightTextColor];
+        [_timeRemainingLabel setFont:[styleManager.font fontWithSize:20]];
+        [_timeRemainingLabel setText:@"Next Bzz"];
+        [self addSubview:_timeRemainingLabel];
         _intervalLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         [_intervalLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         [_intervalLabel setTextAlignment:NSTextAlignmentCenter];
@@ -64,10 +94,24 @@
         [_intervalLabel setFont:[styleManager.font fontWithSize:60]];
         [_intervalLabel setText:@"00:00:00"];
         [self addSubview:_intervalLabel];
-        [self addConstraint:[NSLayoutConstraint constraintWithItem:_intervalLabel
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:_timeRemainingLabel
                                                          attribute:NSLayoutAttributeTop
                                                          relatedBy:NSLayoutRelationEqual
                                                             toItem:_timerLabel
+                                                         attribute:NSLayoutAttributeBottom
+                                                        multiplier:1.0
+                                                          constant:20]];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:_timeRemainingLabel
+                                                         attribute:NSLayoutAttributeLeading
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:self
+                                                         attribute:NSLayoutAttributeLeading
+                                                        multiplier:1.0
+                                                          constant:15]];
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:_intervalLabel
+                                                         attribute:NSLayoutAttributeTop
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:_timeRemainingLabel
                                                          attribute:NSLayoutAttributeBottom
                                                         multiplier:1.0
                                                           constant:20]];
@@ -86,7 +130,9 @@
     TMStyleManager *styleManager = [TMStyleManager getInstance];
     UIColor *backgroundColor = highlighted ? styleManager.highlightBackgroundColor : styleManager.backgroundColor;
     [self setBackgroundColor:backgroundColor];
+    [_durationLabel setHighlighted:highlighted];
     [_timerLabel setHighlighted:highlighted];
+    [_timeRemainingLabel setHighlighted:highlighted];
     [_intervalLabel setHighlighted:highlighted];
 }
 
