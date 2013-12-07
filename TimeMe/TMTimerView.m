@@ -70,7 +70,7 @@
                                                             toItem:self
                                                          attribute:NSLayoutAttributeCenterY
                                                         multiplier:1.0
-                                                          constant:-10]];
+                                                          constant:-15]];
         [self addConstraint:[NSLayoutConstraint constraintWithItem:_timerLabel
                                                          attribute:NSLayoutAttributeCenterX
                                                          relatedBy:NSLayoutRelationEqual
