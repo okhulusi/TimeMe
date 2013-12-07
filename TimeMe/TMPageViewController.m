@@ -66,6 +66,7 @@
 
 - (void)alertManager:(TMAlertManager *)alertManager didFinishAlerts:(NSNumber *)alert {
     [self _flashTimerView];
+    [self _configureForGeneratingAlerts:NO animated:YES];
 }
 
 - (void)_flashTimerView {
